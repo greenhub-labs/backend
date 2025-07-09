@@ -20,6 +20,8 @@ describe('UpdateUserCommandHandler', () => {
     userRepository = {
       save: jest.fn(),
       findById: jest.fn(),
+      update: jest.fn(),
+      softDelete: jest.fn(),
     };
     nestjsEventBus = { publish: jest.fn() } as any;
     kafkaEventBus = { publish: jest.fn() } as any;

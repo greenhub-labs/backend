@@ -5,14 +5,24 @@ import { User } from '../../domain/entities/user.entity';
  */
 export interface UserRepository {
   /**
-   * Saves a user
-   * @param user - User to save
-   */
-  save(user: User): Promise<void>;
-  /**
    * Finds a user by id
    * @param id - User id
    * @returns User or null if not found
    */
   findById(id: string): Promise<User | null>;
+  /**
+   * Restores a soft-deleted user by id
+   * @param id - User id
+   */
+  save(user: User): Promise<string>;
+  /**
+   * Updates an existing user
+   * @param user - User to update
+   */
+  update(user: User): Promise<void>;
+  /**
+   * Soft deletes a user by id
+   * @param id - User id
+   */
+  softDelete(id: string): Promise<void>;
 }

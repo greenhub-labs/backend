@@ -16,6 +16,8 @@ describe('GetUserByIdQueryHandler', () => {
     userRepository = {
       save: jest.fn(),
       findById: jest.fn(),
+      update: jest.fn(),
+      softDelete: jest.fn(),
     };
     handler = new GetUserByIdQueryHandler(userRepository);
   });

@@ -1,4 +1,8 @@
 import { Module } from '@nestjs/common';
+import { UsersDomainModule } from './domain/users-domain.module';
+import { UsersApplicationModule } from './application/users-application.module';
+import { UsersInfrastructureModule } from './infrastructure/users-infrastructure.module';
+import { UsersPresentersModule } from './presenters/users.presenters.module';
 
 /**
  * UsersModule
@@ -6,9 +10,10 @@ import { Module } from '@nestjs/common';
  */
 @Module({
   imports: [
-    // UsersDomainModule,
-    // UsersApplicationModule,
-    // UsersInfrastructureModule,
+    UsersDomainModule,
+    UsersApplicationModule,
+    UsersInfrastructureModule,
+    UsersPresentersModule,
   ],
   exports: [],
 })
