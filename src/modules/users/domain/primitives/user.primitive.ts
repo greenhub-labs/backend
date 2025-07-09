@@ -12,4 +12,5 @@ export type UserPrimitive = {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string;
 };

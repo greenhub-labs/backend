@@ -31,6 +31,8 @@ export class User {
   public readonly createdAt: Date;
   /** Last update date */
   public readonly updatedAt: Date;
+  /** Deletion date */
+  public readonly deletedAt?: Date;
 
   /**
    * Internal collection of domain events
@@ -51,6 +53,7 @@ export class User {
     isDeleted: boolean;
     createdAt: Date;
     updatedAt: Date;
+    deletedAt?: Date;
     emitEvent?: boolean; // For fromPrimitives, avoid duplicate event
   }) {
     this.id = props.id;
@@ -62,6 +65,7 @@ export class User {
     this.isDeleted = props.isDeleted;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
+    this.deletedAt = props.deletedAt;
     // Emit event only if not restoring from persistence
     if (props.emitEvent !== false) {
       this.addDomainEvent(
@@ -162,6 +166,7 @@ export class User {
       isDeleted: this.isDeleted,
       createdAt: this.createdAt.toISOString(),
       updatedAt: this.updatedAt.toISOString(),
+      deletedAt: this.deletedAt?.toISOString(),
     };
   }
 }

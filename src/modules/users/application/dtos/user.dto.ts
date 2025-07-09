@@ -12,5 +12,6 @@ export class UserDto {
     public readonly isDeleted?: boolean,
     public readonly createdAt?: string,
     public readonly updatedAt?: string,
+    public readonly deletedAt?: string,
   ) {}
 }

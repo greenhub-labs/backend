@@ -260,6 +260,8 @@ model User {
   createdAt DateTime @default(now())
   /// Fecha de última actualización
   updatedAt DateTime @updatedAt
+  /// Fecha de eliminación del registro
+  deletedAt DateTime?
   
   // Relations
   /// Datos de autenticación del usuario
@@ -311,6 +313,8 @@ model Auth {
   createdAt  DateTime  @default(now())
   /// Fecha de última actualización
   updatedAt  DateTime  @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt  DateTime?
   
   // Relations
   /// Usuario asociado
@@ -349,6 +353,8 @@ model Farm {
   createdAt   DateTime @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Usuarios miembros de la farm
@@ -392,6 +398,8 @@ model Role {
   createdAt   DateTime @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Membresías que usan este rol
@@ -422,6 +430,8 @@ model FarmMembership {
   joinedAt  DateTime @default(now())
   /// Fecha de última actualización
   updatedAt DateTime @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Usuario miembro
@@ -474,6 +484,8 @@ model Plot {
   createdAt   DateTime   @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime   @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Farm propietaria del bancal
@@ -536,6 +548,8 @@ model CropVariety {
   createdAt         DateTime      @default(now())
   /// Fecha de última actualización
   updatedAt         DateTime      @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt         DateTime?
   
   // Relations
   /// Cultivos que usan esta variedad
@@ -576,6 +590,8 @@ model Crop {
   createdAt      DateTime       @default(now())
   /// Fecha de última actualización
   updatedAt      DateTime       @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt      DateTime?
   
   // Relations
   /// Bancal donde está plantado
@@ -613,6 +629,8 @@ model HarvestLog {
   harvestDate DateTime @default(now())
   /// Fecha de creación del registro
   createdAt   DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Cultivo cosechado
@@ -646,6 +664,8 @@ model PlantingLog {
   plantingDate DateTime @default(now())
   /// Fecha de creación del registro
   createdAt    DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt    DateTime?
   
   // Relations
   /// Cultivo plantado
@@ -695,6 +715,8 @@ model Chicken {
   createdAt   DateTime      @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime      @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Gallinero donde vive
@@ -734,6 +756,8 @@ model Coop {
   createdAt   DateTime    @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime    @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Farm propietaria
@@ -781,6 +805,8 @@ model CoopDoor {
   createdAt     DateTime   @default(now())
   /// Fecha de última actualización
   updatedAt     DateTime   @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt     DateTime?
   
   // Relations
   /// Gallinero al que pertenece
@@ -808,6 +834,8 @@ model DoorLog {
   trigger   String // "manual", "scheduled", "sensor", "emergency"
   /// Momento en que ocurrió el evento
   timestamp DateTime   @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Puerta que generó el log
@@ -841,6 +869,8 @@ model EggLog {
   collectedAt DateTime @default(now())
   /// Fecha de creación del registro
   createdAt DateTime   @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Gallina que puso el huevo
@@ -897,6 +927,8 @@ model IoTNode {
   createdAt      DateTime     @default(now())
   /// Fecha de última actualización
   updatedAt      DateTime     @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt      DateTime?
   
   // Relations
   /// Farm propietaria del nodo
@@ -945,6 +977,8 @@ model Sensor {
   createdAt   DateTime   @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime   @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Nodo IoT al que pertenece
@@ -980,6 +1014,8 @@ model SensorReading {
   quality   Float?
   /// Momento exacto de la medición
   timestamp DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Nodo que generó la lectura
@@ -1034,6 +1070,8 @@ model IrrigationZone {
   createdAt   DateTime          @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime          @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Farm propietaria
@@ -1078,6 +1116,8 @@ model IrrigationValve {
   createdAt DateTime    @default(now())
   /// Fecha de última actualización
   updatedAt DateTime    @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Zona de riego que controla
@@ -1114,6 +1154,8 @@ model IrrigationSchedule {
   createdAt   DateTime @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Zona de riego programada
@@ -1151,6 +1193,8 @@ model IrrigationLog {
   notes     String?
   /// Fecha de creación del registro
   createdAt DateTime          @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Zona donde se ejecutó
@@ -1197,6 +1241,8 @@ model AutomationRule {
   createdAt   DateTime       @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime       @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Zona de riego asociada
@@ -1230,6 +1276,8 @@ model AutomationExecution {
   errorMessage String?
   /// Momento de la ejecución
   executedAt   DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt    DateTime?
   
   // Relations
   /// Regla que se ejecutó
@@ -1280,6 +1328,8 @@ model Alert {
   createdAt   DateTime   @default(now())
   /// Fecha de última actualización
   updatedAt   DateTime   @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Farm donde se generó
@@ -1324,6 +1374,8 @@ model Notification {
   readAt    DateTime?
   /// Fecha de creación
   createdAt DateTime            @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Usuario destinatario
@@ -1374,6 +1426,8 @@ model WeatherData {
   source       String // "local", "openweather", "aemet"
   /// Momento de la medición/obtención
   timestamp    DateTime         @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt    DateTime?
   
   // Relations
   /// Farm a la que pertenece
@@ -1424,6 +1478,8 @@ model SolarPanel {
   createdAt    DateTime  @default(now())
   /// Fecha de última actualización
   updatedAt    DateTime  @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt    DateTime?
   
   // Relations
   /// Farm donde está instalado
@@ -1468,6 +1524,8 @@ model Battery {
   createdAt    DateTime  @default(now())
   /// Fecha de última actualización
   updatedAt    DateTime  @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt    DateTime?
   
   // Relations
   /// Farm donde está instalada
@@ -1510,6 +1568,8 @@ model EnergyLog {
   efficiency      Float?
   /// Momento del registro
   timestamp       DateTime     @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt       DateTime?
   
   // Relations
   /// Panel solar que generó la energía
@@ -1556,6 +1616,8 @@ model Prediction {
   validUntil  DateTime?
   /// Fecha de creación de la predicción
   createdAt   DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   /// Índice para consultas eficientes por tipo y objetivo
   @@index([type, targetId])
@@ -1584,6 +1646,8 @@ model AIInteraction {
   feedback  Int?
   /// Fecha de la interacción
   createdAt DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Usuario que realizó la consulta
@@ -1612,6 +1676,8 @@ model AnalyticsReport {
   data       Json // { metrics: {}, charts: [], summary: "", recommendations: [] }
   /// Fecha de generación del reporte
   generatedAt DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt  DateTime?
   
   @@map("analytics_reports")
 }
@@ -1646,6 +1712,8 @@ model MaintenanceLog {
   nextDue     DateTime?
   /// Fecha en que se completó el mantenimiento
   completedAt DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt   DateTime?
   
   // Relations
   /// Usuario que realizó el mantenimiento
@@ -1674,6 +1742,8 @@ model SystemLog {
   data      Json? // { error_code: string, stack_trace: string, context: {} }
   /// Momento en que ocurrió el evento
   timestamp DateTime @default(now())
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   /// Índice para consultas eficientes por nivel y tiempo
   @@index([level, timestamp])
@@ -1712,6 +1782,8 @@ model SystemConfiguration {
   createdAt DateTime @default(now())
   /// Fecha de última actualización
   updatedAt DateTime @updatedAt
+  /// Soft delete: registro eliminado lógicamente
+  deletedAt DateTime?
   
   // Relations
   /// Farm a la que pertenece

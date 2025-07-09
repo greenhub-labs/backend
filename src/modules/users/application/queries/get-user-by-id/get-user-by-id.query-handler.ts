@@ -28,6 +28,7 @@ export class GetUserByIdQueryHandler
       user.isDeleted,
       user.createdAt.toISOString(),
       user.updatedAt.toISOString(),
+      user.deletedAt?.toISOString(),
     );
   }
 }

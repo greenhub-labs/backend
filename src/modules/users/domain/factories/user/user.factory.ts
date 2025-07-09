@@ -38,6 +38,7 @@ export class UserFactory {
       isDeleted: false,
       createdAt: new Date(),
       updatedAt: new Date(),
+      deletedAt: null,
     });
   }
 
@@ -63,6 +64,9 @@ export class UserFactory {
       isDeleted: primitives.isDeleted,
       createdAt: new Date(primitives.createdAt),
       updatedAt: new Date(primitives.updatedAt),
+      deletedAt: primitives.deletedAt
+        ? new Date(primitives.deletedAt)
+        : undefined,
     });
   }
 }
