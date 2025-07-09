@@ -6,7 +6,7 @@ import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
 import { UserCreatedDomainEvent } from '../events/user-created/user-created.domain-event';
 import { UserUpdatedDomainEvent } from '../events/user-updated/user-updated.domain-event';
 import { UserDeletedDomainEvent } from '../events/user-deleted/user-deleted.domain-event';
-
+import { UserRestoredDomainEvent } from '../events/user-restored/user-restored.domain-event';
 /**
  * User Entity (Aggregate Root)
  * Represents a system user in the domain (DDD Clean Architecture)
@@ -151,6 +151,35 @@ export class User {
       }),
     );
     return deletedUser;
+  }
+
+  /**
+   * Restores the user (soft restore) and emits UserRestoredDomainEvent
+   * @returns A new User instance marked as restored
+   */
+  restore(): User {
+    if (!this.isDeleted) {
+      return this; // No-op if not deleted
+    }
+    const restoredUser = new User({
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      avatar: this.avatar,
+      bio: this.bio,
+      isActive: this.isActive,
+      isDeleted: false,
+      createdAt: this.createdAt,
+      updatedAt: new Date(),
+    });
+    restoredUser.addDomainEvent(
+      new UserRestoredDomainEvent({
+        eventId: crypto.randomUUID(),
+        aggregateId: restoredUser.id.value,
+        occurredAt: restoredUser.updatedAt.toISOString(),
+      }),
+    );
+    return restoredUser;
   }
 
   /**
