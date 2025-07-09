@@ -6,27 +6,7 @@ import {
   Type,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { InvalidDebtStatusException } from 'src/debts/domain/exceptions/invalid-debt-status.exception';
-import { InvalidAmountException as DebtsInvalidAmountException } from 'src/debts/domain/exceptions/invalid-debt-amount.exception';
-import { InvalidCurrencyException as DebtsInvalidCurrencyException } from 'src/debts/domain/exceptions/invalid-debt-currency.exception';
-import { ExpenseNotFoundException } from 'src/expenses/domain/exceptions/expense-not-found.exception';
-import { InvalidAmountException as ExpensesInvalidAmountException } from 'src/expenses/domain/exceptions/invalid-amount.exception';
-import { InvalidSplitTypeException } from 'src/expenses/domain/exceptions/invalid-split-type.exception';
-import { InvalidCurrencyException as ExpensesInvalidCurrencyException } from 'src/expenses/domain/exceptions/invalid-currency.exception copy';
-import { InvalidNameException } from 'src/expenses/domain/exceptions/invalid-name.exception';
-import { GroupNotFoundException } from 'src/groups/domain/exceptions/group-not-found.exception';
-import { InvalidGroupException } from 'src/groups/domain/exceptions/invalid-group.exception';
-import { InvalidGroupNameException } from 'src/groups/domain/exceptions/invalid-group-name.exception';
-import { MembershipNotFoundException } from 'src/memberships/domain/exceptions/membership-not-found.exception';
-import { MembershipAlreadyExistsException } from 'src/memberships/domain/exceptions/member-already-exists.exception';
-import { IsNotAMemberException } from 'src/memberships/domain/exceptions/is-not-a-member.exception';
-import { InvalidUserException } from 'src/user/domain/exceptions/invalid-user.exception';
-import { InvalidActionException } from 'src/notification/domain/exceptions/invalid-action.exception';
-import { InvalidMessageException } from 'src/notification/domain/exceptions/invalid-message.exception';
 import { DomainException } from 'src/shared/domain/exceptions/domain.exception';
-import { InvalidEmailException } from 'src/auth/domain/exceptions/invalid-email.exception';
-import { InvalidFullNameException } from 'src/user/domain/exceptions/invalid-full-name.exception';
-import { UserNotFoundException } from 'src/user/domain/exceptions/user-not-found.exception';
 
 /**
  * Filter that catches and handles domain exceptions thrown by the application
@@ -39,31 +19,28 @@ export class DomainExceptionFilter implements ExceptionFilter {
    */
   private readonly exceptionMap = new Map<Type<DomainException>, HttpStatus>([
     // User
-    [UserNotFoundException, HttpStatus.NOT_FOUND],
-    [InvalidEmailException, HttpStatus.BAD_REQUEST],
-    [InvalidFullNameException, HttpStatus.BAD_REQUEST],
-    [InvalidUserException, HttpStatus.BAD_REQUEST],
+    // [UserNotFoundException, HttpStatus.NOT_FOUND],
+    // [InvalidEmailException, HttpStatus.BAD_REQUEST],
+    // [InvalidFullNameException, HttpStatus.BAD_REQUEST],
+    // [InvalidUserException, HttpStatus.BAD_REQUEST],
     // Groups
-    [GroupNotFoundException, HttpStatus.NOT_FOUND],
-    [InvalidGroupException, HttpStatus.BAD_REQUEST],
-    [InvalidGroupNameException, HttpStatus.BAD_REQUEST],
+    // [GroupNotFoundException, HttpStatus.NOT_FOUND],
+    // [InvalidGroupException, HttpStatus.BAD_REQUEST],
+    // [InvalidGroupNameException, HttpStatus.BAD_REQUEST],
     // Memberships
-    [MembershipNotFoundException, HttpStatus.NOT_FOUND],
-    [MembershipAlreadyExistsException, HttpStatus.CONFLICT],
-    [IsNotAMemberException, HttpStatus.FORBIDDEN],
+    // [MembershipNotFoundException, HttpStatus.NOT_FOUND],
+    // [MembershipAlreadyExistsException, HttpStatus.CONFLICT],
+    // [IsNotAMemberException, HttpStatus.FORBIDDEN],
     // Debts
-    [InvalidDebtStatusException, HttpStatus.BAD_REQUEST],
-    [DebtsInvalidAmountException, HttpStatus.BAD_REQUEST],
-    [DebtsInvalidCurrencyException, HttpStatus.BAD_REQUEST],
+    // [InvalidDebtStatusException, HttpStatus.BAD_REQUEST],
+    // [DebtsInvalidAmountException, HttpStatus.BAD_REQUEST],
+    // [DebtsInvalidCurrencyException, HttpStatus.BAD_REQUEST],
     // Expenses
-    [ExpenseNotFoundException, HttpStatus.NOT_FOUND],
-    [ExpensesInvalidAmountException, HttpStatus.BAD_REQUEST],
-    [InvalidSplitTypeException, HttpStatus.BAD_REQUEST],
-    [ExpensesInvalidCurrencyException, HttpStatus.BAD_REQUEST],
-    [InvalidNameException, HttpStatus.BAD_REQUEST],
-    // Notification
-    [InvalidActionException, HttpStatus.BAD_REQUEST],
-    [InvalidMessageException, HttpStatus.BAD_REQUEST],
+    // [ExpenseNotFoundException, HttpStatus.NOT_FOUND],
+    // [ExpensesInvalidAmountException, HttpStatus.BAD_REQUEST],
+    // [InvalidSplitTypeException, HttpStatus.BAD_REQUEST],
+    // [ExpensesInvalidCurrencyException, HttpStatus.BAD_REQUEST],
+    // [InvalidNameException, HttpStatus.BAD_REQUEST],
   ]);
 
   /**

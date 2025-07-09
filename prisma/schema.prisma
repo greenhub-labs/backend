@@ -252,10 +252,6 @@ model User {
   bio       String?
   /// URL del avatar/foto de perfil
   avatar    String?
-  /// Ubicación geográfica del usuario
-  location  String?
-  /// Zona horaria preferida del usuario
-  timezone  String   @default("UTC")
   /// Si el usuario está activo en el sistema
   isActive  Boolean  @default(true)
   /// Soft delete: usuario eliminado lógicamente

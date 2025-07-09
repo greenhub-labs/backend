@@ -1,3 +1,4 @@
+// DDD Clean Architecture modules integration in progress
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -12,8 +13,11 @@ import { ChickenCoopModule } from './bounded-contexts/chicken-coop/chicken-coop.
 import { DeviceModule } from './bounded-contexts/device/device.module';
 import { CommunicationModule } from './bounded-contexts/communication/communication.module';
 import { UserModule } from './bounded-contexts/user/user.module';
-import { EnergyModule } from './bounded-contexts/energy/energy.module';
-import { AnalyticsModule } from './bounded-contexts/analytics/analytics.module';
+
+// TODO: Import UsersModule, FarmsModule, CropVarietyModule when created
+// import { UsersModule } from './modules/users/users.module';
+// import { FarmsModule } from './modules/farms/farms.module';
+// import { CropVarietyModule } from './modules/crop-variety/crop-variety.module';
 
 @Module({
   imports: [
@@ -34,8 +38,10 @@ import { AnalyticsModule } from './bounded-contexts/analytics/analytics.module';
     DeviceModule,
     CommunicationModule,
     UserModule,
-    EnergyModule,
-    AnalyticsModule,
+    // TODO: Add UsersModule, FarmsModule, CropVarietyModule here when created
+    // UsersModule,
+    // FarmsModule,
+    // CropVarietyModule,
   ],
 })
 export class AppModule {}

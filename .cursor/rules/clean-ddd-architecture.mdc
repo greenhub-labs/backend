@@ -17,20 +17,22 @@ Each domain module must follow this exact folder structure:
 ├── domain/                                    # Business logic layer
 │   ├── {module-name}-domain.module.ts        # Domain module definition
 │   ├── entities/                             # Domain entities and aggregates
-│   │   ├── {entity-name}.ts
-│   │   ├── {entity-name}.spec.ts
-│   │   └── {aggregate-root}.ts
+│   │   ├── {entity-name}.entity.ts
+│   │   ├── {entity-name}.entity.spec.ts
+│   │   └── {aggregate-root}.aggregate-root.ts
 │   ├── value-objects/                        # Immutable value objects
-│   │   ├── {module-name}-{property}.value-object.ts
-│   │   └── {module-name}-{property}.value-object.spec.ts
+│   │   ├── {property}/
+│   │       ├── {module-name}-{property}.value-object.ts
+│   │       └── {module-name}-{property}.value-object.spec.ts
 │   ├── events/                               # Domain events
 │   │   ├── {event-name}/
 │   │   │   ├── {event-name}.domain-event.ts
 │   │   │   ├── {event-name}.domain-event.spec.ts
 │   │   │   └── {event-name}.schema.ts         # Event schema definition
 │   ├── exceptions/                           # Domain-specific exceptions
-│   │   ├── {exception-name}.exception.ts
-│   │   └── {exception-name}.exception.spec.ts
+│   │   ├── {exception-name}/
+│   │       ├── {exception-name}.exception.ts
+│   │       └── {exception-name}.exception.spec.ts
 │   ├── factories/                            # Domain object factories
 │   │   ├── {entity-name}.factory.ts
 │   │   └── {entity-name}.factory.spec.ts
