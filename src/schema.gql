@@ -1,0 +1,59 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserResponseDto {
+  id: String!
+  firstName: String
+  lastName: String
+  avatar: String
+  bio: String
+  isActive: Boolean!
+  isDeleted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  getUserById(input: GetUserByIdRequestDto!): UserResponseDto!
+}
+
+input GetUserByIdRequestDto {
+  id: String!
+}
+
+type Mutation {
+  createUser(input: CreateUserRequestDto!): UserResponseDto!
+  updateUser(input: UpdateUserRequestDto!): UserResponseDto!
+  deleteUser(input: DeleteUserRequestDto!): UserResponseDto!
+  restoreUser(input: RestoreUserRequestDto!): UserResponseDto!
+}
+
+input CreateUserRequestDto {
+  firstName: String!
+  lastName: String
+  avatar: String
+  bio: String
+}
+
+input UpdateUserRequestDto {
+  id: String!
+  firstName: String
+  lastName: String
+  avatar: String
+  bio: String
+}
+
+input DeleteUserRequestDto {
+  id: String!
+}
+
+input RestoreUserRequestDto {
+  id: String!
+}

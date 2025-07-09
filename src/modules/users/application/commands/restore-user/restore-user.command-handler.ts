@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { RestoreUserCommand } from './restore-user.command';
-import { UserRepository } from '../../ports/user.repository';
+import {
+  UserRepository,
+  USER_REPOSITORY_TOKEN,
+} from '../../ports/user.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found/user-not-found.exception';
 import { UserRestoredDomainEvent } from '../../../domain/events/user-restored/user-restored.domain-event';
+import { User } from '../../../domain/entities/user.entity';
 
 /**
  * Command handler to restore a previously deleted user (soft restore).
@@ -19,12 +23,13 @@ export class RestoreUserCommandHandler
   implements ICommandHandler<RestoreUserCommand>
 {
   constructor(
+    @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: UserRepository,
     private readonly nestjsEventBus: NestjsEventBusService,
     private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
-  async execute(command: RestoreUserCommand): Promise<void> {
+  async execute(command: RestoreUserCommand): Promise<User> {
     const user = await this.userRepository.findById(command.userId);
     if (!user) {
       throw new UserNotFoundException(command.userId);
@@ -35,5 +40,7 @@ export class RestoreUserCommandHandler
       await this.nestjsEventBus.publish(event);
       await this.kafkaEventBus.publish(event);
     }
+    // Return the restored user entity (DDD strict)
+    return restoredUser;
   }
 }

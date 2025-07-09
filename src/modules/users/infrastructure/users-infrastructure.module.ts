@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from '../../../shared/infrastructure/prisma/prisma.module';
 import { UserPrismaRepository } from './persistance/prisma/repositories/user-prisma.repository';
+import { USER_REPOSITORY_TOKEN } from '../application/ports/user.repository';
 
 /**
  * UsersInfrastructureModule
@@ -8,7 +9,12 @@ import { UserPrismaRepository } from './persistance/prisma/repositories/user-pri
  */
 @Module({
   imports: [PrismaModule],
-  providers: [UserPrismaRepository],
-  exports: [UserPrismaRepository],
+  providers: [
+    {
+      provide: USER_REPOSITORY_TOKEN,
+      useClass: UserPrismaRepository,
+    },
+  ],
+  exports: [USER_REPOSITORY_TOKEN],
 })
 export class UsersInfrastructureModule {}

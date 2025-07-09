@@ -1,7 +1,11 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetUserByIdQuery } from './get-user-by-id.query';
-import { UserRepository } from '../../ports/user.repository';
-import { UserDto } from '../../dtos/user.dto';
+import { Inject } from '@nestjs/common';
+import {
+  UserRepository,
+  USER_REPOSITORY_TOKEN,
+} from '../../ports/user.repository';
+import { User } from '../../../domain/entities/user.entity';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found/user-not-found.exception';
 
 /**
@@ -11,24 +15,21 @@ import { UserNotFoundException } from '../../../domain/exceptions/user-not-found
 export class GetUserByIdQueryHandler
   implements IQueryHandler<GetUserByIdQuery>
 {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY_TOKEN)
+    private readonly userRepository: UserRepository,
+  ) {}
 
-  async execute(query: GetUserByIdQuery): Promise<UserDto> {
+  /**
+   * Execute the query to get a user by ID
+   * @param query - The query containing the user ID
+   * @returns The User domain entity
+   */
+  async execute(query: GetUserByIdQuery): Promise<User> {
     const user = await this.userRepository.findById(query.id);
     if (!user) {
       throw new UserNotFoundException(query.id);
     }
-    return new UserDto(
-      user.id.value,
-      user.firstName?.value,
-      user.lastName?.value,
-      user.avatar?.value,
-      user.bio,
-      user.isActive,
-      user.isDeleted,
-      user.createdAt.toISOString(),
-      user.updatedAt.toISOString(),
-      user.deletedAt?.toISOString(),
-    );
+    return user;
   }
 }

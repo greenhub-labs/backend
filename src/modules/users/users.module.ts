@@ -7,6 +7,7 @@ import { UsersPresentersModule } from './presenters/users.presenters.module';
 /**
  * UsersModule
  * Main orchestrator for the Users bounded context (DDD Clean Architecture)
+ * Imports all layers: Domain, Application, Infrastructure, Presenters
  */
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { UsersPresentersModule } from './presenters/users.presenters.module';
     UsersInfrastructureModule,
     UsersPresentersModule,
   ],
-  exports: [],
+  exports: [UsersApplicationModule, UsersPresentersModule],
 })
 export class UsersModule {}

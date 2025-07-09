@@ -1,6 +1,11 @@
 import { User } from '../../domain/entities/user.entity';
 
 /**
+ * Token for UserRepository dependency injection
+ */
+export const USER_REPOSITORY_TOKEN = Symbol('UserRepository');
+
+/**
  * UserRepository port for user persistence
  */
 export interface UserRepository {
