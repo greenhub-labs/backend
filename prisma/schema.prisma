@@ -458,6 +458,10 @@ model Plot {
   name        String
   /// Descripción adicional del bancal
   description String?
+  /// Ancho en metros
+  width       Float?
+  /// Longitud en metros
+  length      Float?
   /// Área en metros cuadrados
   area        Float? 
   /// Ubicación y dimensiones del bancal
@@ -662,97 +666,188 @@ model PlantingLog {
 // Gestión completa de gallineros: aves, producción de huevos,
 // control ambiental y automatización de puertas
 
+/**
+ * Gallina individual
+ * 
+ * Registro de cada ave en el gallinero con seguimiento
+ * de salud, producción y características físicas.
+ */
 model Chicken {
+  /// UUID único de la gallina
   id          String        @id @default(uuid())
+  /// Nombre opcional de la gallina
   name        String?
+  /// Raza de la gallina
   breed       ChickenBreed
+  /// Fecha de nacimiento o eclosión
   hatchDate   DateTime?
+  /// Fecha en que se adquirió la gallina
   acquiredDate DateTime     @default(now())
+  /// Estado actual de salud
   status      ChickenStatus @default(HEALTHY)
+  /// Color o descripción física
   color       String?
-  weight      Float? // kg
+  /// Peso aproximado en kilogramos
+  weight      Float?
+  /// Si es gallina ponedora o no
   isLayer     Boolean       @default(true)
+  /// Notas adicionales sobre la gallina
   notes       String?
+  /// Gallinero donde vive (opcional)
   coopId      String?
+  /// Fecha de creación del registro
   createdAt   DateTime      @default(now())
+  /// Fecha de última actualización
   updatedAt   DateTime      @updatedAt
   
   // Relations
+  /// Gallinero donde vive
   coop    Coop?     @relation(fields: [coopId], references: [id])
+  /// Registros de puesta de huevos
   eggLogs EggLog[]
   
   @@map("chickens")
 }
 
+/**
+ * Gallinero
+ * 
+ * Estructura física que aloja gallinas con control
+ * ambiental y automatización de puertas.
+ */
 model Coop {
+  /// UUID único del gallinero
   id          String      @id @default(uuid())
+  /// Nombre descriptivo del gallinero
   name        String
+  /// Descripción adicional
   description String?
+  /// Capacidad máxima de gallinas
   capacity    Int
-  location    Json? // coordinates
-  dimensions  Json? // length, width, height
+  /// Ubicación GPS del gallinero
+  location    Json? // { lat: number, lng: number }
+  /// Dimensiones físicas
+  dimensions  Json? // { length: number, width: number, height: number }
+  /// Si tiene área de paseo exterior
   hasRun      Boolean     @default(false)
-  runArea     Float? // square meters
+  /// Área del paseo en metros cuadrados
+  runArea     Float?
+  /// Farm a la que pertenece
   farmId      String
+  /// Fecha de creación
   createdAt   DateTime    @default(now())
+  /// Fecha de última actualización
   updatedAt   DateTime    @updatedAt
   
   // Relations
+  /// Farm propietaria
   farm           Farm            @relation(fields: [farmId], references: [id])
+  /// Gallinas que viven en este gallinero
   chickens       Chicken[]
+  /// Nodos IoT instalados en el gallinero
   iotNodes       IoTNode[]
+  /// Puertas automatizadas del gallinero
   doors          CoopDoor[]
+  /// Lecturas de sensores ambientales
   sensorReadings SensorReading[]
   
   @@map("coops")
 }
 
+/**
+ * Puerta automática del gallinero
+ * 
+ * Control automatizado de apertura/cierre basado
+ * en horarios o sensores de luz solar.
+ */
 model CoopDoor {
+  /// UUID único de la puerta
   id            String     @id @default(uuid())
+  /// Gallinero al que pertenece
   coopId        String
+  /// Nombre descriptivo de la puerta
   name          String
+  /// Estado actual de la puerta
   status        DoorStatus @default(CLOSED)
+  /// Si está en modo automático
   isAutomatic   Boolean    @default(true)
-  openTime      String? // HH:MM format
-  closeTime     String? // HH:MM format
+  /// Hora fija de apertura (HH:MM)
+  openTime      String?
+  /// Hora fija de cierre (HH:MM)
+  closeTime     String?
+  /// Usar horarios de amanecer/atardecer
   useSunriseSunset Boolean @default(true)
-  sunriseOffset Int       @default(0) // minutes
-  sunsetOffset  Int       @default(0) // minutes
+  /// Offset en minutos del amanecer para abrir
+  sunriseOffset Int       @default(0)
+  /// Offset en minutos del atardecer para cerrar
+  sunsetOffset  Int       @default(0)
+  /// Fecha de creación
   createdAt     DateTime   @default(now())
+  /// Fecha de última actualización
   updatedAt     DateTime   @updatedAt
   
   // Relations
+  /// Gallinero al que pertenece
   coop     Coop       @relation(fields: [coopId], references: [id])
+  /// Logs de actividad de la puerta
   doorLogs DoorLog[]
   
   @@map("coop_doors")
 }
 
+/**
+ * Registro de actividad de puerta
+ * 
+ * Log de cada apertura/cierre de puerta con
+ * información sobre el trigger que lo causó.
+ */
 model DoorLog {
+  /// UUID único del log
   id        String     @id @default(uuid())
+  /// Puerta que generó el evento
   doorId    String
+  /// Estado resultante de la puerta
   status    DoorStatus
+  /// Qué causó el cambio de estado
   trigger   String // "manual", "scheduled", "sensor", "emergency"
+  /// Momento en que ocurrió el evento
   timestamp DateTime   @default(now())
   
   // Relations
+  /// Puerta que generó el log
   door CoopDoor @relation(fields: [doorId], references: [id])
   
   @@map("door_logs")
 }
 
+/**
+ * Registro de recolección de huevos
+ * 
+ * Documenta cada sesión de recolección con
+ * información de calidad y cantidad.
+ */
 model EggLog {
+  /// UUID único del registro
   id        String     @id @default(uuid())
+  /// Gallina que puso el huevo (si se conoce)
   chickenId String?
-  coopId    String? // if chicken is unknown
+  /// Gallinero donde se encontró (si gallina desconocida)
+  coopId    String?
+  /// Cantidad de huevos recolectados
   quantity  Int        @default(1)
-  weight    Float? // grams
+  /// Peso total en gramos
+  weight    Float?
+  /// Calidad de los huevos
   quality   EggQuality @default(GOOD)
+  /// Observaciones adicionales
   notes     String?
+  /// Fecha y hora de recolección
   collectedAt DateTime @default(now())
+  /// Fecha de creación del registro
   createdAt DateTime   @default(now())
   
   // Relations
+  /// Gallina que puso el huevo
   chicken Chicken? @relation(fields: [chickenId], references: [id])
   
   @@map("egg_logs")
@@ -764,74 +859,145 @@ model EggLog {
 // Red distribuida de nodos IoT con sensores múltiples,
 // comunicación mesh y gestión energética solar
 
+/**
+ * Nodo IoT
+ * 
+ * Dispositivo físico distribuido en la farm que contiene
+ * múltiples sensores y se comunica con el sistema central.
+ * Cada nodo tiene gestión energética y conectividad mesh.
+ */
 model IoTNode {
+  /// UUID único del nodo IoT
   id             String       @id @default(uuid())
+  /// Nombre descriptivo del nodo
   name           String
+  /// Descripción adicional del nodo
   description    String?
+  /// Dirección MAC única del dispositivo
   macAddress     String       @unique
+  /// Dirección IP actual en la red
   ipAddress      String?
+  /// Versión del firmware instalado
   firmwareVersion String?
+  /// Último heartbeat recibido del nodo
   lastHeartbeat  DateTime?
-  batteryLevel   Float? // percentage
-  signalStrength Float? // RSSI
+  /// Nivel de batería en porcentaje (0-100)
+  batteryLevel   Float?
+  /// Intensidad de señal RSSI en dBm
+  signalStrength Float?
+  /// Estado actual del sistema
   status         SystemStatus @default(OFFLINE)
-  location       Json? // coordinates
+  /// Ubicación GPS del nodo
+  location       Json? // { lat: number, lng: number, altitude?: number }
+  /// Bancal donde está instalado (opcional)
   plotId         String?
+  /// Gallinero donde está instalado (opcional)
   coopId         String?
+  /// Farm a la que pertenece
   farmId         String
+  /// Fuente de energía principal
   energySource   EnergySource @default(BATTERY)
+  /// Fecha de instalación
   createdAt      DateTime     @default(now())
+  /// Fecha de última actualización
   updatedAt      DateTime     @updatedAt
   
   // Relations
+  /// Farm propietaria del nodo
   farm           Farm            @relation(fields: [farmId], references: [id])
+  /// Bancal donde está instalado
   plot           Plot?           @relation(fields: [plotId], references: [id])
+  /// Gallinero donde está instalado
   coop           Coop?           @relation(fields: [coopId], references: [id])
+  /// Sensores conectados al nodo
   sensors        Sensor[]
+  /// Lecturas de sensores del nodo
   sensorReadings SensorReading[]
+  /// Alertas generadas por el nodo
   alerts         Alert[]
   
   @@map("iot_nodes")
 }
 
+/**
+ * Sensor físico
+ * 
+ * Dispositivo de medición específico conectado a un nodo IoT.
+ * Cada sensor mide un parámetro ambiental específico con
+ * sus propios rangos y calibración.
+ */
 model Sensor {
+  /// UUID único del sensor
   id          String     @id @default(uuid())
+  /// Nodo IoT al que está conectado
   nodeId      String
+  /// Tipo de sensor y qué mide
   type        SensorType
+  /// Modelo específico del sensor
   model       String?
-  calibration Json? // calibration parameters
+  /// Parámetros de calibración del sensor
+  calibration Json? // { offset: number, multiplier: number, ... }
+  /// Valor mínimo que puede medir
   minValue    Float?
+  /// Valor máximo que puede medir
   maxValue    Float?
+  /// Unidad de medida del sensor
   unit        String
+  /// Si el sensor está actualmente activo
   isActive    Boolean    @default(true)
+  /// Fecha de instalación
   createdAt   DateTime   @default(now())
+  /// Fecha de última actualización
   updatedAt   DateTime   @updatedAt
   
   // Relations
+  /// Nodo IoT al que pertenece
   node     IoTNode         @relation(fields: [nodeId], references: [id])
+  /// Lecturas tomadas por este sensor
   readings SensorReading[]
   
   @@map("sensors")
 }
 
+/**
+ * Lectura de sensor
+ * 
+ * Medición individual tomada por un sensor en un momento específico.
+ * Incluye información de calidad del dato y contexto de ubicación.
+ */
 model SensorReading {
+  /// UUID único de la lectura
   id        String   @id @default(uuid())
+  /// Nodo que tomó la medición
   nodeId    String
+  /// Sensor específico que tomó la medición
   sensorId  String
+  /// Bancal donde se tomó la medición (si aplica)
   plotId    String?
+  /// Gallinero donde se tomó la medición (si aplica)
   coopId    String?
+  /// Valor medido por el sensor
   value     Float
+  /// Unidad de la medición
   unit      String
-  quality   Float? // data quality score 0-1
+  /// Calidad del dato (0-1, donde 1 es perfecta)
+  quality   Float?
+  /// Momento exacto de la medición
   timestamp DateTime @default(now())
   
   // Relations
+  /// Nodo que generó la lectura
   node   IoTNode  @relation(fields: [nodeId], references: [id])
+  /// Sensor que tomó la medición
   sensor Sensor   @relation(fields: [sensorId], references: [id])
+  /// Bancal donde se midió
   plot   Plot?    @relation(fields: [plotId], references: [id])
+  /// Gallinero donde se midió
   coop   Coop?    @relation(fields: [coopId], references: [id])
   
+  /// Índices para consultas eficientes por nodo y tiempo
   @@index([nodeId, timestamp])
+  /// Índices para consultas eficientes por sensor y tiempo
   @@index([sensorId, timestamp])
   @@map("sensor_readings")
 }
@@ -842,80 +1008,158 @@ model SensorReading {
 // Sistema de riego inteligente: zonas independientes,
 // válvulas automatizadas y programación flexible
 
+/**
+ * Zona de riego
+ * 
+ * Área delimitada con sistema de riego independiente.
+ * Cada zona puede tener múltiples válvulas y programaciones
+ * específicas según las necesidades de los cultivos.
+ */
 model IrrigationZone {
+  /// UUID único de la zona de riego
   id          String            @id @default(uuid())
+  /// Bancal al que pertenece esta zona
   plotId      String
+  /// Farm propietaria de la zona
   farmId      String
+  /// Nombre descriptivo de la zona
   name        String
+  /// Descripción adicional de la zona
   description String?
-  area        Float? // square meters
-  flowRate    Float? // liters per minute
+  /// Área cubierta en metros cuadrados
+  area        Float?
+  /// Caudal de agua en litros por minuto
+  flowRate    Float?
+  /// Estado actual del sistema de riego
   status      IrrigationStatus  @default(INACTIVE)
+  /// Si la zona está activa para programación
   isActive    Boolean           @default(true)
+  /// Fecha de creación
   createdAt   DateTime          @default(now())
+  /// Fecha de última actualización
   updatedAt   DateTime          @updatedAt
   
   // Relations
+  /// Farm propietaria
   farm            Farm              @relation(fields: [farmId], references: [id])
+  /// Bancal donde está ubicada
   plot            Plot              @relation(fields: [plotId], references: [id])
+  /// Válvulas de control de la zona
   valves          IrrigationValve[]
+  /// Programaciones de riego
   schedules       IrrigationSchedule[]
+  /// Logs de actividad de riego
   logs            IrrigationLog[]
+  /// Reglas de automatización
   automationRules AutomationRule[]
   
   @@map("irrigation_zones")
 }
 
+/**
+ * Válvula de riego
+ * 
+ * Actuador físico que controla el flujo de agua
+ * en una zona específica. Controlable remotamente
+ * mediante GPIO en nodos IoT.
+ */
 model IrrigationValve {
+  /// UUID único de la válvula
   id        String      @id @default(uuid())
+  /// Zona de riego a la que pertenece
   zoneId    String
+  /// Nombre descriptivo de la válvula
   name      String
-  pin       Int? // GPIO pin number
+  /// Pin GPIO para control (en nodo IoT)
+  pin       Int?
+  /// Estado actual de la válvula
   status    ValveStatus @default(CLOSED)
+  /// Última vez que se abrió
   lastOpened DateTime?
+  /// Última vez que se cerró
   lastClosed DateTime?
+  /// Fecha de instalación
   createdAt DateTime    @default(now())
+  /// Fecha de última actualización
   updatedAt DateTime    @updatedAt
   
   // Relations
+  /// Zona de riego que controla
   zone IrrigationZone @relation(fields: [zoneId], references: [id])
   
   @@map("irrigation_valves")
 }
 
+/**
+ * Programación de riego
+ * 
+ * Horario automático configurado para una zona específica.
+ * Incluye días de la semana, hora de inicio, duración
+ * y condiciones meteorológicas a verificar.
+ */
 model IrrigationSchedule {
+  /// UUID único de la programación
   id          String   @id @default(uuid())
+  /// Zona de riego programada
   zoneId      String
+  /// Nombre descriptivo de la programación
   name        String
-  startTime   String // HH:MM format
-  duration    Int // minutes
-  daysOfWeek  Int[] // 0-6, Sunday=0
+  /// Hora de inicio en formato HH:MM
+  startTime   String
+  /// Duración del riego en minutos
+  duration    Int
+  /// Días de la semana (0-6, domingo=0)
+  daysOfWeek  Int[]
+  /// Si la programación está activa
   isActive    Boolean  @default(true)
-  conditions  Json? // weather conditions to check
+  /// Condiciones meteorológicas a verificar
+  conditions  Json? // { maxRain: number, minTemperature: number, ... }
+  /// Fecha de creación
   createdAt   DateTime @default(now())
+  /// Fecha de última actualización
   updatedAt   DateTime @updatedAt
   
   // Relations
+  /// Zona de riego programada
   zone IrrigationZone @relation(fields: [zoneId], references: [id])
   
   @@map("irrigation_schedules")
 }
 
+/**
+ * Registro de actividad de riego
+ * 
+ * Log de cada sesión de riego ejecutada, incluyendo
+ * duración real, consumo de agua y trigger que lo activó.
+ */
 model IrrigationLog {
+  /// UUID único del registro
   id        String            @id @default(uuid())
+  /// Zona donde se ejecutó el riego
   zoneId    String
+  /// Usuario que inició el riego (si fue manual)
   userId    String?
+  /// Momento de inicio del riego
   startTime DateTime
+  /// Momento de finalización del riego
   endTime   DateTime?
-  duration  Int? // actual duration in minutes
+  /// Duración real en minutos
+  duration  Int?
+  /// Estado final del riego
   status    IrrigationStatus
+  /// Qué disparó el riego
   trigger   String // "manual", "scheduled", "sensor", "ai"
-  waterUsed Float? // liters
+  /// Cantidad de agua utilizada en litros
+  waterUsed Float?
+  /// Observaciones adicionales
   notes     String?
+  /// Fecha de creación del registro
   createdAt DateTime          @default(now())
   
   // Relations
+  /// Zona donde se ejecutó
   zone IrrigationZone @relation(fields: [zoneId], references: [id])
+  /// Usuario que ejecutó (si fue manual)
   user User?          @relation(fields: [userId], references: [id])
   
   @@map("irrigation_logs")
@@ -927,37 +1171,72 @@ model IrrigationLog {
 // Motor de reglas configurable para automatización completa:
 // riego por sensores, horarios y control basado en IA
 
+/**
+ * Regla de automatización
+ * 
+ * Define lógica de control automático basada en condiciones
+ * de sensores, horarios o IA. Cada regla puede disparar
+ * múltiples acciones cuando se cumplen las condiciones.
+ */
 model AutomationRule {
+  /// UUID único de la regla
   id          String         @id @default(uuid())
+  /// Nombre descriptivo de la regla
   name        String
+  /// Descripción del propósito de la regla
   description String?
+  /// Zona de riego asociada (opcional)
   zoneId      String?
-  conditions  Json // trigger conditions
-  actions     Json // actions to execute
+  /// Condiciones que disparan la regla
+  conditions  Json // { sensorType: string, operator: string, value: number, ... }
+  /// Acciones a ejecutar cuando se dispara
+  actions     Json // { type: string, parameters: object, ... }
+  /// Modo de operación de la automatización
   mode        AutomationMode @default(SENSOR_BASED)
+  /// Si la regla está activa
   isActive    Boolean        @default(true)
+  /// Prioridad de ejecución (mayor número = mayor prioridad)
   priority    Int            @default(0)
+  /// Fecha de creación
   createdAt   DateTime       @default(now())
+  /// Fecha de última actualización
   updatedAt   DateTime       @updatedAt
   
   // Relations
+  /// Zona de riego asociada
   zone            IrrigationZone?      @relation(fields: [zoneId], references: [id])
+  /// Logs de ejecución de la regla
   executionLogs   AutomationExecution[]
   
   @@map("automation_rules")
 }
 
+/**
+ * Ejecución de automatización
+ * 
+ * Registro de cada vez que se evalúa y ejecuta una regla
+ * de automatización, incluyendo resultado y errores.
+ */
 model AutomationExecution {
+  /// UUID único de la ejecución
   id           String   @id @default(uuid())
+  /// Regla que se ejecutó
   ruleId       String
+  /// Si la regla se disparó efectivamente
   triggered    Boolean
-  conditions   Json // evaluated conditions
-  actions      Json // executed actions
+  /// Estado de las condiciones al momento de evaluación
+  conditions   Json // { condition1: { evaluated: true, value: 25 }, ... }
+  /// Acciones que se ejecutaron
+  actions      Json // { action1: { executed: true, result: "success" }, ... }
+  /// Si la ejecución fue exitosa
   success      Boolean
+  /// Mensaje de error (si hubo fallo)
   errorMessage String?
+  /// Momento de la ejecución
   executedAt   DateTime @default(now())
   
   // Relations
+  /// Regla que se ejecutó
   rule AutomationRule @relation(fields: [ruleId], references: [id])
   
   @@map("automation_executions")
@@ -969,45 +1248,89 @@ model AutomationExecution {
 // Sistema de alertas en tiempo real y notificaciones
 // multi-canal: email, SMS, Telegram, Slack, Discord
 
+/**
+ * Alerta del sistema
+ * 
+ * Notificación de eventos importantes que requieren atención:
+ * fallos de sensores, condiciones críticas, mantenimiento, etc.
+ * Incluye sistema de asignación y seguimiento de resolución.
+ */
 model Alert {
+  /// UUID único de la alerta
   id          String     @id @default(uuid())
+  /// Farm donde se generó la alerta
   farmId      String
+  /// Nodo IoT que generó la alerta (opcional)
   nodeId      String?
+  /// Tipo de alerta generada
   type        AlertType
+  /// Nivel de severidad
   level       AlertLevel
+  /// Título descriptivo de la alerta
   title       String
+  /// Mensaje detallado de la alerta
   message     String
+  /// Si la alerta ha sido leída
   isRead      Boolean    @default(false)
+  /// Si la alerta ha sido resuelta
   isResolved  Boolean    @default(false)
+  /// Usuario que creó la alerta
   createdById String?
+  /// Usuario asignado para resolver la alerta
   assignedToId String?
+  /// Momento en que se resolvió la alerta
   resolvedAt  DateTime?
+  /// Fecha de creación de la alerta
   createdAt   DateTime   @default(now())
+  /// Fecha de última actualización
   updatedAt   DateTime   @updatedAt
   
   // Relations
+  /// Farm donde se generó
   farm       Farm     @relation(fields: [farmId], references: [id])
+  /// Nodo IoT que la generó
   node       IoTNode? @relation(fields: [nodeId], references: [id])
+  /// Usuario que creó la alerta
   createdBy  User?    @relation("AlertCreatedBy", fields: [createdById], references: [id])
+  /// Usuario asignado para resolverla
   assignedTo User?    @relation("AlertAssignedTo", fields: [assignedToId], references: [id])
   
   @@map("alerts")
 }
 
+/**
+ * Notificación
+ * 
+ * Mensaje enviado a un usuario a través de diferentes canales:
+ * email, SMS, push, Telegram, etc. Incluye tracking de entrega
+ * y lectura para asegurar que llegan las comunicaciones críticas.
+ */
 model Notification {
+  /// UUID único de la notificación
   id        String              @id @default(uuid())
+  /// Usuario destinatario
   userId    String
+  /// Canal de comunicación utilizado
   channel   NotificationChannel
+  /// Título de la notificación
   title     String
+  /// Contenido del mensaje
   message   String
-  data      Json? // additional payload
+  /// Datos adicionales (JSON payload)
+  data      Json? // { alertId: string, actionUrl: string, ... }
+  /// Si la notificación fue enviada exitosamente
   sent      Boolean             @default(false)
+  /// Momento en que se envió
   sentAt    DateTime?
+  /// Si el usuario leyó la notificación
   read      Boolean             @default(false)
+  /// Momento en que se leyó
   readAt    DateTime?
+  /// Fecha de creación
   createdAt DateTime            @default(now())
   
   // Relations
+  /// Usuario destinatario
   user User @relation(fields: [userId], references: [id])
   
   @@map("notifications")
@@ -1019,26 +1342,50 @@ model Notification {
 // Estación meteorológica local integrada con APIs externas
 // (OpenWeather, AEMET) para decisiones agrícolas inteligentes
 
+/**
+ * Datos meteorológicos
+ * 
+ * Información climática local obtenida de estación meteorológica
+ * propia o APIs externas (OpenWeather, AEMET). Utilizada para
+ * decisiones automáticas de riego y alertas de condiciones adversas.
+ */
 model WeatherData {
+  /// UUID único del registro meteorológico
   id           String           @id @default(uuid())
+  /// Farm a la que corresponde el dato
   farmId       String
+  /// Ubicación específica de la medición
   location     String
+  /// Temperatura actual en grados Celsius
   temperature  Float
+  /// Humedad relativa del aire (%)
   humidity     Float
+  /// Presión atmosférica en hPa
   pressure     Float
+  /// Velocidad del viento en km/h
   windSpeed    Float?
+  /// Dirección del viento en grados (0-360)
   windDirection Float?
+  /// Precipitación acumulada en mm
   rainfall     Float?
+  /// Índice UV
   uv          Float?
+  /// Condición meteorológica general
   condition    WeatherCondition
-  forecast     Json? // extended forecast data
+  /// Datos de pronóstico extendido
+  forecast     Json? // { hourly: [], daily: [], alerts: [] }
+  /// Fuente de los datos meteorológicos
   source       String // "local", "openweather", "aemet"
+  /// Momento de la medición/obtención
   timestamp    DateTime         @default(now())
   
   // Relations
+  /// Farm a la que pertenece
   farm Farm @relation(fields: [farmId], references: [id])
   
+  /// Índice para consultas eficientes por farm y tiempo
   @@index([farmId, timestamp])
+  /// Índice para consultas por ubicación y tiempo
   @@index([location, timestamp])
   @@map("weather_data")
 }
@@ -1049,67 +1396,132 @@ model WeatherData {
 // Gestión energética sostenible: paneles solares, baterías
 // y optimización automática del consumo por IA
 
+/**
+ * Panel solar
+ * 
+ * Panel fotovoltaico instalado en la farm para generación
+ * de energía renovable. Incluye especificaciones técnicas
+ * y monitoreo de producción energética.
+ */
 model SolarPanel {
+  /// UUID único del panel solar
   id           String    @id @default(uuid())
+  /// Farm donde está instalado
   farmId       String
+  /// Nodo IoT que monitorea el panel (opcional)
   nodeId       String?
+  /// Nombre descriptivo del panel
   name         String
-  capacity     Float // watts
-  efficiency   Float? // percentage
+  /// Capacidad máxima en watts
+  capacity     Float
+  /// Eficiencia del panel (%)
+  efficiency   Float?
+  /// Ángulo de inclinación en grados
   tiltAngle    Float?
+  /// Ángulo de azimut en grados (orientación)
   azimuthAngle Float?
+  /// Fecha de instalación
   installDate  DateTime?
+  /// Si el panel está activo
   isActive     Boolean   @default(true)
+  /// Fecha de creación del registro
   createdAt    DateTime  @default(now())
+  /// Fecha de última actualización
   updatedAt    DateTime  @updatedAt
   
   // Relations
+  /// Farm donde está instalado
   farm       Farm        @relation(fields: [farmId], references: [id])
+  /// Logs de generación energética
   energyLogs EnergyLog[]
   
   @@map("solar_panels")
 }
 
+/**
+ * Batería del sistema
+ * 
+ * Sistema de almacenamiento energético para autonomía
+ * durante períodos sin sol. Monitorea salud, ciclos
+ * de carga y capacidad residual.
+ */
 model Battery {
+  /// UUID único de la batería
   id           String    @id @default(uuid())
+  /// Farm donde está instalada
   farmId       String
+  /// Nodo IoT que monitorea la batería (opcional)
   nodeId       String?
+  /// Nombre descriptivo de la batería
   name         String
-  capacity     Float // amp-hours
-  voltage      Float // volts
-  chemistry    String? // "LiPo", "Li-ion", "Lead-acid"
+  /// Capacidad nominal en amperios-hora (Ah)
+  capacity     Float
+  /// Voltaje nominal en volts (V)
+  voltage      Float
+  /// Química de la batería
+  chemistry    String? // "LiPo", "Li-ion", "Lead-acid", "LiFePO4"
+  /// Número de ciclos de carga completados
   cycleCount   Int       @default(0)
-  healthStatus Float?    @default(100) // percentage
+  /// Estado de salud de la batería (%)
+  healthStatus Float?    @default(100)
+  /// Fecha de instalación
   installDate  DateTime?
+  /// Si la batería está activa
   isActive     Boolean   @default(true)
+  /// Fecha de creación del registro
   createdAt    DateTime  @default(now())
+  /// Fecha de última actualización
   updatedAt    DateTime  @updatedAt
   
   // Relations
+  /// Farm donde está instalada
   farm       Farm        @relation(fields: [farmId], references: [id])
+  /// Logs de actividad energética
   energyLogs EnergyLog[]
   
   @@map("batteries")
 }
 
+/**
+ * Registro de energía
+ * 
+ * Log de producción, consumo y almacenamiento energético
+ * del sistema. Permite análisis de eficiencia y autonomía
+ * para optimización energética mediante IA.
+ */
 model EnergyLog {
+  /// UUID único del registro energético
   id              String       @id @default(uuid())
+  /// Panel solar que generó energía (opcional)
   solarPanelId    String?
+  /// Batería involucrada en el registro (opcional)
   batteryId       String?
-  generated       Float? // watts generated (solar)
-  consumed        Float? // watts consumed
-  stored          Float? // watts stored (battery)
-  batteryLevel    Float? // percentage
-  batteryVoltage  Float? // volts
-  batteryCurrent  Float? // amps
-  gridConsumption Float? // watts from grid
-  efficiency      Float? // system efficiency percentage
+  /// Energía generada por paneles solares (W)
+  generated       Float?
+  /// Energía consumida por el sistema (W)
+  consumed        Float?
+  /// Energía almacenada en baterías (W)
+  stored          Float?
+  /// Nivel de carga de la batería (%)
+  batteryLevel    Float?
+  /// Voltaje actual de la batería (V)
+  batteryVoltage  Float?
+  /// Corriente de la batería (A, + carga, - descarga)
+  batteryCurrent  Float?
+  /// Consumo de la red eléctrica externa (W)
+  gridConsumption Float?
+  /// Eficiencia general del sistema (%)
+  efficiency      Float?
+  /// Momento del registro
   timestamp       DateTime     @default(now())
   
   // Relations
+  /// Panel solar que generó la energía
   solarPanel SolarPanel? @relation(fields: [solarPanelId], references: [id])
+  /// Batería involucrada
   battery    Battery?    @relation(fields: [batteryId], references: [id])
   
+  /// Índice para consultas eficientes por tiempo
   @@index([timestamp])
   @@map("energy_logs")
 }
@@ -1120,43 +1532,89 @@ model EnergyLog {
 // Motor de inteligencia artificial: predicciones de rendimiento,
 // asistente conversacional y análisis predictivo avanzado
 
+/**
+ * Predicción de IA
+ * 
+ * Resultado de modelos de machine learning aplicados
+ * a diferentes aspectos del sistema: rendimiento de cultivos,
+ * necesidades de riego, condiciones meteorológicas, etc.
+ */
 model Prediction {
+  /// UUID único de la predicción
   id          String   @id @default(uuid())
-  type        String // "yield", "irrigation", "weather", "pest"
-  target      String // what is being predicted
-  targetId    String? // ID of the target entity
-  model       String // AI model used
-  confidence  Float // 0-1
-  prediction  Json // prediction data
-  actualValue Json? // actual outcome for training
+  /// Tipo de predicción realizada
+  type        String // "yield", "irrigation", "weather", "pest", "harvest"
+  /// Descripción de qué se está prediciendo
+  target      String // "crop_yield", "irrigation_need", "rainfall", etc.
+  /// ID de la entidad objetivo (plot, crop, etc.)
+  targetId    String?
+  /// Modelo de IA utilizado para la predicción
+  model       String // "random_forest", "neural_network", "lstm", etc.
+  /// Nivel de confianza de la predicción (0-1)
+  confidence  Float
+  /// Datos de la predicción
+  prediction  Json // { value: number, range: {min, max}, factors: [] }
+  /// Valor real para entrenamiento posterior
+  actualValue Json?
+  /// Fecha hasta que es válida la predicción
   validUntil  DateTime?
+  /// Fecha de creación de la predicción
   createdAt   DateTime @default(now())
   
+  /// Índice para consultas eficientes por tipo y objetivo
   @@index([type, targetId])
   @@map("predictions")
 }
 
+/**
+ * Interacción con asistente IA
+ * 
+ * Registro de conversaciones con el chatbot/asistente
+ * inteligente del sistema. Incluye feedback para mejora
+ * continua del modelo de lenguaje.
+ */
 model AIInteraction {
+  /// UUID único de la interacción
   id        String   @id @default(uuid())
+  /// Usuario que interactuó con la IA
   userId    String
+  /// Pregunta o consulta del usuario
   query     String
+  /// Respuesta generada por la IA
   response  String
-  context   Json? // conversation context
-  feedback  Int? // user rating 1-5
+  /// Contexto de la conversación
+  context   Json? // { conversation_id: string, previous_queries: [], farm_context: {} }
+  /// Calificación del usuario (1-5 estrellas)
+  feedback  Int?
+  /// Fecha de la interacción
   createdAt DateTime @default(now())
   
   // Relations
+  /// Usuario que realizó la consulta
   user User @relation(fields: [userId], references: [id])
   
   @@map("ai_interactions")
 }
 
+/**
+ * Reporte de analíticas
+ * 
+ * Reporte automático generado por el sistema de analíticas
+ * con métricas de rendimiento, eficiencia y tendencias
+ * a lo largo de diferentes períodos temporales.
+ */
 model AnalyticsReport {
+  /// UUID único del reporte
   id         String   @id @default(uuid())
+  /// Nombre descriptivo del reporte
   name       String
-  type       String // "yield", "efficiency", "consumption"
-  period     String // "daily", "weekly", "monthly", "yearly"
-  data       Json // report data
+  /// Tipo de reporte generado
+  type       String // "yield", "efficiency", "consumption", "energy", "alerts"
+  /// Período temporal del reporte
+  period     String // "daily", "weekly", "monthly", "yearly", "seasonal"
+  /// Datos del reporte en formato JSON
+  data       Json // { metrics: {}, charts: [], summary: "", recommendations: [] }
+  /// Fecha de generación del reporte
   generatedAt DateTime @default(now())
   
   @@map("analytics_reports")
@@ -1168,31 +1626,62 @@ model AnalyticsReport {
 // Seguimiento de mantenimiento preventivo y logs del sistema
 // para monitoreo completo y diagnóstico de problemas
 
+/**
+ * Registro de mantenimiento
+ * 
+ * Log de actividades de mantenimiento realizadas en el sistema:
+ * limpieza, calibración, reparaciones, reemplazos. Incluye
+ * programación de mantenimiento preventivo.
+ */
 model MaintenanceLog {
+  /// UUID único del registro de mantenimiento
   id          String   @id @default(uuid())
+  /// Usuario que realizó el mantenimiento
   userId      String
+  /// Nodo IoT mantenido (opcional)
   nodeId      String?
-  type        String // "cleaning", "calibration", "repair", "replacement"
+  /// Tipo de mantenimiento realizado
+  type        String // "cleaning", "calibration", "repair", "replacement", "inspection"
+  /// Descripción detallada del trabajo realizado
   description String
+  /// Costo del mantenimiento (opcional)
   cost        Float?
+  /// Fecha programada del próximo mantenimiento
   nextDue     DateTime?
+  /// Fecha en que se completó el mantenimiento
   completedAt DateTime @default(now())
   
   // Relations
+  /// Usuario que realizó el mantenimiento
   user User @relation(fields: [userId], references: [id])
   
   @@map("maintenance_logs")
 }
 
+/**
+ * Log del sistema
+ * 
+ * Registro de eventos técnicos del sistema para debugging,
+ * monitoreo y auditoría. Incluye diferentes niveles de
+ * severidad y componentes del sistema.
+ */
 model SystemLog {
+  /// UUID único del log
   id        String   @id @default(uuid())
-  level     String // "info", "warning", "error", "debug"
-  component String // "backend", "node", "sensor", "irrigation"
+  /// Nivel de severidad del log
+  level     String // "info", "warning", "error", "debug", "critical"
+  /// Componente del sistema que generó el log
+  component String // "backend", "node", "sensor", "irrigation", "energy", "ai"
+  /// Mensaje descriptivo del evento
   message   String
-  data      Json?
+  /// Datos adicionales del evento
+  data      Json? // { error_code: string, stack_trace: string, context: {} }
+  /// Momento en que ocurrió el evento
   timestamp DateTime @default(now())
   
+  /// Índice para consultas eficientes por nivel y tiempo
   @@index([level, timestamp])
+  /// Índice para consultas eficientes por componente y tiempo
   @@index([component, timestamp])
   @@map("system_logs")
 }
@@ -1203,19 +1692,36 @@ model SystemLog {
 // Configuraciones del sistema por farm: umbrales de sensores,
 // preferencias de alertas y parámetros de automatización
 
+/**
+ * Configuración del sistema
+ * 
+ * Parámetros configurables por farm para personalizar
+ * el comportamiento del sistema: umbrales de sensores,
+ * preferencias de alertas, configuración de IA, etc.
+ */
 model SystemConfiguration {
+  /// UUID único de la configuración
   id        String   @id @default(uuid())
+  /// Farm a la que pertenece la configuración
   farmId    String
+  /// Clave de la configuración
   key       String
-  value     Json
-  category  String // "irrigation", "alerts", "energy", "ai"
+  /// Valor de la configuración en formato JSON
+  value     Json // { threshold: number, enabled: boolean, settings: {} }
+  /// Categoría de la configuración
+  category  String // "irrigation", "alerts", "energy", "ai", "sensors", "automation"
+  /// Si la configuración está activa
   isActive  Boolean  @default(true)
+  /// Fecha de creación
   createdAt DateTime @default(now())
+  /// Fecha de última actualización
   updatedAt DateTime @updatedAt
   
   // Relations
+  /// Farm a la que pertenece
   farm Farm @relation(fields: [farmId], references: [id])
   
+  /// Una configuración por farm y clave
   @@unique([farmId, key])
   @@map("system_configurations")
 }
