@@ -113,6 +113,32 @@ Crear un ecosistema digital completo que transforme la agricultura tradicional e
 - Compatibilidad entre cultivos
 - Optimización del espacio disponible
 
+#### 🌿 **Catálogo de Plantas (CropVariety)**
+
+- **Base de datos completa** de variedades cultivables
+- **Información detallada** por planta:
+  - Nombre común y científico (ej: Tomate - _Solanum lycopersicum_)
+  - Categoría (vegetales, frutas, hierbas, legumbres, etc.)
+  - Rendimiento promedio por m²
+  - Ciclo de cultivo (días desde siembra hasta cosecha)
+- **Requerimientos específicos**:
+  - Necesidades hídricas (bajo, medio, alto)
+  - Exposición solar (pleno sol, sombra parcial, sombra)
+  - Rango de temperatura ideal (min/max °C)
+  - pH del suelo óptimo (rango)
+- **Companion Planting (Siembra Asociada)**:
+  - Plantas compatibles que se benefician mutuamente
+  - Plantas incompatibles que deben evitarse cerca
+  - Recomendaciones de rotación de cultivos
+- **Calendario de cultivo**:
+  - Estaciones ideales para plantación
+  - Estaciones de cosecha
+  - Planificación automática de siembras
+- **Datos técnicos de plantación**:
+  - Profundidad de siembra (cm)
+  - Espaciado entre plantas (cm)
+  - Método de plantación recomendado
+
 ### 🐔 **Gestión de Gallinero**
 
 #### 🐓 **Gestión de Aves**
@@ -339,9 +365,11 @@ web/
 
 - `plots/` - Gestión de bancales
 - `crops/` - Gestión de cultivos
+- `plant-catalog/` - Catálogo de plantas y variedades
 - `irrigation/` - Sistema de riego
 - `planting-planner/` - Planificador
 - `rotation/` - Rotación de cultivos
+- `companion-planting/` - Guía de siembra asociada
 
 #### 🤖 **Automation Module**
 
@@ -387,6 +415,35 @@ web/
 - ✅ **Automatización de puerta**: Control por horario o sensor de luz
 - ✅ **Detección de presencia**: Sensores para verificar gallinas antes del cierre
 - ✅ **Monitoreo consumo**: Agua y pienso automático
+
+#### **Catálogo de Plantas Inteligente**
+
+- 🌿 **Biblioteca completa**: +200 variedades de plantas catalogadas con información técnica detallada
+- 📊 **Fichas técnicas completas**:
+  - Nombre común y científico (ej: Tomate - _Solanum lycopersicum_)
+  - Categoría (vegetales, frutas, hierbas, legumbres, raíces, flores)
+  - Ciclo de cultivo (días desde siembra hasta cosecha)
+  - Rendimiento promedio por m²
+- 🌡️ **Requerimientos específicos**:
+  - Necesidades hídricas (bajo, medio, alto)
+  - Exposición solar (pleno sol, sombra parcial, sombra)
+  - Rango de temperatura ideal (min/max °C)
+  - pH del suelo óptimo (rango)
+- 🤝 **Companion Planting (Siembra Asociada)**:
+  - Sistema automático de compatibilidades entre plantas
+  - Plantas beneficiosas que mejoran crecimiento y repelen plagas
+  - Plantas incompatibles que compiten por recursos o se perjudican
+  - Recomendaciones de rotación de cultivos para mantener salud del suelo
+- 📅 **Planificación estacional inteligente**:
+  - Calendario automático de siembras por estación
+  - Sugerencias de qué plantar según época del año y zona climática
+  - Optimización de espacios y compatibilidades
+- 🔍 **Funcionalidades avanzadas**:
+  - Búsqueda y filtros avanzados (tipo, estación, compatibilidad, dificultad)
+  - Identificación visual por foto usando IA
+  - Predicción de rendimiento basada en condiciones locales
+  - Alertas automáticas de incompatibilidades al planificar cultivos
+  - Recomendaciones personalizadas según histórico y preferencias
 
 ### 🧠 Inteligencia Artificial y Predicciones
 
@@ -866,12 +923,22 @@ services:
 - ✅ Internacionalización
 - ✅ Estructura modular
 
+### Fase 1.5: Catálogo de Plantas
+
+- 📋 Interfaz de catálogo de plantas (`/garden/plant-catalog`)
+- 📋 Fichas detalladas de variedades con todos los requerimientos
+- 📋 Sistema de búsqueda y filtros avanzados
+- 📋 Funcionalidad de companion planting
+- 📋 Planificador de siembras con calendario estacional
+- 📋 Base de datos inicial con 50+ variedades comunes
+
 ### Fase 2: Backend Integration
 
 - 🔄 API REST para gestión de datos
-- 🔄 Base de datos con modelos IoT
+- 🔄 Base de datos con modelos IoT (incluyendo CropVariety)
 - 🔄 Sistema de autenticación
 - 🔄 MQTT broker para IoT
+- 🔄 CRUD completo para catálogo de plantas
 
 ### Fase 3: IoT Implementation
 
@@ -927,6 +994,77 @@ services:
 - Estándares abiertos para IoT agrícola
 
 ---
+
+## 📋 Ejemplo de Datos del Catálogo de Plantas
+
+### Estructura de Datos CropVariety
+
+```json
+{
+  "tomate_cherry": {
+    "name": "Tomate Cherry",
+    "scientificName": "Solanum lycopersicum var. cerasiforme",
+    "type": "VEGETABLE",
+    "description": "Variedad de tomate pequeño ideal para cultivo en maceta",
+    "averageYield": 3.5,
+    "daysToMaturity": 75,
+    "plantingDepth": 1.0,
+    "spacingBetween": 30.0,
+    "waterRequirements": "medium",
+    "sunRequirements": "full",
+    "idealTemperature": { "min": 18, "max": 28 },
+    "idealPh": { "min": 6.0, "max": 7.0 },
+    "compatibleWith": ["albahaca", "perejil", "marigold", "lechuga"],
+    "incompatibleWith": ["hinojo", "brassicas", "nogal"],
+    "plantingSeasons": ["SPRING", "SUMMER"],
+    "harvestSeasons": ["SUMMER", "AUTUMN"]
+  },
+  "lechuga_romana": {
+    "name": "Lechuga Romana",
+    "scientificName": "Lactuca sativa var. longifolia",
+    "type": "VEGETABLE",
+    "description": "Lechuga de hojas alargadas, resistente al calor",
+    "averageYield": 1.2,
+    "daysToMaturity": 60,
+    "plantingDepth": 0.5,
+    "spacingBetween": 20.0,
+    "waterRequirements": "medium",
+    "sunRequirements": "partial",
+    "idealTemperature": { "min": 10, "max": 24 },
+    "idealPh": { "min": 6.0, "max": 7.5 },
+    "compatibleWith": ["tomate", "zanahoria", "cebolla", "fresas"],
+    "incompatibleWith": ["apio", "girasol"],
+    "plantingSeasons": ["SPRING", "AUTUMN", "WINTER"],
+    "harvestSeasons": ["SPRING", "SUMMER", "AUTUMN", "WINTER"]
+  },
+  "albahaca": {
+    "name": "Albahaca",
+    "scientificName": "Ocimum basilicum",
+    "type": "HERB",
+    "description": "Hierba aromática ideal como repelente natural de insectos",
+    "averageYield": 0.8,
+    "daysToMaturity": 45,
+    "plantingDepth": 0.5,
+    "spacingBetween": 15.0,
+    "waterRequirements": "medium",
+    "sunRequirements": "full",
+    "idealTemperature": { "min": 20, "max": 30 },
+    "idealPh": { "min": 6.0, "max": 7.5 },
+    "compatibleWith": ["tomate", "pimiento", "oregano"],
+    "incompatibleWith": ["rue"],
+    "plantingSeasons": ["SPRING", "SUMMER"],
+    "harvestSeasons": ["SUMMER", "AUTUMN"]
+  }
+}
+```
+
+### Funcionalidades del Sistema
+
+- **Búsqueda inteligente**: "plantas para verano", "compatibles con tomate"
+- **Filtros avanzados**: Por tipo, estación, nivel de dificultad, necesidades hídricas
+- **Companion Planting**: Sistema que sugiere automáticamente plantas beneficiosas
+- **Planificación automática**: "¿Qué puedo plantar en marzo en Valencia?"
+- **Alertas de incompatibilidad**: Aviso si se plantan especies incompatibles cerca
 
 ## 🤝 Contribución al Proyecto
 
