@@ -1,0 +1,9 @@
+import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
+
+/**
+ * EventBus interface for publishing domain events
+ * Allows for different implementations (in-memory, Kafka, etc.)
+ */
+export interface EventBus {
+  publish(event: DomainEvent): Promise<void>;
+}

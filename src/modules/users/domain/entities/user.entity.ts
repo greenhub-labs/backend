@@ -2,9 +2,12 @@ import { UserIdValueObject } from '../value-objects/user-id/user-id.value-object
 import { UserNameValueObject } from '../value-objects/user-name/user-name.value-object';
 import { UserAvatarUrlValueObject } from '../value-objects/user-avatar-url/user-avatar-url.value-object';
 import { UserPrimitive } from '../primitives/user.primitive';
+import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
+import { UserCreatedDomainEvent } from '../events/user-created/user-created.domain-event';
+import { UserUpdatedDomainEvent } from '../events/user-updated/user-updated.domain-event';
 
 /**
- * User Entity
+ * User Entity (Aggregate Root)
  * Represents a system user in the domain (DDD Clean Architecture)
  *
  * @author GreenHub Labs
@@ -30,7 +33,12 @@ export class User {
   public readonly updatedAt: Date;
 
   /**
-   * Creates a new User entity
+   * Internal collection of domain events
+   */
+  private readonly domainEvents: DomainEvent[] = [];
+
+  /**
+   * Creates a new User entity and emits UserCreatedDomainEvent
    * @param props User properties (value objects and primitives)
    */
   constructor(props: {
@@ -43,6 +51,7 @@ export class User {
     isDeleted: boolean;
     createdAt: Date;
     updatedAt: Date;
+    emitEvent?: boolean; // For fromPrimitives, avoid duplicate event
   }) {
     this.id = props.id;
     this.firstName = props.firstName;
@@ -53,10 +62,24 @@ export class User {
     this.isDeleted = props.isDeleted;
     this.createdAt = props.createdAt;
     this.updatedAt = props.updatedAt;
+    // Emit event only if not restoring from persistence
+    if (props.emitEvent !== false) {
+      this.addDomainEvent(
+        new UserCreatedDomainEvent({
+          eventId: crypto.randomUUID(),
+          aggregateId: this.id.value,
+          firstName: this.firstName?.value,
+          lastName: this.lastName?.value,
+          bio: this.bio,
+          avatar: this.avatar?.value,
+          occurredAt: this.createdAt.toISOString(),
+        }),
+      );
+    }
   }
 
   /**
-   * Updates the user with the given data (immutable)
+   * Updates the user with the given data (immutable) and emits UserUpdatedDomainEvent
    * @param data - The data to update the user with
    * @returns A new User instance with the updated data
    */
@@ -68,7 +91,7 @@ export class User {
       bio: string;
     }>,
   ): User {
-    return new User({
+    const updatedUser = new User({
       id: this.id,
       firstName: data.firstName
         ? new UserNameValueObject(data.firstName)
@@ -85,6 +108,43 @@ export class User {
       createdAt: this.createdAt,
       updatedAt: new Date(),
     });
+    updatedUser.addDomainEvent(
+      new UserUpdatedDomainEvent({
+        eventId: crypto.randomUUID(),
+        aggregateId: updatedUser.id.value,
+        firstName: updatedUser.firstName?.value,
+        lastName: updatedUser.lastName?.value,
+        bio: updatedUser.bio,
+        avatar: updatedUser.avatar?.value,
+        occurredAt: updatedUser.updatedAt.toISOString(),
+      }),
+    );
+    return updatedUser;
+  }
+
+  /**
+   * Adds a domain event to the internal collection
+   * @param event - The domain event to add
+   */
+  private addDomainEvent(event: DomainEvent): void {
+    this.domainEvents.push(event);
+  }
+
+  /**
+   * Returns and clears all accumulated domain events
+   * @returns The list of domain events
+   */
+  public pullDomainEvents(): DomainEvent[] {
+    const events = [...this.domainEvents];
+    this.clearDomainEvents();
+    return events;
+  }
+
+  /**
+   * Clears all accumulated domain events
+   */
+  public clearDomainEvents(): void {
+    (this.domainEvents as DomainEvent[]).length = 0;
   }
 
   /**
