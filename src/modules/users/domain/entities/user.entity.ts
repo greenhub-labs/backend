@@ -88,31 +88,6 @@ export class User {
   }
 
   /**
-   * Creates a new User instance from a primitive object
-   * @param primitives - The primitive object to create the User from
-   * @returns A new User instance
-   */
-  static fromPrimitives(primitives: UserPrimitive): User {
-    return new User({
-      id: new UserIdValueObject(primitives.id),
-      firstName: primitives.firstName
-        ? new UserNameValueObject(primitives.firstName)
-        : undefined,
-      lastName: primitives.lastName
-        ? new UserNameValueObject(primitives.lastName)
-        : undefined,
-      bio: primitives.bio,
-      avatar: primitives.avatar
-        ? new UserAvatarUrlValueObject(primitives.avatar)
-        : undefined,
-      isActive: primitives.isActive,
-      isDeleted: primitives.isDeleted,
-      createdAt: new Date(primitives.createdAt),
-      updatedAt: new Date(primitives.updatedAt),
-    });
-  }
-
-  /**
    * Converts the User instance to a primitive object
    * @returns A primitive object
    */
