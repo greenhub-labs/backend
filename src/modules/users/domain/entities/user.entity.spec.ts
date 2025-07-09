@@ -3,6 +3,7 @@ import { UserIdValueObject } from '../value-objects/user-id/user-id.value-object
 import { UserNameValueObject } from '../value-objects/user-name/user-name.value-object';
 import { UserAvatarUrlValueObject } from '../value-objects/user-avatar-url/user-avatar-url.value-object';
 import { UserPrimitive } from '../primitives/user.primitive';
+import { UserFactory } from '../factories/user/user.factory';
 
 describe('User Entity', () => {
   const id = new UserIdValueObject('123e4567-e89b-12d3-a456-426614174000');
@@ -91,7 +92,7 @@ describe('User Entity', () => {
       createdAt: createdAt.toISOString(),
       updatedAt: updatedAt.toISOString(),
     });
-    const from = User.fromPrimitives(primitives);
+    const from = UserFactory.fromPrimitives(primitives);
     expect(from.id.value).toBe(id.value);
     expect(from.firstName?.value).toBe(firstName.value);
     expect(from.lastName?.value).toBe(lastName.value);
