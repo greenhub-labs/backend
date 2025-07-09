@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersGraphQLModule } from './graphql/graphql.module';
 
 /**
- * PresentersModule
+ * UsersPresentersModule
  * Presenters layer for Users (HTTP, GraphQL, Events, etc.)
  */
 @Module({
