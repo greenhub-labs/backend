@@ -138,10 +138,11 @@ export class User {
       lastName: this.lastName,
       avatar: this.avatar,
       bio: this.bio,
-      isActive: this.isActive,
+      isActive: false,
       isDeleted: true,
       createdAt: this.createdAt,
       updatedAt: new Date(),
+      deletedAt: new Date(),
     });
     deletedUser.addDomainEvent(
       new UserDeletedDomainEvent({
@@ -167,10 +168,11 @@ export class User {
       lastName: this.lastName,
       avatar: this.avatar,
       bio: this.bio,
-      isActive: this.isActive,
+      isActive: true,
       isDeleted: false,
       createdAt: this.createdAt,
       updatedAt: new Date(),
+      deletedAt: undefined,
     });
     restoredUser.addDomainEvent(
       new UserRestoredDomainEvent({

@@ -43,15 +43,15 @@ export class UserPrismaEntity {
   static toPrisma(user: User): any {
     return {
       id: user.id.value,
-      firstName: user.firstName?.value,
-      lastName: user.lastName?.value,
-      avatar: user.avatar?.value,
-      bio: user.bio,
+      firstName: user.firstName?.value || null,
+      lastName: user.lastName?.value || null,
+      avatar: user.avatar?.value || null,
+      bio: user.bio || null,
       isActive: user.isActive,
       isDeleted: user.isDeleted,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
+      deletedAt: user.deletedAt || null,
     };
   }
 }
