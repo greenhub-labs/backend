@@ -2,7 +2,7 @@ import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
 
 /**
  * UserDeletedDomainEvent
- * Emitted when a user is deleted in the system
+ * Emitted when a user is deleted (soft delete) in the system
  */
 export class UserDeletedDomainEvent implements DomainEvent {
   /** Unique event identifier */

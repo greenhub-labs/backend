@@ -5,6 +5,7 @@ import { UserPrimitive } from '../primitives/user.primitive';
 import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
 import { UserCreatedDomainEvent } from '../events/user-created/user-created.domain-event';
 import { UserUpdatedDomainEvent } from '../events/user-updated/user-updated.domain-event';
+import { UserDeletedDomainEvent } from '../events/user-deleted/user-deleted.domain-event';
 
 /**
  * User Entity (Aggregate Root)
@@ -124,6 +125,32 @@ export class User {
       }),
     );
     return updatedUser;
+  }
+
+  /**
+   * Marks the user as deleted (soft delete) and emits UserDeletedDomainEvent
+   * @returns A new User instance marked as deleted
+   */
+  delete(): User {
+    const deletedUser = new User({
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      avatar: this.avatar,
+      bio: this.bio,
+      isActive: this.isActive,
+      isDeleted: true,
+      createdAt: this.createdAt,
+      updatedAt: new Date(),
+    });
+    deletedUser.addDomainEvent(
+      new UserDeletedDomainEvent({
+        eventId: crypto.randomUUID(),
+        aggregateId: deletedUser.id.value,
+        occurredAt: deletedUser.updatedAt.toISOString(),
+      }),
+    );
+    return deletedUser;
   }
 
   /**
