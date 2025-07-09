@@ -14,6 +14,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ================================
+// ENUMS
+// ================================
+
 enum Roles {
   OWNER
   ADMINISTRATOR
@@ -22,6 +26,177 @@ enum Roles {
   GUEST
 }
 
+enum PlotStatus {
+  ACTIVE
+  INACTIVE
+  PREPARING
+  RESTING
+}
+
+enum CropStatus {
+  PLANNED
+  PLANTED
+  GROWING
+  FLOWERING
+  FRUITING
+  HARVESTING
+  FINISHED
+}
+
+enum CropType {
+  VEGETABLE
+  FRUIT
+  HERB
+  GRAIN
+  LEGUME
+  ROOT
+  FLOWER
+}
+
+enum Season {
+  SPRING
+  SUMMER
+  AUTUMN
+  WINTER
+}
+
+enum PlantingMethod {
+  DIRECT_SEED
+  TRANSPLANT
+  CUTTING
+  BULB
+}
+
+enum SensorType {
+  SOIL_MOISTURE
+  TEMPERATURE
+  HUMIDITY
+  PH
+  LIGHT
+  PRESSURE
+  CO2
+  NH3
+  WATER_FLOW
+  WATER_PRESSURE
+  BATTERY_LEVEL
+  SOLAR_GENERATION
+}
+
+enum IrrigationStatus {
+  INACTIVE
+  ACTIVE
+  SCHEDULED
+  MANUAL
+  ERROR
+}
+
+enum ValveStatus {
+  OPEN
+  CLOSED
+  PARTIAL
+  ERROR
+}
+
+enum AlertLevel {
+  INFO
+  WARNING
+  CRITICAL
+  ERROR
+}
+
+enum AlertType {
+  SENSOR_FAILURE
+  LOW_BATTERY
+  IRRIGATION_ISSUE
+  WEATHER_ALERT
+  SECURITY_BREACH
+  SYSTEM_ERROR
+  MAINTENANCE_REQUIRED
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  PUSH
+  TELEGRAM
+  SLACK
+  DISCORD
+}
+
+enum ChickenBreed {
+  LEGHORN
+  RHODE_ISLAND_RED
+  PLYMOUTH_ROCK
+  SUSSEX
+  ORPINGTON
+  AUSTRALORP
+  MARANS
+  BANTAM
+  OTHER
+}
+
+enum ChickenStatus {
+  HEALTHY
+  SICK
+  QUARANTINE
+  BROODING
+  MOLTING
+  RETIRED
+  DECEASED
+}
+
+enum EggQuality {
+  EXCELLENT
+  GOOD
+  FAIR
+  POOR
+  CRACKED
+  DIRTY
+}
+
+enum DoorStatus {
+  OPEN
+  CLOSED
+  OPENING
+  CLOSING
+  ERROR
+}
+
+enum AutomationMode {
+  MANUAL
+  SCHEDULED
+  SENSOR_BASED
+  AI_CONTROLLED
+}
+
+enum WeatherCondition {
+  SUNNY
+  CLOUDY
+  RAINY
+  STORMY
+  SNOWY
+  FOGGY
+  WINDY
+}
+
+enum EnergySource {
+  SOLAR
+  BATTERY
+  GRID
+  HYBRID
+}
+
+enum SystemStatus {
+  ONLINE
+  OFFLINE
+  MAINTENANCE
+  ERROR
+}
+
+// ================================
+// USER MANAGEMENT & MULTI-TENANT
+// ================================
+
 model User {
   id        String   @id @default(uuid())
   firstName String?
@@ -29,35 +204,754 @@ model User {
   bio       String?
   avatar    String?
   location  String?
-  timezone  String?
+  timezone  String   @default("UTC")
   isActive  Boolean  @default(true)
   isDeleted Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
-  // Relation to Auth
-  auth      Auth?
+  // Relations
+  auth            Auth?
+  farmMemberships FarmMembership[]
+  irrigationLogs  IrrigationLog[]
+  harvestLogs     HarvestLog[]
+  plantingLogs    PlantingLog[]
+  maintenanceLogs MaintenanceLog[]
+  notifications   Notification[]
+  aiInteractions  AIInteraction[]
+  createdAlerts   Alert[]       @relation("AlertCreatedBy")
+  assignedAlerts  Alert[]       @relation("AlertAssignedTo")
+  
+  @@map("users")
 }
 
 model Auth {
-  id         String   @id @default(uuid())
-  userId     String   @unique
-  email      String   @unique
-  phone      String   @unique
+  id         String    @id @default(uuid())
+  userId     String    @unique
+  email      String    @unique
+  phone      String?   @unique
   password   String?
-  isVerified Boolean  @default(false)
+  isVerified Boolean   @default(false)
   lastLogin  DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   
   // Relations
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("auth")
+}
+
+model Farm {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  location    String?
+  address     Json? // full address object
+  coordinates Json? // lat, lng
+  timezone    String   @default("UTC")
+  settings    Json? // farm-specific settings
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  memberships     FarmMembership[]
+  plots           Plot[]
+  coops           Coop[]
+  iotNodes        IoTNode[]
+  irrigationZones IrrigationZone[]
+  weatherData     WeatherData[]
+  solarPanels     SolarPanel[]
+  batteries       Battery[]
+  alerts          Alert[]
+  configurations  SystemConfiguration[]
+  
+  @@map("farms")
 }
 
 model Role {
-  id        String   @id @default(uuid())
-  name      Roles   @unique 
+  id          String   @id @default(uuid())
+  name        Roles    @unique
   description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  farmMemberships FarmMembership[]
+  
+  @@map("roles")
+}
+
+model FarmMembership {
+  id        String   @id @default(uuid())
+  userId    String
+  farmId    String
+  roleId    String
+  isActive  Boolean  @default(true)
+  joinedAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  farm Farm @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id])
+  
+  @@unique([userId, farmId])
+  @@map("farm_memberships")
+}
+
+// ================================
+// GARDEN MANAGEMENT
+// ================================
+
+model Plot {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  area        Float? // in square meters
+  location    Json? // coordinates, dimensions
+  status      PlotStatus @default(ACTIVE)
+  soilType    String?
+  soilPh      Float?
+  farmId      String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
+  farm            Farm             @relation(fields: [farmId], references: [id])
+  crops           Crop[]
+  iotNodes        IoTNode[]
+  irrigationZones IrrigationZone[]
+  sensorReadings  SensorReading[]
+  
+  @@map("plots")
+}
+
+model CropVariety {
+  id                String        @id @default(uuid())
+  name              String
+  scientificName    String?
+  type              CropType
+  description       String?
+  averageYield      Float? // kg per m²
+  daysToMaturity    Int?
+  plantingDepth     Float? // cm
+  spacingBetween    Float? // cm
+  waterRequirements String? // low, medium, high
+  sunRequirements   String? // full, partial, shade
+  idealTemperature  Json? // min/max in celsius
+  idealPh           Json? // min/max
+  compatibleWith    String[] // companion planting
+  incompatibleWith  String[] // avoid planting with
+  plantingSeasons   Season[]
+  harvestSeasons    Season[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  // Relations
+  crops Crop[]
+  
+  @@map("crop_varieties")
+}
+
+model Crop {
+  id             String         @id @default(uuid())
+  plotId         String
+  varietyId      String
+  plantingDate   DateTime?
+  expectedHarvest DateTime?
+  actualHarvest  DateTime?
+  quantity       Int? // number of plants
+  status         CropStatus     @default(PLANNED)
+  plantingMethod PlantingMethod
+  notes          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  
+  // Relations
+  plot         Plot          @relation(fields: [plotId], references: [id])
+  variety      CropVariety   @relation(fields: [varietyId], references: [id])
+  harvestLogs  HarvestLog[]
+  plantingLogs PlantingLog[]
+  
+  @@map("crops")
+}
+
+model HarvestLog {
+  id          String   @id @default(uuid())
+  cropId      String
+  userId      String
+  quantity    Float // kg or units
+  quality     String? // excellent, good, fair, poor
+  notes       String?
+  harvestDate DateTime @default(now())
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  crop Crop @relation(fields: [cropId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("harvest_logs")
+}
+
+model PlantingLog {
+  id           String   @id @default(uuid())
+  cropId       String
+  userId       String
+  quantity     Int
+  method       PlantingMethod
+  notes        String?
+  plantingDate DateTime @default(now())
+  createdAt    DateTime @default(now())
+  
+  // Relations
+  crop Crop @relation(fields: [cropId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("planting_logs")
+}
+
+// ================================
+// CHICKEN COOP MANAGEMENT
+// ================================
+
+model Chicken {
+  id          String        @id @default(uuid())
+  name        String?
+  breed       ChickenBreed
+  hatchDate   DateTime?
+  acquiredDate DateTime     @default(now())
+  status      ChickenStatus @default(HEALTHY)
+  color       String?
+  weight      Float? // kg
+  isLayer     Boolean       @default(true)
+  notes       String?
+  coopId      String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // Relations
+  coop    Coop?     @relation(fields: [coopId], references: [id])
+  eggLogs EggLog[]
+  
+  @@map("chickens")
+}
+
+model Coop {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  capacity    Int
+  location    Json? // coordinates
+  dimensions  Json? // length, width, height
+  hasRun      Boolean     @default(false)
+  runArea     Float? // square meters
+  farmId      String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relations
+  farm           Farm            @relation(fields: [farmId], references: [id])
+  chickens       Chicken[]
+  iotNodes       IoTNode[]
+  doors          CoopDoor[]
+  sensorReadings SensorReading[]
+  
+  @@map("coops")
+}
+
+model CoopDoor {
+  id            String     @id @default(uuid())
+  coopId        String
+  name          String
+  status        DoorStatus @default(CLOSED)
+  isAutomatic   Boolean    @default(true)
+  openTime      String? // HH:MM format
+  closeTime     String? // HH:MM format
+  useSunriseSunset Boolean @default(true)
+  sunriseOffset Int       @default(0) // minutes
+  sunsetOffset  Int       @default(0) // minutes
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  // Relations
+  coop     Coop       @relation(fields: [coopId], references: [id])
+  doorLogs DoorLog[]
+  
+  @@map("coop_doors")
+}
+
+model DoorLog {
+  id        String     @id @default(uuid())
+  doorId    String
+  status    DoorStatus
+  trigger   String // "manual", "scheduled", "sensor", "emergency"
+  timestamp DateTime   @default(now())
+  
+  // Relations
+  door CoopDoor @relation(fields: [doorId], references: [id])
+  
+  @@map("door_logs")
+}
+
+model EggLog {
+  id        String     @id @default(uuid())
+  chickenId String?
+  coopId    String? // if chicken is unknown
+  quantity  Int        @default(1)
+  weight    Float? // grams
+  quality   EggQuality @default(GOOD)
+  notes     String?
+  collectedAt DateTime @default(now())
+  createdAt DateTime   @default(now())
+  
+  // Relations
+  chicken Chicken? @relation(fields: [chickenId], references: [id])
+  
+  @@map("egg_logs")
+}
+
+// ================================
+// IOT AND SENSOR MANAGEMENT
+// ================================
+
+model IoTNode {
+  id             String       @id @default(uuid())
+  name           String
+  description    String?
+  macAddress     String       @unique
+  ipAddress      String?
+  firmwareVersion String?
+  lastHeartbeat  DateTime?
+  batteryLevel   Float? // percentage
+  signalStrength Float? // RSSI
+  status         SystemStatus @default(OFFLINE)
+  location       Json? // coordinates
+  plotId         String?
+  coopId         String?
+  farmId         String
+  energySource   EnergySource @default(BATTERY)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  // Relations
+  farm           Farm            @relation(fields: [farmId], references: [id])
+  plot           Plot?           @relation(fields: [plotId], references: [id])
+  coop           Coop?           @relation(fields: [coopId], references: [id])
+  sensors        Sensor[]
+  sensorReadings SensorReading[]
+  alerts         Alert[]
+  
+  @@map("iot_nodes")
+}
+
+model Sensor {
+  id          String     @id @default(uuid())
+  nodeId      String
+  type        SensorType
+  model       String?
+  calibration Json? // calibration parameters
+  minValue    Float?
+  maxValue    Float?
+  unit        String
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
+  node     IoTNode         @relation(fields: [nodeId], references: [id])
+  readings SensorReading[]
+  
+  @@map("sensors")
+}
+
+model SensorReading {
+  id        String   @id @default(uuid())
+  nodeId    String
+  sensorId  String
+  plotId    String?
+  coopId    String?
+  value     Float
+  unit      String
+  quality   Float? // data quality score 0-1
+  timestamp DateTime @default(now())
+  
+  // Relations
+  node   IoTNode  @relation(fields: [nodeId], references: [id])
+  sensor Sensor   @relation(fields: [sensorId], references: [id])
+  plot   Plot?    @relation(fields: [plotId], references: [id])
+  coop   Coop?    @relation(fields: [coopId], references: [id])
+  
+  @@index([nodeId, timestamp])
+  @@index([sensorId, timestamp])
+  @@map("sensor_readings")
+}
+
+// ================================
+// IRRIGATION SYSTEM
+// ================================
+
+model IrrigationZone {
+  id          String            @id @default(uuid())
+  plotId      String
+  farmId      String
+  name        String
+  description String?
+  area        Float? // square meters
+  flowRate    Float? // liters per minute
+  status      IrrigationStatus  @default(INACTIVE)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  
+  // Relations
+  farm            Farm              @relation(fields: [farmId], references: [id])
+  plot            Plot              @relation(fields: [plotId], references: [id])
+  valves          IrrigationValve[]
+  schedules       IrrigationSchedule[]
+  logs            IrrigationLog[]
+  automationRules AutomationRule[]
+  
+  @@map("irrigation_zones")
+}
+
+model IrrigationValve {
+  id        String      @id @default(uuid())
+  zoneId    String
+  name      String
+  pin       Int? // GPIO pin number
+  status    ValveStatus @default(CLOSED)
+  lastOpened DateTime?
+  lastClosed DateTime?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  // Relations
+  zone IrrigationZone @relation(fields: [zoneId], references: [id])
+  
+  @@map("irrigation_valves")
+}
+
+model IrrigationSchedule {
+  id          String   @id @default(uuid())
+  zoneId      String
+  name        String
+  startTime   String // HH:MM format
+  duration    Int // minutes
+  daysOfWeek  Int[] // 0-6, Sunday=0
+  isActive    Boolean  @default(true)
+  conditions  Json? // weather conditions to check
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  zone IrrigationZone @relation(fields: [zoneId], references: [id])
+  
+  @@map("irrigation_schedules")
+}
+
+model IrrigationLog {
+  id        String            @id @default(uuid())
+  zoneId    String
+  userId    String?
+  startTime DateTime
+  endTime   DateTime?
+  duration  Int? // actual duration in minutes
+  status    IrrigationStatus
+  trigger   String // "manual", "scheduled", "sensor", "ai"
+  waterUsed Float? // liters
+  notes     String?
+  createdAt DateTime          @default(now())
+  
+  // Relations
+  zone IrrigationZone @relation(fields: [zoneId], references: [id])
+  user User?          @relation(fields: [userId], references: [id])
+  
+  @@map("irrigation_logs")
+}
+
+// ================================
+// AUTOMATION SYSTEM
+// ================================
+
+model AutomationRule {
+  id          String         @id @default(uuid())
+  name        String
+  description String?
+  zoneId      String?
+  conditions  Json // trigger conditions
+  actions     Json // actions to execute
+  mode        AutomationMode @default(SENSOR_BASED)
+  isActive    Boolean        @default(true)
+  priority    Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  // Relations
+  zone            IrrigationZone?      @relation(fields: [zoneId], references: [id])
+  executionLogs   AutomationExecution[]
+  
+  @@map("automation_rules")
+}
+
+model AutomationExecution {
+  id           String   @id @default(uuid())
+  ruleId       String
+  triggered    Boolean
+  conditions   Json // evaluated conditions
+  actions      Json // executed actions
+  success      Boolean
+  errorMessage String?
+  executedAt   DateTime @default(now())
+  
+  // Relations
+  rule AutomationRule @relation(fields: [ruleId], references: [id])
+  
+  @@map("automation_executions")
+}
+
+// ================================
+// ALERTS AND NOTIFICATIONS
+// ================================
+
+model Alert {
+  id          String     @id @default(uuid())
+  farmId      String
+  nodeId      String?
+  type        AlertType
+  level       AlertLevel
+  title       String
+  message     String
+  isRead      Boolean    @default(false)
+  isResolved  Boolean    @default(false)
+  createdById String?
+  assignedToId String?
+  resolvedAt  DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // Relations
+  farm       Farm     @relation(fields: [farmId], references: [id])
+  node       IoTNode? @relation(fields: [nodeId], references: [id])
+  createdBy  User?    @relation("AlertCreatedBy", fields: [createdById], references: [id])
+  assignedTo User?    @relation("AlertAssignedTo", fields: [assignedToId], references: [id])
+  
+  @@map("alerts")
+}
+
+model Notification {
+  id        String              @id @default(uuid())
+  userId    String
+  channel   NotificationChannel
+  title     String
+  message   String
+  data      Json? // additional payload
+  sent      Boolean             @default(false)
+  sentAt    DateTime?
+  read      Boolean             @default(false)
+  readAt    DateTime?
+  createdAt DateTime            @default(now())
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("notifications")
+}
+
+// ================================
+// WEATHER AND ENVIRONMENTAL DATA
+// ================================
+
+model WeatherData {
+  id           String           @id @default(uuid())
+  farmId       String
+  location     String
+  temperature  Float
+  humidity     Float
+  pressure     Float
+  windSpeed    Float?
+  windDirection Float?
+  rainfall     Float?
+  uv          Float?
+  condition    WeatherCondition
+  forecast     Json? // extended forecast data
+  source       String // "local", "openweather", "aemet"
+  timestamp    DateTime         @default(now())
+  
+  // Relations
+  farm Farm @relation(fields: [farmId], references: [id])
+  
+  @@index([farmId, timestamp])
+  @@index([location, timestamp])
+  @@map("weather_data")
+}
+
+// ================================
+// ENERGY MANAGEMENT
+// ================================
+
+model SolarPanel {
+  id           String    @id @default(uuid())
+  farmId       String
+  nodeId       String?
+  name         String
+  capacity     Float // watts
+  efficiency   Float? // percentage
+  tiltAngle    Float?
+  azimuthAngle Float?
+  installDate  DateTime?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  // Relations
+  farm       Farm        @relation(fields: [farmId], references: [id])
+  energyLogs EnergyLog[]
+  
+  @@map("solar_panels")
+}
+
+model Battery {
+  id           String    @id @default(uuid())
+  farmId       String
+  nodeId       String?
+  name         String
+  capacity     Float // amp-hours
+  voltage      Float // volts
+  chemistry    String? // "LiPo", "Li-ion", "Lead-acid"
+  cycleCount   Int       @default(0)
+  healthStatus Float?    @default(100) // percentage
+  installDate  DateTime?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  // Relations
+  farm       Farm        @relation(fields: [farmId], references: [id])
+  energyLogs EnergyLog[]
+  
+  @@map("batteries")
+}
+
+model EnergyLog {
+  id              String       @id @default(uuid())
+  solarPanelId    String?
+  batteryId       String?
+  generated       Float? // watts generated (solar)
+  consumed        Float? // watts consumed
+  stored          Float? // watts stored (battery)
+  batteryLevel    Float? // percentage
+  batteryVoltage  Float? // volts
+  batteryCurrent  Float? // amps
+  gridConsumption Float? // watts from grid
+  efficiency      Float? // system efficiency percentage
+  timestamp       DateTime     @default(now())
+  
+  // Relations
+  solarPanel SolarPanel? @relation(fields: [solarPanelId], references: [id])
+  battery    Battery?    @relation(fields: [batteryId], references: [id])
+  
+  @@index([timestamp])
+  @@map("energy_logs")
+}
+
+// ================================
+// ANALYTICS AND AI
+// ================================
+
+model Prediction {
+  id          String   @id @default(uuid())
+  type        String // "yield", "irrigation", "weather", "pest"
+  target      String // what is being predicted
+  targetId    String? // ID of the target entity
+  model       String // AI model used
+  confidence  Float // 0-1
+  prediction  Json // prediction data
+  actualValue Json? // actual outcome for training
+  validUntil  DateTime?
+  createdAt   DateTime @default(now())
+  
+  @@index([type, targetId])
+  @@map("predictions")
+}
+
+model AIInteraction {
+  id        String   @id @default(uuid())
+  userId    String
+  query     String
+  response  String
+  context   Json? // conversation context
+  feedback  Int? // user rating 1-5
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("ai_interactions")
+}
+
+model AnalyticsReport {
+  id         String   @id @default(uuid())
+  name       String
+  type       String // "yield", "efficiency", "consumption"
+  period     String // "daily", "weekly", "monthly", "yearly"
+  data       Json // report data
+  generatedAt DateTime @default(now())
+  
+  @@map("analytics_reports")
+}
+
+// ================================
+// MAINTENANCE AND SYSTEM LOGS
+// ================================
+
+model MaintenanceLog {
+  id          String   @id @default(uuid())
+  userId      String
+  nodeId      String?
+  type        String // "cleaning", "calibration", "repair", "replacement"
+  description String
+  cost        Float?
+  nextDue     DateTime?
+  completedAt DateTime @default(now())
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("maintenance_logs")
+}
+
+model SystemLog {
+  id        String   @id @default(uuid())
+  level     String // "info", "warning", "error", "debug"
+  component String // "backend", "node", "sensor", "irrigation"
+  message   String
+  data      Json?
+  timestamp DateTime @default(now())
+  
+  @@index([level, timestamp])
+  @@index([component, timestamp])
+  @@map("system_logs")
+}
+
+// ================================
+// CONFIGURATIONS
+// ================================
+
+model SystemConfiguration {
+  id        String   @id @default(uuid())
+  farmId    String
+  key       String
+  value     Json
+  category  String // "irrigation", "alerts", "energy", "ai"
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Relations
+  farm Farm @relation(fields: [farmId], references: [id])
+  
+  @@unique([farmId, key])
+  @@map("system_configurations")
 }
