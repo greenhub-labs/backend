@@ -1,15 +1,12 @@
 import { Module } from '@nestjs/common';
+import { UserFactory } from './factories/user/user.factory';
 
 /**
  * UsersDomainModule
  * Domain layer for Users (DDD Clean Architecture)
  */
 @Module({
-  providers: [
-    // Entities, ValueObjects, DomainServices, Factories, etc.
-  ],
-  exports: [
-    // Entities, ValueObjects, DomainServices, Factories, etc.
-  ],
+  providers: [UserFactory],
+  exports: [UserFactory],
 })
 export class UsersDomainModule {}
