@@ -6,7 +6,6 @@ import { UserIdValueObject } from '../../../domain/value-objects/user-id/user-id
 import { UserNameValueObject } from '../../../domain/value-objects/user-name/user-name.value-object';
 import { UserAvatarUrlValueObject } from '../../../domain/value-objects/user-avatar-url/user-avatar-url.value-object';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found/user-not-found.exception';
-import { UserDto } from '../../dtos/user.dto';
 
 describe('GetUserByIdQueryHandler', () => {
   let handler: GetUserByIdQueryHandler;
@@ -38,7 +37,7 @@ describe('GetUserByIdQueryHandler', () => {
     userRepository.findById.mockResolvedValue(user);
     const query = new GetUserByIdQuery('123e4567-e89b-12d3-a456-426614174000');
     const result = await handler.execute(query);
-    expect(result).toBeInstanceOf(UserDto);
+    expect(result).toBeInstanceOf(User);
     expect(result.id).toBe(user.id.value);
     expect(result.firstName).toBe(user.firstName?.value);
     expect(result.lastName).toBe(user.lastName?.value);
