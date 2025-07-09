@@ -1,0 +1,333 @@
+---
+alwaysApply: true
+---
+
+# Clean DDD Architecture Structure Rule
+
+This repository must follow a complete Domain-Driven Design (DDD) Clean Architecture pattern. All code must be organized following this exact structure and guidelines.
+
+## 🏗️ Module Structure
+
+Each domain module must follow this exact folder structure:
+
+```
+{module-name}/
+├── {module-name}.module.ts                    # Main module orchestrator
+├── domain/                                    # Business logic layer
+│   ├── {module-name}-domain.module.ts        # Domain module definition
+│   ├── entities/                             # Domain entities and aggregates
+│   │   ├── {entity-name}.ts
+│   │   ├── {entity-name}.spec.ts
+│   │   └── {aggregate-root}.ts
+│   ├── value-objects/                        # Immutable value objects
+│   │   ├── {module-name}-{property}.value-object.ts
+│   │   └── {module-name}-{property}.value-object.spec.ts
+│   ├── events/                               # Domain events
+│   │   ├── {event-name}/
+│   │   │   ├── {event-name}.domain-event.ts
+│   │   │   └── {event-name}.domain-event.spec.ts
+│   ├── exceptions/                           # Domain-specific exceptions
+│   │   ├── {exception-name}.exception.ts
+│   │   └── {exception-name}.exception.spec.ts
+│   ├── factories/                            # Domain object factories
+│   │   ├── {entity-name}.factory.ts
+│   │   └── {entity-name}.factory.spec.ts
+│   ├── services/                             # Domain services
+│   │   ├── {service-name}.domain-service.ts
+│   │   └── {service-name}.domain-service.spec.ts
+│   ├── primitives/                           # Domain primitives
+│   │   └── {module-name}.primitives.ts
+│   └── constants/                            # Domain constants
+│       └── {module-name}.constants.ts
+├── application/                              # Use cases and orchestration
+│   ├── {module-name}-application.module.ts  # Application module definition
+│   ├── commands/                             # Command handlers (CQRS)
+│   │   ├── {use-case-name}/
+│   │   │   ├── {use-case-name}.command.ts
+│   │   │   ├── {use-case-name}.command-handler.ts
+│   │   │   └── {use-case-name}.command-handler.spec.ts
+│   ├── queries/                              # Query handlers (CQRS)
+│   │   ├── {query-name}/
+│   │   │   ├── {query-name}.query.ts
+│   │   │   ├── {query-name}.query-handler.ts
+│   │   │   └── {query-name}.query-handler.spec.ts
+│   ├── event-handlers/                       # Application event handlers
+│   │   ├── {event-name}/
+│   │   │   ├── {event-name}.event-handler.ts
+│   │   │   └── {event-name}.event-handler.spec.ts
+│   ├── dtos/                                 # Data Transfer Objects
+│   │   ├── {dto-name}.dto.ts
+│   │   └── {dto-name}.dto.spec.ts
+│   ├── ports/                                # Interface definitions (Dependency Inversion)
+│   │   ├── {repository-name}.repository.ts
+│   │   ├── {service-name}.service.ts
+│   │   └── {gateway-name}.gateway.ts
+│   ├── services/                             # Application services
+│   │   ├── {service-name}.service.ts
+│   │   └── {service-name}.service.spec.ts
+│   └── events/                               # Application events
+│       ├── {event-name}.event.ts
+│       └── {event-name}.event.spec.ts
+├── infrastructure/                           # External concerns implementation
+│   ├── {module-name}-infrastructure.module.ts # Infrastructure module definition
+│   ├── persistance/                          # Data persistence implementations
+│   │   ├── in-memory/
+│   │   │   ├── in-memory-persistance.module.ts
+│   │   │   ├── entities/
+│   │   │   │   └── {entity-name}-in-memory.entity.ts
+│   │   │   └── repositories/
+│   │   │       └── {repository-name}-in-memory.repository.ts
+│   │   └── prisma/
+│   │       ├── prisma-persistance.module.ts
+│   │       ├── entities/
+│   │       │   └── {entity-name}-prisma.entity.ts
+│   │       └── repositories/
+│   │           └── {repository-name}-prisma.repository.ts
+│   ├── cache/                                # Caching implementations
+│   │   ├── noop/
+│   │   │   └── noop-cache.module.ts
+│   │   ├── in-memory/
+│   │   │   └── in-memory-cache.module.ts
+│   │   └── redis/
+│   │       └── redis-cache.module.ts
+│   ├── services/                             # External service implementations
+│   │   ├── {service-name}.service.impl.ts
+│   │   └── {service-name}.service.impl.spec.ts
+│   ├── decorators/                           # Infrastructure decorators
+│   │   └── {decorator-name}.decorator.ts
+│   ├── guards/                               # Security guards
+│   │   ├── {guard-name}/
+│   │   │   ├── {guard-name}.guard.ts
+│   │   │   └── {guard-name}.guard.spec.ts
+│   └── providers/                            # External providers (APIs, etc.)
+│       └── {provider-name}/
+│           ├── {provider-name}.provider.ts
+│           └── {provider-name}.provider.spec.ts
+└── presenters/                               # Interface adapters
+    └── http/                                 # HTTP controllers
+        ├── controllers/
+        │   ├── {controller-name}.controller.ts
+        │   └── {controller-name}.controller.spec.ts
+        ├── dtos/
+        │   ├── requests/
+        │   │   └── {request-name}.request.dto.ts
+        │   └── responses/
+        │       └── {response-name}.response.dto.ts
+        └── guards/
+            ├── {guard-name}.guard.ts
+            └── {guard-name}.guard.spec.ts
+    └── graphql/                                 # Graphql
+      ├── resolvers/
+      │   ├── {resolver-name}.resolver.ts
+      │   └── {resolver-name}.resolver.spec.ts
+      ├── dtos/
+      │   ├── requests/
+      │   │   └── {request-name}.request.dto.ts
+      │   └── responses/
+      │       └── {response-name}.response.dto.ts
+      └── guards/
+          ├── {guard-name}.guard.ts
+          └── {guard-name}.guard.spec.ts
+```
+
+## 📋 Layer Responsibilities
+
+### 🏛️ Domain Layer
+
+**Purpose**: Contains business logic and domain knowledge
+**Dependencies**: None (pure business logic)
+
+- **Entities**: Core business objects with identity and lifecycle
+- **Value Objects**: Immutable objects defined by their properties
+- **Domain Events**: Business events that occurred in the domain
+- **Domain Services**: Business logic that doesn't belong to a single entity
+- **Factories**: Complex object creation logic
+- **Exceptions**: Domain-specific error conditions
+- **Primitives**: Basic types used across the domain
+- **Constants**: Domain-level constants
+
+**Rules**:
+
+- No dependencies on other layers
+- Contains only business logic
+- Entities must implement proper encapsulation
+- Value Objects must be immutable
+- All business rules must be enforced here
+
+### 🔄 Application Layer
+
+**Purpose**: Orchestrates use cases and coordinates domain objects
+**Dependencies**: Domain layer only
+
+- **Commands/CommandHandlers**: Write operations (CQRS pattern)
+- **Queries/QueryHandlers**: Read operations (CQRS pattern)
+- **Event Handlers**: React to domain events
+- **DTOs**: Data transfer between layers
+- **Ports**: Interface definitions for external dependencies
+- **Services**: Application-specific services
+- **Events**: Application-level events
+
+**Rules**:
+
+- Orchestrates domain objects
+- Implements use cases
+- Depends only on domain layer
+- Defines interfaces for infrastructure (ports)
+- No business logic, only coordination
+
+### 🔧 Infrastructure Layer
+
+**Purpose**: Implements technical concerns and external dependencies
+**Dependencies**: Application and Domain layers
+
+- **Persistence**: Database implementations
+- **Cache**: Caching strategies
+- **Services**: External service implementations
+- **Providers**: Third-party integrations
+- **Decorators**: Cross-cutting concerns
+- **Guards**: Security implementations
+
+**Rules**:
+
+- Implements ports defined in application layer
+- Contains all framework-specific code
+- Handles external integrations
+- Must be swappable through dependency injection
+
+### 🌐 Presenters Layer
+
+**Purpose**: Handles external interfaces (HTTP, GraphQL, CLI, etc.)
+**Dependencies**: Application layer only
+
+- **Controllers**: HTTP endpoint handlers
+- **Resolvers**: GrapQL resolver handlers
+- **DTOs**: Input/output data structures
+- **Guards**: Presentation-level security
+- **Middleware**: Request/response processing
+
+**Rules**:
+
+- Only input/output mapping
+- No business logic
+- Depends only on application layer
+- Handles serialization/deserialization
+
+## 🔧 Module Integration Pattern
+
+Each module must implement this integration pattern:
+
+```typescript
+// Main module
+@Module({})
+export class {ModuleName}Module {
+  static forRoot(options: ApplicationBootstrapOptions): DynamicModule {
+    return {
+      module: {ModuleName}Module,
+      imports: [
+        {ModuleName}DomainModule,
+        {ModuleName}ApplicationModule,
+        {ModuleName}InfrastructureModule.use(
+          options.databaseDriver,
+          options.cacheDriver,
+        ),
+      ],
+      exports: [{ModuleName}ApplicationModule, {ModuleName}InfrastructureModule],
+    };
+  }
+}
+
+// Application module
+@Module({})
+export class {ModuleName}ApplicationModule {
+  static withInfrastructure(
+    infrastructureModule: Type | DynamicModule,
+    options: ApplicationBootstrapOptions,
+  ) {
+    return {
+      module: {ModuleName}ApplicationModule,
+      imports: [infrastructureModule],
+    };
+  }
+}
+
+// Infrastructure module
+@Module({})
+export class {ModuleName}InfrastructureModule {
+  static use(
+    databaseDriver: 'in-memory' | 'type-orm',
+    cacheDriver: 'in-memory' | 'noop' | 'redis',
+  ) {
+    const persistenceModule = this.selectPersistenceModule(databaseDriver);
+    const cacheModule = this.selectCacheModule(cacheDriver);
+
+    return {
+      module: {ModuleName}InfrastructureModule,
+      imports: [persistenceModule, cacheModule],
+      exports: [persistenceModule, cacheModule],
+    };
+  }
+}
+```
+
+## 📂 Shared Components Structure
+
+```
+shared/
+├── shared.module.ts
+├── domain/
+│   └── exceptions/
+│       └── domain.exception.ts           # Base domain exception
+├── infrastructure/
+│   ├── shared-infrastructure.module.ts
+│   ├── filters/
+│   │   └── domain-exception.filter.ts   # Global exception filter
+│   └── redis/
+│       └── redis.module.ts               # Shared Redis configuration
+└── common/
+    ├── constants/
+    │   └── currency.constant.ts          # Global constants
+    └── interfaces/
+        └── application-bootstrap-options.interface.ts
+```
+
+## 🎯 Naming Conventions
+
+- **Modules**: `{domain-name}.module.ts`
+- **Entities**: `{entity-name}.ts`
+- **Value Objects**: `{module-name}-{property-name}.value-object.ts`
+- **Commands**: `{action-name}.command.ts`
+- **Command Handlers**: `{action-name}.command-handler.ts`
+- **Queries**: `{query-name}.query.ts`
+- **Query Handlers**: `{query-name}.query-handler.ts`
+- **Events**: `{event-name}.domain-event.ts`
+- **Event Handlers**: `{event-name}.event-handler.ts`
+- **Exceptions**: `{exception-name}.exception.ts`
+- **DTOs**: `{purpose}.dto.ts`
+- **Repositories**: `{entity-name}.repository.ts`
+- **Services**: `{service-name}.service.ts`
+- **Controllers**: `{resource-name}.controller.ts`
+
+## 🧪 Testing Strategy
+
+Each component must have corresponding tests:
+
+- **Unit Tests**: `.spec.ts` files alongside source files
+- **Integration Tests**: `e2e` folder for end-to-end tests
+- **Domain Tests**: Focus on business logic validation
+- **Application Tests**: Test use case orchestration
+- **Infrastructure Tests**: Test external integrations
+
+## 📋 Implementation Rules
+
+1. **Dependency Direction**: Always inward (Infrastructure → Application → Domain)
+2. **Interface Segregation**: Create specific interfaces for each use case
+3. **Single Responsibility**: Each class/module has one reason to change
+4. **Open/Closed**: Open for extension, closed for modification
+5. **Dependency Inversion**: Depend on abstractions, not concretions
+6. **Test Coverage**: Minimum 80% coverage for business logic
+7. **Documentation**: JSDoc for all public methods and classes
+8. **Error Handling**: Domain exceptions for business errors
+9. **Event Sourcing**: Use domain events for state changes
+10. **CQRS**: Separate read and write operations
+
+This architecture ensures scalability, maintainability, and testability while following DDD principles and clean architecture patterns.
