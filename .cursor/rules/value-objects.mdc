@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+All Value Object class names must be prefixed with their module name (e.g., GroupDescriptionValueObject), and their file names must follow the pattern module-description.value-object.ts (e.g., group-description.value-object.ts) to ensure consistency and clarity across the project.

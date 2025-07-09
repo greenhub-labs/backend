@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Follow the SOLID principles:
+
+- Single Responsibility Principle
+A class should have only one reason to change.
+
+- Open/Closed Principle
+Software should be open for extension, but closed for modification.
+
+- Liskov Substitution Principle
+Subtypes must be substitutable for their base types.
+
+- Interface Segregation Principle
+Clients should not be forced to depend on interfaces they do not use.
+
+- Dependency Inversion Principle
+Depend on abstractions, not on concrete implementations.

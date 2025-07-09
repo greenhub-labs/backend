@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Unit Testing Rule
+
+Every time a new feature is added or an existing one is modified (unless the user explicitly provides an exception), unit tests must be created or updated accordingly. These tests should:
+
+- Follow the current standards and structure demonstrated in the project (e.g., colocated with the code, descriptive, and covering all relevant cases).
+- Cover all public methods, main use cases, and edge cases for the affected code.
+- Be written in the same PR/commit as the code change, unless otherwise specified by the user.
+- Be clear, maintainable, and follow the project's naming and organization conventions.
+
+This ensures code quality, prevents regressions, and maintains a robust and scalable codebase.

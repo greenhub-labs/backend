@@ -1,0 +1,42 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Folder structure rule for the application layer
+
+All folders in the `application` layer that contain handlers (commands, queries, event-handlers) must be organized following a modular structure by use case. Each use case will have its own subfolder, which will contain:
+
+- The corresponding handler (command-handler, query-handler, event-handler)
+- The definition file (command, query, event)
+- The unit tests for that handler
+
+Example:
+
+```
+application/
+  commands/
+    create-member/
+      create-member.command.ts
+      create-member.command-handler.ts
+      create-member.command-handler.spec.ts
+    delete-membership/
+      delete-membership.command.ts
+      delete-membership.command-handler.ts
+      delete-membership.command-handler.spec.ts
+  queries/
+    get-all-memberships/
+      get-all-memberships.query.ts
+      get-all-memberships.query-handler.ts
+      get-all-memberships.query-handler.spec.ts
+    ...
+  event-handlers/
+    membership-created/
+      membership-created.event-handler.ts
+      membership-created.event-handler.spec.ts
+    membership-deleted/
+      membership-deleted.event-handler.ts
+      membership-deleted.event-handler.spec.ts
+```
+
+This structure must be maintained to ensure scalability, clarity, and maintainability of the code in the application layer.

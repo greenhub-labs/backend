@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# pnpm Package Manager Rule
+
+This repository must always use pnpm as the package manager for all dependency management tasks. The following guidelines apply:
+
+- All dependency installation, removal, and update commands must use pnpm (e.g., `pnpm install`, `pnpm add`, `pnpm remove`, `pnpm update`).
+- Do not use npm or yarn for any package management operations.
+- If any script, documentation, or instruction references npm or yarn, it must be adapted to use pnpm instead.
+- The lockfile (`pnpm-lock.yaml`) must be committed and kept up to date.
+- All contributors must have pnpm installed locally to work with this repository.
+
+This rule ensures consistency, performance, and reliability in dependency management across the project.
