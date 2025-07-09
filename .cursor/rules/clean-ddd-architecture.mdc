@@ -1,3 +1,827 @@
+---
+description: Architecture porject description to build a DDD backend
+alwaysApply: false
+---
+
+# Clean DDD Event-Driven Architecture Structure Rule
+
+This repository must follow a complete Domain-Driven Design (DDD) Clean Architecture pattern with advanced Event-Driven Architecture patterns for distributed systems using Kafka and similar messaging platforms. All code must be organized following this exact structure and guidelines.
+
+## 🏗️ Module Structure
+
+Each domain module must follow this exact folder structure:
+
+```
+{module-name}/
+├── {module-name}.module.ts                    # Main module orchestrator
+├── domain/                                    # Business logic layer
+│   ├── {module-name}-domain.module.ts        # Domain module definition
+│   ├── entities/                             # Domain entities and aggregates
+│   │   ├── {entity-name}.ts
+│   │   ├── {entity-name}.spec.ts
+│   │   └── {aggregate-root}.ts
+│   ├── value-objects/                        # Immutable value objects
+│   │   ├── {module-name}-{property}.value-object.ts
+│   │   └── {module-name}-{property}.value-object.spec.ts
+│   ├── events/                               # Domain events
+│   │   ├── {event-name}/
+│   │   │   ├── {event-name}.domain-event.ts
+│   │   │   ├── {event-name}.domain-event.spec.ts
+│   │   │   └── {event-name}.schema.ts         # Event schema definition
+│   ├── exceptions/                           # Domain-specific exceptions
+│   │   ├── {exception-name}.exception.ts
+│   │   └── {exception-name}.exception.spec.ts
+│   ├── factories/                            # Domain object factories
+│   │   ├── {entity-name}.factory.ts
+│   │   └── {entity-name}.factory.spec.ts
+│   ├── services/                             # Domain services
+│   │   ├── {service-name}.domain-service.ts
+│   │   └── {service-name}.domain-service.spec.ts
+│   ├── primitives/                           # Domain primitives
+│   │   └── {module-name}.primitives.ts
+│   ├── constants/                            # Domain constants
+│   │   └── {module-name}.constants.ts
+│   └── aggregates/                           # Aggregate specifications
+│       ├── {aggregate-name}.aggregate.ts
+│       └── {aggregate-name}.aggregate.spec.ts
+├── application/                              # Use cases and orchestration
+│   ├── {module-name}-application.module.ts  # Application module definition
+│   ├── commands/                             # Command handlers (CQRS)
+│   │   ├── {use-case-name}/
+│   │   │   ├── {use-case-name}.command.ts
+│   │   │   ├── {use-case-name}.command-handler.ts
+│   │   │   └── {use-case-name}.command-handler.spec.ts
+│   ├── queries/                              # Query handlers (CQRS)
+│   │   ├── {query-name}/
+│   │   │   ├── {query-name}.query.ts
+│   │   │   ├── {query-name}.query-handler.ts
+│   │   │   └── {query-name}.query-handler.spec.ts
+│   ├── event-handlers/                       # Application event handlers
+│   │   ├── {event-name}/
+│   │   │   ├── {event-name}.event-handler.ts
+│   │   │   ├── {event-name}.event-handler.spec.ts
+│   │   │   └── {event-name}.retry-policy.ts   # Retry and error handling
+│   ├── sagas/                                # Distributed transaction orchestrators
+│   │   ├── {saga-name}/
+│   │   │   ├── {saga-name}.saga.ts
+│   │   │   ├── {saga-name}.saga.spec.ts
+│   │   │   └── {saga-name}.state.ts           # Saga state management
+│   ├── projections/                          # Read model projections
+│   │   ├── {projection-name}/
+│   │   │   ├── {projection-name}.projection.ts
+│   │   │   ├── {projection-name}.projection.spec.ts
+│   │   │   └── {projection-name}.rebuilder.ts # Projection rebuilding logic
+│   ├── dtos/                                 # Data Transfer Objects
+│   │   ├── {dto-name}.dto.ts
+│   │   └── {dto-name}.dto.spec.ts
+│   ├── ports/                                # Interface definitions (Dependency Inversion)
+│   │   ├── {repository-name}.repository.ts
+│   │   ├── {service-name}.service.ts
+│   │   ├── {gateway-name}.gateway.ts
+│   │   ├── event-store.repository.ts         # Event store interface
+│   │   ├── event-bus.service.ts              # Event bus interface
+│   │   ├── message-broker.service.ts         # Message broker interface
+│   │   └── saga-store.repository.ts          # Saga persistence interface
+│   ├── services/                             # Application services
+│   │   ├── {service-name}.service.ts
+│   │   ├── {service-name}.service.spec.ts
+│   │   ├── event-sourcing.service.ts         # Event sourcing coordination
+│   │   └── idempotency.service.ts            # Idempotency handling
+│   ├── events/                               # Application events
+│   │   ├── {event-name}.event.ts
+│   │   ├── {event-name}.event.spec.ts
+│   │   └── {event-name}.integration-event.ts # Cross-bounded context events
+│   └── policies/                             # Event processing policies
+│       ├── retry.policy.ts
+│       ├── dead-letter.policy.ts
+│       └── idempotency.policy.ts
+├── infrastructure/                           # External concerns implementation
+│   ├── {module-name}-infrastructure.module.ts # Infrastructure module definition
+│   ├── persistance/                          # Data persistence implementations
+│   │   ├── in-memory/
+│   │   │   ├── in-memory-persistance.module.ts
+│   │   │   ├── entities/
+│   │   │   │   └── {entity-name}-in-memory.entity.ts
+│   │   │   ├── repositories/
+│   │   │   │   └── {repository-name}-in-memory.repository.ts
+│   │   │   └── event-store/
+│   │   │       └── in-memory-event-store.repository.ts
+│   │   ├── prisma/
+│   │   │   ├── prisma-persistance.module.ts
+│   │   │   ├── entities/
+│   │   │   │   └── {entity-name}-prisma.entity.ts
+│   │   │   ├── repositories/
+│   │   │   │   └── {repository-name}-prisma.repository.ts
+│   │   │   └── event-store/
+│   │   │       ├── prisma-event-store.repository.ts
+│   │   │       └── outbox.entity.ts          # Outbox pattern implementation
+│   │   └── event-sourcing/
+│   │       ├── event-sourcing.module.ts
+│   │       ├── repositories/
+│   │       │   ├── event-store.repository.impl.ts
+│   │       │   └── snapshot-store.repository.impl.ts
+│   │       └── services/
+│   │           ├── event-replay.service.impl.ts
+│   │           └── snapshot.service.impl.ts
+│   ├── messaging/                            # Event and message handling
+│   │   ├── kafka/
+│   │   │   ├── kafka-messaging.module.ts
+│   │   │   ├── producers/
+│   │   │   │   ├── kafka-event-publisher.service.ts
+│   │   │   │   └── kafka-command-publisher.service.ts
+│   │   │   ├── consumers/
+│   │   │   │   ├── kafka-event-consumer.service.ts
+│   │   │   │   └── kafka-dead-letter-consumer.service.ts
+│   │   │   ├── config/
+│   │   │   │   ├── kafka.config.ts
+│   │   │   │   ├── topic.config.ts
+│   │   │   │   └── consumer-group.config.ts
+│   │   │   ├── serializers/
+│   │   │   │   ├── avro.serializer.ts
+│   │   │   │   └── json.serializer.ts
+│   │   │   └── middleware/
+│   │   │       ├── retry.middleware.ts
+│   │   │       ├── dead-letter.middleware.ts
+│   │   │       └── idempotency.middleware.ts
+│   │   ├── in-memory/
+│   │   │   ├── in-memory-messaging.module.ts
+│   │   │   └── in-memory-event-bus.service.ts
+│   │   └── rabbitmq/                         # Alternative messaging system
+│   │       ├── rabbitmq-messaging.module.ts
+│   │       └── rabbitmq-event-bus.service.ts
+│   ├── cache/                                # Caching implementations
+│   │   ├── noop/
+│   │   │   └── noop-cache.module.ts
+│   │   ├── in-memory/
+│   │   │   └── in-memory-cache.module.ts
+│   │   └── redis/
+│   │       ├── redis-cache.module.ts
+│   │       └── redis-projection-cache.service.ts # Projection caching
+│   ├── monitoring/                           # Observability implementations
+│   │   ├── metrics/
+│   │   │   ├── event-metrics.service.ts
+│   │   │   └── saga-metrics.service.ts
+│   │   └── tracing/
+│   │       ├── event-tracing.service.ts
+│   │       └── distributed-tracing.service.ts
+│   ├── schema-registry/                      # Event schema management
+│   │   ├── avro/
+│   │   │   ├── avro-schema-registry.module.ts
+│   │   │   └── avro-schema-registry.service.ts
+│   │   └── json-schema/
+│   │       └── json-schema-registry.service.ts
+│   ├── services/                             # External service implementations
+│   │   ├── {service-name}.service.impl.ts
+│   │   └── {service-name}.service.impl.spec.ts
+│   ├── decorators/                           # Infrastructure decorators
+│   │   ├── {decorator-name}.decorator.ts
+│   │   ├── transactional.decorator.ts
+│   │   ├── idempotent.decorator.ts
+│   │   └── saga-orchestrates.decorator.ts
+│   ├── guards/                               # Security guards
+│   │   ├── {guard-name}/
+│   │   │   ├── {guard-name}.guard.ts
+│   │   │   └── {guard-name}.guard.spec.ts
+│   │   └── event-authorization.guard.ts
+│   └── providers/                            # External providers (APIs, etc.)
+│       └── {provider-name}/
+│           ├── {provider-name}.provider.ts
+│           └── {provider-name}.provider.spec.ts
+└── presenters/                               # Interface adapters
+    ├── http/                                 # HTTP controllers
+    │   ├── controllers/
+    │   │   ├── {controller-name}.controller.ts
+    │   │   └── {controller-name}.controller.spec.ts
+    │   ├── dtos/
+    │   │   ├── requests/
+    │   │   │   └── {request-name}.request.dto.ts
+    │   │   └── responses/
+    │   │       └── {response-name}.response.dto.ts
+    │   ├── guards/
+    │   │   ├── {guard-name}.guard.ts
+    │   │   └── {guard-name}.guard.spec.ts
+    │   └── webhooks/                         # Webhook handlers for external events
+    │       ├── {webhook-name}.webhook.ts
+    │       └── {webhook-name}.webhook.spec.ts
+    ├── graphql/                              # GraphQL resolvers
+    │   ├── resolvers/
+    │   │   ├── {resolver-name}.resolver.ts
+    │   │   └── {resolver-name}.resolver.spec.ts
+    │   ├── dtos/
+    │   │   ├── requests/
+    │   │   │   └── {request-name}.request.dto.ts
+    │   │   └── responses/
+    │   │       └── {response-name}.response.dto.ts
+    │   ├── guards/
+    │   │   ├── {guard-name}.guard.ts
+    │   │   └── {guard-name}.guard.spec.ts
+    │   └── subscriptions/                    # Real-time GraphQL subscriptions
+    │       ├── {subscription-name}.subscription.ts
+    │       └── {subscription-name}.subscription.spec.ts
+    └── events/                               # Event-driven presenters
+        ├── consumers/
+        │   ├── {event-consumer-name}.consumer.ts
+        │   └── {event-consumer-name}.consumer.spec.ts
+        └── publishers/
+            ├── {event-publisher-name}.publisher.ts
+            └── {event-publisher-name}.publisher.spec.ts
+```
+
+## 📋 Layer Responsibilities
+
+### 🏛️ Domain Layer
+
+**Purpose**: Contains business logic and domain knowledge
+**Dependencies**: None (pure business logic)
+
+- **Entities**: Core business objects with identity and lifecycle
+- **Value Objects**: Immutable objects defined by their properties
+- **Domain Events**: Business events that occurred in the domain with schemas
+- **Aggregates**: Consistency boundaries and transaction boundaries
+- **Domain Services**: Business logic that doesn't belong to a single entity
+- **Factories**: Complex object creation logic
+- **Exceptions**: Domain-specific error conditions
+- **Primitives**: Basic types used across the domain
+- **Constants**: Domain-level constants
+
+**Rules**:
+
+- No dependencies on other layers
+- Contains only business logic
+- Entities must implement proper encapsulation
+- Value Objects must be immutable
+- All business rules must be enforced here
+- Aggregates define transaction boundaries
+- Domain events must have versioned schemas
+
+### 🔄 Application Layer
+
+**Purpose**: Orchestrates use cases and coordinates domain objects
+**Dependencies**: Domain layer only
+
+- **Commands/CommandHandlers**: Write operations (CQRS pattern)
+- **Queries/QueryHandlers**: Read operations (CQRS pattern)
+- **Event Handlers**: React to domain and integration events
+- **Sagas**: Orchestrate distributed transactions and processes
+- **Projections**: Build read models from event streams
+- **DTOs**: Data transfer between layers
+- **Ports**: Interface definitions for external dependencies
+- **Services**: Application-specific services including event sourcing
+- **Events**: Application-level and integration events
+- **Policies**: Event processing, retry, and error handling policies
+
+**Rules**:
+
+- Orchestrates domain objects
+- Implements use cases and business processes
+- Depends only on domain layer
+- Defines interfaces for infrastructure (ports)
+- No business logic, only coordination
+- Manages eventual consistency through events
+- Implements saga patterns for distributed transactions
+- Handles idempotency and exactly-once processing
+
+### 🔧 Infrastructure Layer
+
+**Purpose**: Implements technical concerns and external dependencies
+**Dependencies**: Application and Domain layers
+
+- **Persistence**: Database implementations with event store
+- **Messaging**: Kafka, RabbitMQ, and other message brokers
+- **Event Sourcing**: Event store, snapshots, and replay mechanisms
+- **Cache**: Caching strategies including projection caching
+- **Schema Registry**: Event schema management and evolution
+- **Monitoring**: Metrics, tracing, and observability
+- **Services**: External service implementations
+- **Providers**: Third-party integrations
+- **Decorators**: Cross-cutting concerns (transactional, idempotent)
+- **Guards**: Security implementations
+
+**Rules**:
+
+- Implements ports defined in application layer
+- Contains all framework-specific code
+- Handles external integrations
+- Must be swappable through dependency injection
+- Implements outbox pattern for transactional integrity
+- Provides exactly-once delivery guarantees
+- Handles schema evolution and backward compatibility
+- Implements circuit breakers and retry mechanisms
+
+### 🌐 Presenters Layer
+
+**Purpose**: Handles external interfaces (HTTP, GraphQL, Events, CLI, etc.)
+**Dependencies**: Application layer only
+
+- **Controllers**: HTTP endpoint handlers
+- **Resolvers**: GraphQL resolver handlers
+- **Webhooks**: External system integration handlers
+- **Event Consumers**: Kafka consumer handlers
+- **Event Publishers**: Event publication interfaces
+- **Subscriptions**: Real-time data subscriptions
+- **DTOs**: Input/output data structures
+- **Guards**: Presentation-level security
+- **Middleware**: Request/response processing
+
+**Rules**:
+
+- Only input/output mapping
+- No business logic
+- Depends only on application layer
+- Handles serialization/deserialization
+- Manages event routing and transformation
+- Implements at-least-once delivery semantics
+- Provides idempotency keys for external consumers
+
+## 🚀 Event-Driven Architecture Patterns
+
+### 🔄 Event Sourcing
+
+```typescript
+/**
+ * Event sourcing implementation pattern
+ * Store all changes as immutable events
+ */
+export interface EventStore {
+  append(
+    streamId: string,
+    events: DomainEvent[],
+    expectedVersion?: number,
+  ): Promise<void>;
+  getEvents(streamId: string, fromVersion?: number): Promise<DomainEvent[]>;
+  getSnapshot(streamId: string): Promise<Snapshot | null>;
+  saveSnapshot(streamId: string, snapshot: Snapshot): Promise<void>;
+}
+
+/**
+ * Aggregate reconstruction from events
+ */
+export abstract class EventSourcedAggregate {
+  protected version = 0;
+  private uncommittedEvents: DomainEvent[] = [];
+
+  static fromHistory<T extends EventSourcedAggregate>(
+    events: DomainEvent[],
+  ): T {
+    const aggregate = new (this as any)();
+    events.forEach((event) => aggregate.applyEvent(event));
+    aggregate.version = events.length;
+    return aggregate;
+  }
+
+  protected applyEvent(event: DomainEvent): void {
+    this.apply(event);
+    this.version++;
+  }
+
+  protected addEvent(event: DomainEvent): void {
+    this.apply(event);
+    this.uncommittedEvents.push(event);
+  }
+
+  getUncommittedEvents(): DomainEvent[] {
+    return [...this.uncommittedEvents];
+  }
+
+  markEventsAsCommitted(): void {
+    this.uncommittedEvents = [];
+  }
+
+  protected abstract apply(event: DomainEvent): void;
+}
+```
+
+### 📦 Outbox Pattern
+
+```typescript
+/**
+ * Outbox pattern for transactional consistency
+ * Ensures events are published exactly once
+ */
+@Entity()
+export class OutboxEvent {
+  @PrimaryColumn()
+  id: string;
+
+  @Column()
+  aggregateId: string;
+
+  @Column()
+  eventType: string;
+
+  @Column('json')
+  eventData: object;
+
+  @Column()
+  createdAt: Date;
+
+  @Column({ nullable: true })
+  processedAt?: Date;
+
+  @Column({ default: 0 })
+  retryCount: number;
+}
+
+export class OutboxService {
+  async publishUnprocessedEvents(): Promise<void> {
+    const events = await this.outboxRepository.findUnprocessed();
+
+    for (const event of events) {
+      try {
+        await this.eventBus.publish(event);
+        await this.outboxRepository.markAsProcessed(event.id);
+      } catch (error) {
+        await this.outboxRepository.incrementRetry(event.id);
+        if (event.retryCount >= MAX_RETRIES) {
+          await this.deadLetterQueue.send(event);
+        }
+      }
+    }
+  }
+}
+```
+
+### 🎭 Saga Pattern
+
+```typescript
+/**
+ * Saga pattern for distributed transactions
+ * Manages long-running business processes
+ */
+export abstract class Saga {
+  protected sagaId: string;
+  protected state: SagaState;
+  protected compensations: Array<() => Promise<void>> = [];
+
+  abstract handle(event: DomainEvent): Promise<void>;
+
+  protected async executeStep<T>(
+    action: () => Promise<T>,
+    compensation: () => Promise<void>,
+  ): Promise<T> {
+    try {
+      const result = await action();
+      this.compensations.push(compensation);
+      return result;
+    } catch (error) {
+      await this.compensate();
+      throw error;
+    }
+  }
+
+  protected async compensate(): Promise<void> {
+    const compensations = [...this.compensations].reverse();
+
+    for (const compensation of compensations) {
+      try {
+        await compensation();
+      } catch (error) {
+        // Log compensation failure but continue
+        console.error('Compensation failed:', error);
+      }
+    }
+
+    this.compensations = [];
+  }
+}
+```
+
+### 📊 Projection Pattern
+
+```typescript
+/**
+ * Projection pattern for read models
+ * Build optimized views from event streams
+ */
+export abstract class Projection {
+  abstract readonly projectionName: string;
+
+  abstract project(event: DomainEvent): Promise<void>;
+
+  async rebuild(fromVersion?: number): Promise<void> {
+    // Clear current projection
+    await this.clear();
+
+    // Replay all events
+    const events = await this.eventStore.getAllEvents(fromVersion);
+
+    for (const event of events) {
+      await this.project(event);
+    }
+  }
+
+  protected abstract clear(): Promise<void>;
+}
+```
+
+## 🔧 Module Integration Pattern
+
+```typescript
+// Main module with event-driven capabilities
+@Module({})
+export class {ModuleName}Module {
+  static forRoot(options: ApplicationBootstrapOptions): DynamicModule {
+    return {
+      module: {ModuleName}Module,
+      imports: [
+        {ModuleName}DomainModule,
+        {ModuleName}ApplicationModule,
+        {ModuleName}InfrastructureModule.use(
+          options.databaseDriver,
+          options.cacheDriver,
+          options.messagingDriver,
+          options.eventSourcingEnabled,
+        ),
+      ],
+      exports: [{ModuleName}ApplicationModule, {ModuleName}InfrastructureModule],
+    };
+  }
+}
+
+// Application module with saga and projection support
+@Module({})
+export class {ModuleName}ApplicationModule {
+  static withInfrastructure(
+    infrastructureModule: Type | DynamicModule,
+    options: ApplicationBootstrapOptions,
+  ) {
+    const providers = [
+      ...this.getCommandHandlers(),
+      ...this.getQueryHandlers(),
+      ...this.getEventHandlers(),
+      ...this.getSagas(),
+      ...this.getProjections(),
+    ];
+
+    return {
+      module: {ModuleName}ApplicationModule,
+      imports: [infrastructureModule],
+      providers,
+      exports: providers,
+    };
+  }
+
+  private static getCommandHandlers(): Provider[] {
+    return [
+      // Command handlers
+    ];
+  }
+
+  private static getQueryHandlers(): Provider[] {
+    return [
+      // Query handlers
+    ];
+  }
+
+  private static getEventHandlers(): Provider[] {
+    return [
+      // Event handlers
+    ];
+  }
+
+  private static getSagas(): Provider[] {
+    return [
+      // Saga orchestrators
+    ];
+  }
+
+  private static getProjections(): Provider[] {
+    return [
+      // Projection builders
+    ];
+  }
+}
+
+// Infrastructure module with messaging support
+@Module({})
+export class {ModuleName}InfrastructureModule {
+  static use(
+    databaseDriver: 'in-memory' | 'prisma',
+    cacheDriver: 'in-memory' | 'noop' | 'redis',
+    messagingDriver: 'in-memory' | 'kafka' | 'rabbitmq',
+    eventSourcingEnabled: boolean = false,
+  ) {
+    const persistenceModule = this.selectPersistenceModule(databaseDriver);
+    const cacheModule = this.selectCacheModule(cacheDriver);
+    const messagingModule = this.selectMessagingModule(messagingDriver);
+    const eventSourcingModule = eventSourcingEnabled
+      ? this.selectEventSourcingModule(databaseDriver)
+      : null;
+
+    return {
+      module: {ModuleName}InfrastructureModule,
+      imports: [
+        persistenceModule,
+        cacheModule,
+        messagingModule,
+        ...(eventSourcingModule ? [eventSourcingModule] : [])
+      ],
+      exports: [
+        persistenceModule,
+        cacheModule,
+        messagingModule,
+        ...(eventSourcingModule ? [eventSourcingModule] : [])
+      ],
+    };
+  }
+
+  private static selectMessagingModule(driver: string) {
+    switch (driver) {
+      case 'kafka':
+        return KafkaMessagingModule;
+      case 'rabbitmq':
+        return RabbitMQMessagingModule;
+      default:
+        return InMemoryMessagingModule;
+    }
+  }
+
+  private static selectEventSourcingModule(databaseDriver: string) {
+    return EventSourcingModule.forDatabase(databaseDriver);
+  }
+}
+```
+
+## 📂 Shared Components Structure
+
+```
+shared/
+├── shared.module.ts
+├── domain/
+│   ├── exceptions/
+│   │   ├── domain.exception.ts           # Base domain exception
+│   │   ├── aggregate-not-found.exception.ts
+│   │   └── concurrency.exception.ts
+│   ├── events/
+│   │   ├── domain-event.interface.ts
+│   │   ├── integration-event.interface.ts
+│   │   └── event-metadata.ts
+│   └── value-objects/
+│       ├── base.value-object.ts
+│       ├── event-id.value-object.ts
+│       └── correlation-id.value-object.ts
+├── infrastructure/
+│   ├── shared-infrastructure.module.ts
+│   ├── filters/
+│   │   ├── domain-exception.filter.ts   # Global exception filter
+│   │   └── event-exception.filter.ts
+│   ├── messaging/
+│   │   ├── event-bus.interface.ts
+│   │   ├── message-broker.interface.ts
+│   │   └── event-serializer.interface.ts
+│   ├── monitoring/
+│   │   ├── metrics.service.ts
+│   │   └── distributed-tracing.service.ts
+│   ├── redis/
+│   │   └── redis.module.ts               # Shared Redis configuration
+│   └── patterns/
+│       ├── outbox/
+│       │   ├── outbox.module.ts
+│       │   └── outbox.service.ts
+│       ├── saga/
+│       │   ├── saga.module.ts
+│       │   ├── saga.orchestrator.ts
+│       │   └── saga-store.interface.ts
+│       └── event-sourcing/
+│           ├── event-sourcing.module.ts
+│           ├── event-store.interface.ts
+│           └── snapshot-store.interface.ts
+└── common/
+    ├── constants/
+    │   ├── event-types.constant.ts        # Global event type constants
+    │   ├── topic-names.constant.ts        # Kafka topic names
+    │   └── retry-policies.constant.ts
+    ├── interfaces/
+    │   ├── application-bootstrap-options.interface.ts
+    │   ├── event-sourcing-options.interface.ts
+    │   └── messaging-options.interface.ts
+    └── decorators/
+        ├── event-handler.decorator.ts
+        ├── saga-start.decorator.ts
+        ├── saga-orchestrates.decorator.ts
+        └── projection.decorator.ts
+```
+
+## 🎯 Naming Conventions
+
+### Core Components
+
+- **Modules**: `{domain-name}.module.ts`
+- **Entities**: `{entity-name}.ts`
+- **Aggregates**: `{aggregate-name}.aggregate.ts`
+- **Value Objects**: `{module-name}-{property-name}.value-object.ts`
+
+### CQRS Components
+
+- **Commands**: `{action-name}.command.ts`
+- **Command Handlers**: `{action-name}.command-handler.ts`
+- **Queries**: `{query-name}.query.ts`
+- **Query Handlers**: `{query-name}.query-handler.ts`
+
+### Event-Driven Components
+
+- **Domain Events**: `{event-name}.domain-event.ts`
+- **Integration Events**: `{event-name}.integration-event.ts`
+- **Event Handlers**: `{event-name}.event-handler.ts`
+- **Event Schemas**: `{event-name}.schema.ts`
+
+### Distributed Patterns
+
+- **Sagas**: `{saga-name}.saga.ts`
+- **Projections**: `{projection-name}.projection.ts`
+- **Event Consumers**: `{consumer-name}.consumer.ts`
+- **Event Publishers**: `{publisher-name}.publisher.ts`
+
+### Infrastructure
+
+- **Repositories**: `{entity-name}.repository.ts`
+- **Services**: `{service-name}.service.ts`
+- **Controllers**: `{resource-name}.controller.ts`
+- **Middleware**: `{middleware-name}.middleware.ts`
+
+## 🧪 Testing Strategy
+
+### Unit Testing
+
+- **Domain Tests**: Focus on business logic and invariants
+- **Application Tests**: Test use case orchestration and event handling
+- **Infrastructure Tests**: Test external integrations and messaging
+
+### Integration Testing
+
+- **Event Flow Tests**: Test complete event flows across bounded contexts
+- **Saga Tests**: Test distributed transaction scenarios
+- **Projection Tests**: Test read model consistency
+
+### End-to-End Testing
+
+- **Message Replay Tests**: Test event replay scenarios
+- **Failure Recovery Tests**: Test system resilience
+- **Performance Tests**: Test under load with high event volumes
+
+### Event-Specific Testing
+
+```typescript
+describe('Event Flow Testing', () => {
+  it('should process events in correct order', async () => {
+    // Arrange: Set up event stream
+    const events = [event1, event2, event3];
+
+    // Act: Process events
+    await eventProcessor.processEvents(events);
+
+    // Assert: Verify final state
+    expect(await projectionRepository.getState()).toEqual(expectedState);
+  });
+
+  it('should handle event replay correctly', async () => {
+    // Test projection rebuilding from events
+  });
+
+  it('should ensure exactly-once processing', async () => {
+    // Test idempotency mechanisms
+  });
+});
+```
+
+## 📋 Implementation Rules
+
+### Core Architecture Rules
+
+1. **Dependency Direction**: Always inward (Infrastructure → Application → Domain)
+2. **Interface Segregation**: Create specific interfaces for each use case
+3. **Single Responsibility**: Each class/module has one reason to change
+4. **Open/Closed**: Open for extension, closed for modification
+5. **Dependency Inversion**: Depend on abstractions, not concretions
+
+### Event-Driven Rules
+
+6. **Event Immutability**: Events must be immutable once created
+7. **Event Versioning**: All events must support schema evolution
+8. **Exactly-Once Processing**: Implement idempotency for all event handlers
+9. **Event Ordering**: Maintain event ordering within aggregates
+10. **Eventual Consistency**: Design for eventual consistency across bounded contexts
+
+### Distributed System Rules
+
+11. **Saga Isolation**: Sagas must handle concurrent execution
+12. **Compensation Logic**: All saga steps must have compensation actions
+13. **Circuit Breakers**: Implement circuit breakers for external dependencies
+14. **Retry Policies**: Define clear retry and backoff strategies
+15. **Dead Letter Queues**: Handle poison messages appropriately
+
+### Observability Rules
+
+16. **Distributed Tracing**: Trace requests across service boundaries
+17. **Event Metrics**: Monitor event processing latency and throughput
+18. **Saga Monitoring**: Track saga execution status and failures
+19. **Projection Lag**: Monitor projection processing delays
+20. **Schema Evolution**: Track schema changes and compatibility
+
+This architecture ensures scalability, maintainability, and testability while following DDD principles, clean architecture patterns, and advanced event-driven architecture for distributed systems with Kafka and similar messaging platforms.
+
+This architecture ensures scalability, maintainability, and testability while following DDD principles and clean architecture patterns.
+
 # Clean DDD Event-Driven Architecture Structure Rule
 
 This repository must follow a complete Domain-Driven Design (DDD) Clean Architecture pattern with advanced Event-Driven Architecture patterns for distributed systems using Kafka and similar messaging platforms. All code must be organized following this exact structure and guidelines.
