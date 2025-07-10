@@ -56,7 +56,7 @@ export abstract class BaseValueObject<T> {
 
     if (a.prototype !== b.prototype) return false;
 
-    let keys = Object.keys(a);
+    const keys = Object.keys(a);
     if (keys.length !== Object.keys(b).length) {
       return false;
     }

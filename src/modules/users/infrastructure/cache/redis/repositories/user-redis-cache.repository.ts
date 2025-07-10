@@ -53,7 +53,7 @@ export class UserRedisCacheRepository implements UserCacheRepository {
 
     try {
       return UserRedisEntity.fromRedis(userData);
-    } catch (error) {
+    } catch {
       // If deserialization fails, remove the corrupted cache entry
       await this.delete(key);
       return null;
@@ -136,7 +136,7 @@ export class UserRedisCacheRepository implements UserCacheRepository {
         try {
           const user = UserRedisEntity.fromRedis(userData);
           userMap.set(keys[i], user);
-        } catch (error) {
+        } catch {
           // If deserialization fails, remove the corrupted cache entry
           await this.delete(keys[i]);
         }
@@ -233,7 +233,7 @@ export class UserRedisCacheRepository implements UserCacheRepository {
     try {
       const result = await this.redis.ping();
       return result === 'PONG';
-    } catch (error) {
+    } catch {
       return false;
     }
   }

@@ -12,7 +12,6 @@ import {
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found/user-not-found.exception';
-import { UserRestoredDomainEvent } from '../../../domain/events/user-restored/user-restored.domain-event';
 import { User } from '../../../domain/entities/user.entity';
 
 /**

@@ -10,7 +10,6 @@ import {
   UserCacheRepository,
   USER_CACHE_REPOSITORY_TOKEN,
 } from '../../ports/user-cache.repository';
-import { EventBus as AppEventBus } from '../../ports/event-bus.service';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 import { User } from '../../../domain/entities/user.entity';
