@@ -13,6 +13,7 @@ import { KafkaEventBusService } from './services/kafka-event-bus.service';
 /**
  * UsersApplicationModule
  * Application layer for Users (DDD Clean Architecture)
+ * Includes caching capabilities for improved performance
  */
 @Module({
   imports: [CqrsModule, UsersDomainModule, UsersInfrastructureModule],

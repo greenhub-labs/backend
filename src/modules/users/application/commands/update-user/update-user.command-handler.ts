@@ -5,6 +5,10 @@ import {
   UserRepository,
   USER_REPOSITORY_TOKEN,
 } from '../../ports/user.repository';
+import {
+  UserCacheRepository,
+  USER_CACHE_REPOSITORY_TOKEN,
+} from '../../ports/user-cache.repository';
 import { User } from '../../../domain/entities/user.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
@@ -13,6 +17,7 @@ import { UserNotFoundException } from '../../../domain/exceptions/user-not-found
 /**
  * Command handler for updating a user
  * Publishes events to both NestJS CQRS and Kafka event bus
+ * Updates cache with the modified user data
  */
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserCommandHandler
@@ -21,15 +26,20 @@ export class UpdateUserCommandHandler
   constructor(
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: UserRepository,
+    @Inject(USER_CACHE_REPOSITORY_TOKEN)
+    private readonly userCacheRepository: UserCacheRepository,
     private readonly nestjsEventBus: NestjsEventBusService,
     private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
   async execute(command: UpdateUserCommand): Promise<User> {
-    // 1. Find the user
-    const user = await this.userRepository.findById(command.id);
+    // 1. Find the user (check cache first, then database)
+    let user = await this.userCacheRepository.get(command.id);
     if (!user) {
-      throw new UserNotFoundException(command.id);
+      user = await this.userRepository.findById(command.id);
+      if (!user) {
+        throw new UserNotFoundException(command.id);
+      }
     }
 
     // 2. Update the user (returns a new instance)
@@ -43,7 +53,10 @@ export class UpdateUserCommandHandler
     // 3. Save the updated user
     await this.userRepository.save(updatedUser);
 
-    // 4. Publish domain events to both event buses
+    // 4. Update the cache with the new user data
+    await this.userCacheRepository.set(updatedUser.id.value, updatedUser);
+
+    // 5. Publish domain events to both event buses
     const events = updatedUser.pullDomainEvents();
     for (const event of events) {
       await this.nestjsEventBus.publish(event);

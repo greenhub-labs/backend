@@ -17,7 +17,7 @@ export class UserNameValueObject extends BaseValueObject<string> {
         'UserName must be between 2 and 50 characters',
       );
     }
-    const nameRegex = /^[A-Za-z 0-9'\-\s]+$/;
+    const nameRegex = /^[A-Za-zÀ-ÿ 0-9'\-\s]+$/;
     if (!nameRegex.test(value)) {
       throw new InvalidUserNameException(
         'UserName contains invalid characters',
