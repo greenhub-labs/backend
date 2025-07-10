@@ -9,13 +9,14 @@ import { UserNameValueObject } from '../../../domain/value-objects/user-name/use
 import { UserAvatarUrlValueObject } from '../../../domain/value-objects/user-avatar-url/user-avatar-url.value-object';
 import { UserUpdatedDomainEvent } from '../../../domain/events/user-updated/user-updated.domain-event';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found/user-not-found.exception';
+import { UserCacheRepository } from '../../ports/user-cache.repository';
 
 describe('UpdateUserCommandHandler', () => {
   let handler: UpdateUserCommandHandler;
   let userRepository: jest.Mocked<UserRepository>;
   let nestjsEventBus: jest.Mocked<NestjsEventBusService>;
   let kafkaEventBus: jest.Mocked<KafkaEventBusService>;
-
+  let userCacheRepository: jest.Mocked<UserCacheRepository>;
   beforeEach(() => {
     userRepository = {
       save: jest.fn(),
@@ -27,6 +28,7 @@ describe('UpdateUserCommandHandler', () => {
     kafkaEventBus = { publish: jest.fn() } as any;
     handler = new UpdateUserCommandHandler(
       userRepository,
+      userCacheRepository,
       nestjsEventBus,
       kafkaEventBus,
     );

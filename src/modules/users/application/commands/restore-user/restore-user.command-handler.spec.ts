@@ -9,22 +9,27 @@ import { UserNameValueObject } from '../../../domain/value-objects/user-name/use
 import { UserAvatarUrlValueObject } from '../../../domain/value-objects/user-avatar-url/user-avatar-url.value-object';
 import { UserRestoredDomainEvent } from '../../../domain/events/user-restored/user-restored.domain-event';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found/user-not-found.exception';
+import { UserCacheRepository } from '../../ports/user-cache.repository';
 
 describe('RestoreUserCommandHandler', () => {
   let handler: RestoreUserCommandHandler;
   let userRepository: jest.Mocked<UserRepository>;
   let nestjsEventBus: jest.Mocked<NestjsEventBusService>;
   let kafkaEventBus: jest.Mocked<KafkaEventBusService>;
+  let userCacheRepository: jest.Mocked<UserCacheRepository>;
 
   beforeEach(() => {
     userRepository = {
       save: jest.fn(),
       findById: jest.fn(),
+      update: jest.fn(),
+      softDelete: jest.fn(),
     };
     nestjsEventBus = { publish: jest.fn() } as any;
     kafkaEventBus = { publish: jest.fn() } as any;
     handler = new RestoreUserCommandHandler(
       userRepository,
+      userCacheRepository,
       nestjsEventBus,
       kafkaEventBus,
     );
