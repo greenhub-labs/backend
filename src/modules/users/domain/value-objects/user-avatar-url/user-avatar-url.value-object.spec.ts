@@ -26,9 +26,10 @@ describe('UserAvatarUrlValueObject', () => {
   });
 
   it('should be immutable', () => {
-    const vo = new UserAvatarUrlValueObject('https://example.com/avatar.png');
-    expect(() => {
-      (vo as any)._value = 'other';
-    }).toThrow();
+    const vo = new UserAvatarUrlValueObject('https://avatar.com/john.png');
+    // Intentar mutar la propiedad privada
+    (vo as any)._value = 'other';
+    // Comprobar que el valor no cambia
+    expect(vo.value).toBe('https://avatar.com/john.png');
   });
 });

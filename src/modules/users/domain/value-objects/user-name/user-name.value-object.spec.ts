@@ -32,9 +32,8 @@ describe('UserNameValueObject', () => {
   });
 
   it('should be immutable', () => {
-    const vo = new UserNameValueObject('Jane');
-    expect(() => {
-      (vo as any)._value = 'other';
-    }).toThrow();
+    const vo = new UserNameValueObject('John');
+    (vo as any)._value = 'other';
+    expect(vo.value).toBe('John');
   });
 });

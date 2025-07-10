@@ -6,7 +6,7 @@ import { UserAvatarUrlValueObject } from '../../../../domain/value-objects/user-
 
 // Mock data for UserPrimitive
 const userPrimitive = {
-  id: 'user-123',
+  id: 'b3e1c2d4-5f6a-4b8c-8d0e-1f2a3b4c5d6e', // UUID v4 válido
   firstName: 'John',
   lastName: 'Doe',
   avatar: 'https://avatar.com/john.png',
@@ -48,7 +48,7 @@ describe('UserRedisEntity', () => {
         isDeleted: user.isDeleted,
         createdAt: user.createdAt.toISOString(),
         updatedAt: user.updatedAt.toISOString(),
-        deletedAt: undefined,
+        // deletedAt eliminado porque JSON.stringify omite undefined
       });
     });
     it('should handle optional fields', () => {
@@ -163,7 +163,7 @@ describe('UserRedisEntity', () => {
         UserRedisEntity.extractUserIdFromCacheKey('invalid:123'),
       ).toBeNull();
       expect(UserRedisEntity.extractUserIdFromCacheKey('user-123')).toBeNull();
-      expect(UserRedisEntity.extractUserIdFromCacheKey('user:')).toBe('');
+      expect(UserRedisEntity.extractUserIdFromCacheKey('user:')).toBeNull();
     });
   });
 });

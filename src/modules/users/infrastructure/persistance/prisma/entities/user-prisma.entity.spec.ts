@@ -6,7 +6,7 @@ import { UserAvatarUrlValueObject } from '../../../../domain/value-objects/user-
 
 describe('UserPrismaEntity', () => {
   const prismaUser = {
-    id: 'user-1',
+    id: 'b3e1c2d4-5f6a-4b8c-8d0e-1f2a3b4c5d6e',
     firstName: 'John',
     lastName: 'Doe',
     avatar: 'https://avatar.com/john.png',

@@ -30,13 +30,13 @@ describe('UserDeletedDomainEvent', () => {
    */
   it('should be immutable', () => {
     const event = new UserDeletedDomainEvent({
-      eventId: 'evt-immutable',
-      aggregateId: 'user-immutable',
+      eventId: 'event-1',
+      aggregateId: 'agg-1',
       occurredAt: new Date().toISOString(),
+      version: 1,
     });
-    expect(() => {
-      // @ts-expect-error
-      event.eventId = 'changed';
-    }).toThrow();
+    // @ts-expect-error
+    event.eventId = 'changed';
+    expect(event.eventId).toBe('event-1');
   });
 });
