@@ -20,6 +20,10 @@ import { User } from '../../../../users/domain/entities/user.entity';
 import { Auth } from '../../../domain/entities/auth.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
+import {
+  AuthCacheRepository,
+  AUTH_CACHE_REPOSITORY_TOKEN,
+} from '../../ports/auth-cache.repository';
 
 /**
  * Auth payload response for login
@@ -32,8 +36,9 @@ export interface AuthPayload {
 
 /**
  * Command handler for user login
- * Validates credentials, records login activity, publishes events to both
- * NestJS CQRS and Kafka event bus, and returns JWT tokens
+ * Validates credentials, checks cache for fast auth retrieval, records login activity,
+ * caches updated auth, publishes events to both NestJS CQRS and Kafka event bus,
+ * and returns JWT tokens
  *
  * @author GreenHub Labs
  */
@@ -42,6 +47,8 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
   constructor(
     @Inject(AUTH_REPOSITORY_TOKEN)
     private readonly authRepository: AuthRepository,
+    @Inject(AUTH_CACHE_REPOSITORY_TOKEN)
+    private readonly authCacheRepository: AuthCacheRepository,
     @Inject(HASHING_SERVICE_TOKEN)
     private readonly hashingService: HashingService,
     @Inject(TOKEN_SERVICE_TOKEN)
@@ -52,13 +59,20 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
   ) {}
 
   async execute(command: LoginCommand): Promise<AuthPayload> {
-    // 1. Find auth record by email
-    const auth = await this.authRepository.findByEmail(command.email);
+    // 1. Try to find auth record by email in cache first
+    let auth = await this.authCacheRepository.getByEmail(command.email);
+
+    // 2. If not in cache, get from database
     if (!auth) {
-      throw new InvalidCredentialsException('Invalid email or password');
+      auth = await this.authRepository.findByEmail(command.email);
+      if (!auth) {
+        throw new InvalidCredentialsException('Invalid email or password');
+      }
+      // Cache for future requests
+      await this.authCacheRepository.cacheAuth(auth);
     }
 
-    // 2. Verify password
+    // 3. Verify password
     const isPasswordValid = await this.hashingService.compare(
       command.password,
       auth.password.value,
@@ -67,16 +81,16 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
       throw new InvalidCredentialsException('Invalid email or password');
     }
 
-    // 3. Get user entity
+    // 4. Get user entity
     const getUserQuery = new GetUserByIdQuery(auth.userId);
     const user: User = await this.queryBus.execute(getUserQuery);
 
-    // 4. Check if user is active
+    // 5. Check if user is active
     if (!user.isActive || user.isDeleted) {
       throw new UnauthorizedException('User account is inactive');
     }
 
-    // 5. Record login activity
+    // 6. Record login activity
     const sessionId = crypto.randomUUID();
     const updatedAuth = auth.recordLogin({
       ipAddress: command.ipAddress,
@@ -84,24 +98,36 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
       sessionId: sessionId,
     });
 
-    // 6. Update auth record with login timestamp
+    // 7. Update auth record with login timestamp
     await this.authRepository.update(updatedAuth);
 
-    // 7. Publish domain events to both event buses
+    // 8. Update cache with login timestamp
+    await this.authCacheRepository.updateAuth(updatedAuth);
+
+    // 9. Cache session information
+    await this.authCacheRepository.setSession(sessionId, {
+      userId: user.id.value,
+      email: auth.email.value,
+      loginAt: new Date().toISOString(),
+      ipAddress: command.ipAddress,
+      userAgent: command.userAgent,
+    });
+
+    // 10. Publish domain events to both event buses
     const events = updatedAuth.pullDomainEvents();
     for (const event of events) {
       await this.nestjsEventBus.publish(event); // For internal event handlers
       await this.kafkaEventBus.publish(event); // For external systems
     }
 
-    // 8. Generate JWT tokens
+    // 11. Generate JWT tokens
     const tokenPair: TokenPair = await this.tokenService.generateTokenPair({
       sub: user.id.value,
       email: auth.email.value,
       sessionId: sessionId,
     });
 
-    // 9. Return auth payload
+    // 12. Return auth payload
     return {
       accessToken: tokenPair.accessToken.value,
       refreshToken: tokenPair.refreshToken.value,

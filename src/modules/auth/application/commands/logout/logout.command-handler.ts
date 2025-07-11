@@ -5,6 +5,10 @@ import {
   AuthRepository,
   AUTH_REPOSITORY_TOKEN,
 } from '../../ports/auth.repository';
+import {
+  AuthCacheRepository,
+  AUTH_CACHE_REPOSITORY_TOKEN,
+} from '../../ports/auth-cache.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 
@@ -12,8 +16,8 @@ import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
  * LogoutCommandHandler
  *
  * Command handler for user logout operations.
- * Records the logout event, triggers domain events for analytics and monitoring,
- * and publishes events to both NestJS CQRS and Kafka event bus.
+ * Records the logout event, clears cache and session data, triggers domain events
+ * for analytics and monitoring, and publishes events to both NestJS CQRS and Kafka event bus.
  *
  * @author GreenHub Labs
  */
@@ -22,6 +26,8 @@ export class LogoutCommandHandler implements ICommandHandler<LogoutCommand> {
   constructor(
     @Inject(AUTH_REPOSITORY_TOKEN)
     private readonly authRepository: AuthRepository,
+    @Inject(AUTH_CACHE_REPOSITORY_TOKEN)
+    private readonly authCacheRepository: AuthCacheRepository,
     private readonly nestjsEventBus: NestjsEventBusService,
     private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
@@ -52,14 +58,24 @@ export class LogoutCommandHandler implements ICommandHandler<LogoutCommand> {
     // 3. Save auth entity
     await this.authRepository.save(auth);
 
-    // 4. Publish domain events to both event buses
+    // 4. Clear session cache if sessionId is provided
+    if (command.sessionId) {
+      await this.authCacheRepository.deleteSession(command.sessionId);
+    }
+
+    // 5. Optionally clear auth cache to force fresh data on next login
+    // This can be useful for security reasons or if auth data might be stale
+    // Uncomment if you want to clear auth cache on logout:
+    // await this.authCacheRepository.deleteAuth(command.userId, auth.email.value);
+
+    // 6. Publish domain events to both event buses
     const events = auth.pullDomainEvents();
     for (const event of events) {
       await this.nestjsEventBus.publish(event); // For internal event handlers
       await this.kafkaEventBus.publish(event); // For external systems
     }
 
-    // 5. Return success
+    // 7. Return success
     return true;
   }
 }
