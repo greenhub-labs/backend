@@ -18,6 +18,7 @@ import { LoginInput } from '../dtos/requests/login.request.dto';
 import { AuthPayload } from '../dtos/responses/auth-payload.response.dto';
 import { TokenVerificationResult } from '../dtos/responses/token-verification-result.response.dto';
 import { UserResponseDto } from '../../../../users/presenters/graphql/dtos/responses/user.response.dto';
+import { AuthMapper } from '../mappers/auth.mapper';
 
 // Guards and decorators
 import {
@@ -58,8 +59,8 @@ export class AuthResolver {
       input.lastName,
       input.phone,
     );
-
-    return this.commandBus.execute(command);
+    const result = await this.commandBus.execute(command);
+    return AuthMapper.fromDomain(result);
   }
 
   /**
@@ -84,8 +85,8 @@ export class AuthResolver {
       request.ip || request.connection?.remoteAddress,
       request.headers?.['user-agent'],
     );
-
-    return this.commandBus.execute(command);
+    const result = await this.commandBus.execute(command);
+    return AuthMapper.fromDomain(result);
   }
 
   /**
@@ -123,7 +124,8 @@ export class AuthResolver {
     @Args('refreshToken') refreshToken: string,
   ): Promise<AuthPayload> {
     const command = new RefreshTokenCommand(refreshToken);
-    return this.commandBus.execute(command);
+    const result = await this.commandBus.execute(command);
+    return AuthMapper.fromDomain(result);
   }
 
   /**
