@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
-import { Inject, UnauthorizedException } from '@nestjs/common';
+import { Inject, Logger, UnauthorizedException } from '@nestjs/common';
 import { LoginCommand } from './login.command';
 import {
   AuthRepository,
@@ -42,6 +42,7 @@ export interface AuthPayload {
  */
 @CommandHandler(LoginCommand)
 export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
+  private readonly logger = new Logger(LoginCommandHandler.name);
   constructor(
     @Inject(AUTH_REPOSITORY_TOKEN)
     private readonly authRepository: AuthRepository,
@@ -56,6 +57,9 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
   ) {}
 
   async execute(command: LoginCommand): Promise<AuthPayload> {
+    this.logger.debug('Executing login command');
+    this.logger.debug(JSON.stringify(command));
+
     // 1. Try to find auth record by email in cache first
     let auth = await this.authCacheRepository.getByEmail(command.email);
 
@@ -112,6 +116,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     // 10. Publish domain events to event bus
     const events = updatedAuth.pullDomainEvents();
+    this.logger.debug(`Publishing ${events.length} domain events to event bus`);
     for (const event of events) {
       await this.nestjsEventBus.publish(event); // For internal event handlers
     }
