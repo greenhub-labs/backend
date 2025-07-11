@@ -13,6 +13,7 @@ import { CreateUserCommand } from '../../../application/commands/create-user/cre
 import { UpdateUserCommand } from '../../../application/commands/update-user/update-user.command';
 import { DeleteUserCommand } from '../../../application/commands/delete-user/delete-user.command';
 import { RestoreUserCommand } from '../../../application/commands/restore-user/restore-user.command';
+import { UserMapper } from '../mappers/user.mapper';
 
 // Auth guards and decorators
 import {
@@ -46,18 +47,7 @@ export class UserResolver {
   ): Promise<UserResponseDto> {
     const user = await this.queryBus.execute(new GetUserByIdQuery(input.id));
     // Mapear la entidad User del dominio al DTO de respuesta
-    return {
-      id: user.id.value,
-      firstName: user.firstName?.value,
-      lastName: user.lastName?.value,
-      avatar: user.avatar?.value,
-      bio: user.bio,
-      isActive: user.isActive,
-      isDeleted: user.isDeleted,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
-    };
+    return UserMapper.fromDomain(user);
   }
 
   /**
@@ -83,18 +73,7 @@ export class UserResolver {
         input.bio,
       ),
     );
-    return {
-      id: user.id.value,
-      firstName: user.firstName?.value,
-      lastName: user.lastName?.value,
-      avatar: user.avatar?.value,
-      bio: user.bio,
-      isActive: user.isActive,
-      isDeleted: user.isDeleted,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
-    };
+    return UserMapper.fromDomain(user);
   }
 
   /**
@@ -126,18 +105,7 @@ export class UserResolver {
         input.bio,
       ),
     );
-    return {
-      id: user.id.value,
-      firstName: user.firstName?.value,
-      lastName: user.lastName?.value,
-      avatar: user.avatar?.value,
-      bio: user.bio,
-      isActive: user.isActive,
-      isDeleted: user.isDeleted,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
-    };
+    return UserMapper.fromDomain(user);
   }
 
   /**
@@ -160,18 +128,7 @@ export class UserResolver {
       throw new ForbiddenException('You can only delete your own account');
     }
     const user = await this.commandBus.execute(new DeleteUserCommand(input.id));
-    return {
-      id: user.id.value,
-      firstName: user.firstName?.value,
-      lastName: user.lastName?.value,
-      avatar: user.avatar?.value,
-      bio: user.bio,
-      isActive: user.isActive,
-      isDeleted: user.isDeleted,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
-    };
+    return UserMapper.fromDomain(user);
   }
 
   /**
@@ -198,17 +155,6 @@ export class UserResolver {
     const user = await this.commandBus.execute(
       new RestoreUserCommand(input.id),
     );
-    return {
-      id: user.id.value,
-      firstName: user.firstName?.value,
-      lastName: user.lastName?.value,
-      avatar: user.avatar?.value,
-      bio: user.bio,
-      isActive: user.isActive,
-      isDeleted: user.isDeleted,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
-    };
+    return UserMapper.fromDomain(user);
   }
 }

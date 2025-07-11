@@ -6,6 +6,7 @@ type UserResponseDto {
   id: String!
   firstName: String
   lastName: String
+  email: String
   avatar: String
   bio: String
   isActive: Boolean!
