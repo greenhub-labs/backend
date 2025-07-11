@@ -9,22 +9,26 @@ import { UserNameValueObject } from '../../../domain/value-objects/user-name/use
 import { UserAvatarUrlValueObject } from '../../../domain/value-objects/user-avatar-url/user-avatar-url.value-object';
 import { UserDeletedDomainEvent } from '../../../domain/events/user-deleted/user-deleted.domain-event';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found/user-not-found.exception';
+import { UserCacheRepository } from '../../ports/user-cache.repository';
 
 describe('DeleteUserCommandHandler', () => {
   let handler: DeleteUserCommandHandler;
   let userRepository: jest.Mocked<UserRepository>;
   let nestjsEventBus: jest.Mocked<NestjsEventBusService>;
   let kafkaEventBus: jest.Mocked<KafkaEventBusService>;
-
+  let userCacheRepository: jest.Mocked<UserCacheRepository>;
   beforeEach(() => {
     userRepository = {
       save: jest.fn(),
       findById: jest.fn(),
+      update: jest.fn(),
+      softDelete: jest.fn(),
     };
     nestjsEventBus = { publish: jest.fn() } as any;
     kafkaEventBus = { publish: jest.fn() } as any;
     handler = new DeleteUserCommandHandler(
       userRepository,
+      userCacheRepository,
       nestjsEventBus,
       kafkaEventBus,
     );

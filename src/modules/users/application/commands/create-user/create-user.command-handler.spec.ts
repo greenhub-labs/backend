@@ -9,11 +9,13 @@ import { UserIdValueObject } from '../../../domain/value-objects/user-id/user-id
 import { UserNameValueObject } from '../../../domain/value-objects/user-name/user-name.value-object';
 import { UserAvatarUrlValueObject } from '../../../domain/value-objects/user-avatar-url/user-avatar-url.value-object';
 import { UserCreatedDomainEvent } from '../../../domain/events/user-created/user-created.domain-event';
+import { UserCacheRepository } from '../../ports/user-cache.repository';
 
 describe('CreateUserCommandHandler', () => {
   let handler: CreateUserCommandHandler;
   let userFactory: jest.Mocked<UserFactory>;
   let userRepository: jest.Mocked<UserRepository>;
+  let userCacheRepository: jest.Mocked<UserCacheRepository>;
   let nestjsEventBus: jest.Mocked<NestjsEventBusService>;
   let kafkaEventBus: jest.Mocked<KafkaEventBusService>;
 
@@ -25,6 +27,7 @@ describe('CreateUserCommandHandler', () => {
     handler = new CreateUserCommandHandler(
       userFactory,
       userRepository,
+      userCacheRepository,
       nestjsEventBus,
       kafkaEventBus,
     );

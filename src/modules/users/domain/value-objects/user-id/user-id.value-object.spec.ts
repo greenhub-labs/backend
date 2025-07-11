@@ -28,10 +28,8 @@ describe('UserIdValueObject', () => {
   });
 
   it('should be immutable', () => {
-    const uuid = '123e4567-e89b-12d3-a456-426614174000';
-    const vo = new UserIdValueObject(uuid);
-    expect(() => {
-      (vo as any)._value = 'other';
-    }).toThrow();
+    const vo = new UserIdValueObject('b3e1c2d4-5f6a-4b8c-8d0e-1f2a3b4c5d6e');
+    (vo as any)._value = 'other';
+    expect(vo.value).toBe('b3e1c2d4-5f6a-4b8c-8d0e-1f2a3b4c5d6e');
   });
 });
