@@ -37,9 +37,10 @@ datasource db {
 /// Roles de usuario dentro de una farm
 /// Define los niveles de acceso y permisos
 enum Roles {
-  OWNER         /// Propietario: acceso total, puede eliminar farm
+  SYSTEM        /// Administrador del sistema: acceso total, puede gestionar todos los recursos.
+  OWNER         /// Propietario: acceso total, puede eliminar farm, usuarios, etc.
   ADMINISTRATOR /// Administrador: gestión completa excepto eliminación
-  MANAGER       /// Gestor: control operativo de cultivos y sistemas
+  MANAGER       /// Gestor: control operativo de cultivos y sistemas, puede eliminar farm, usuarios, etc.
   VIEWER        /// Observador: solo lectura de datos y reportes
   GUEST         /// Invitado: acceso limitado a información básica
 }

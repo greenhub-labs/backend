@@ -35,7 +35,7 @@ describe('UserRestoredDomainEvent', () => {
       occurredAt: new Date().toISOString(),
       version: 1,
     });
-    // @ts-expect-error
+    // @ts-expect-error: test immutability
     event.eventId = 'changed';
     expect(event.eventId).toBe('event-1');
   });
