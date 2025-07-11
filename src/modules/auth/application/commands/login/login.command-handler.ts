@@ -17,7 +17,6 @@ import {
 import { InvalidCredentialsException } from '../../../domain/exceptions/invalid-credentials/invalid-credentials.exception';
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
 import { User } from '../../../../users/domain/entities/user.entity';
-import { Auth } from '../../../domain/entities/auth.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 import {

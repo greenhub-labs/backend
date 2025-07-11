@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { EventBus } from '../ports/event-bus.service';
 import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
 import { KAFKA_CLIENT } from 'src/shared/infrastructure/providers/kafka/kafka.provider';
@@ -13,6 +13,7 @@ import { Kafka } from 'kafkajs';
  */
 @Injectable()
 export class KafkaEventBusService implements EventBus {
+  private readonly logger = new Logger(KafkaEventBusService.name);
   constructor(@Inject(KAFKA_CLIENT) private readonly kafka: Kafka) {}
 
   /**
@@ -22,6 +23,10 @@ export class KafkaEventBusService implements EventBus {
    * @throws {Error} When Kafka publishing fails
    */
   async publish(event: DomainEvent): Promise<void> {
+    this.logger.debug(
+      `Publishing event to Kafka: ${event.constructor.name}`,
+      event,
+    );
     try {
       const producer = this.kafka.producer();
       await producer.connect();
