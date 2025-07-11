@@ -1,0 +1,116 @@
+---
+description: Document a entire module
+alwaysApply: false
+---
+
+# Rule: Module Documentation Standard
+
+All modules must include a comprehensive README.md or equivalent documentation file in their root directory. The documentation must be written in clear, concise English and follow the structure below (based on the documentation_request.md template):
+
+## Required Sections for Module Documentation
+
+1. **Module Overview**
+   - Purpose of the module
+   - Business/domain context
+   - How it fits into the overall architecture
+
+2. **Architecture & Design**
+   - Structure and main folders
+   - DDD elements (aggregates, entities, value objects, repositories, services)
+   - Key design decisions
+
+3. **Business Rules**
+   - All relevant business logic and domain rules handled by the module
+
+4. **Usage**
+   - How to use the module (APIs, commands, queries, events)
+   - Example flows (e.g., create, update, delete)
+   - Extension/customization points
+
+5. **Integration**
+   - How to integrate with the rest of the backend
+   - Dependencies, configuration, and environment variables
+
+6. **Domain Events & CQRS**
+   - List and describe all domain events, commands, queries, and their handlers
+
+7. **Resolvers & Presenters**
+   - How GraphQL/HTTP resolvers/controllers are structured
+   - How they interact with the application layer
+
+8. **Testing**
+   - How to run unit/integration tests
+   - Test structure and conventions
+
+9. **Troubleshooting & FAQ**
+   - Common issues and solutions
+   - Where to find further help
+
+10. **Conventions & Best Practices**
+    - Naming conventions, folder structure, and architectural rules
+
+11. **References**
+    - Links to related documentation, ADRs, or external resources
+
+## Additional Guidelines
+
+- Include diagrams (Mermaid, PlantUML, etc.) where helpful.
+- Reference the overall project documentation style (see PROYECTO_GREENHUB_DOCUMENTACION.md) when in doubt.
+- Keep the documentation up to date with any significant changes to the module.
+
+This rule ensures that all modules are consistently documented, improving onboarding, maintainability, and collaboration across the project.# Rule: Module Documentation Standard
+
+All modules must include a comprehensive README.md or equivalent documentation file in their root directory. The documentation must be written in clear, concise English and follow the structure below (based on the documentation_request.md template):
+
+## Required Sections for Module Documentation
+
+1. **Module Overview**
+   - Purpose of the module
+   - Business/domain context
+   - How it fits into the overall architecture
+
+2. **Architecture & Design**
+   - Structure and main folders
+   - DDD elements (aggregates, entities, value objects, repositories, services)
+   - Key design decisions
+
+3. **Business Rules**
+   - All relevant business logic and domain rules handled by the module
+
+4. **Usage**
+   - How to use the module (APIs, commands, queries, events)
+   - Example flows (e.g., create, update, delete)
+   - Extension/customization points
+
+5. **Integration**
+   - How to integrate with the rest of the backend
+   - Dependencies, configuration, and environment variables
+
+6. **Domain Events & CQRS**
+   - List and describe all domain events, commands, queries, and their handlers
+
+7. **Resolvers & Presenters**
+   - How GraphQL/HTTP resolvers/controllers are structured
+   - How they interact with the application layer
+
+8. **Testing**
+   - How to run unit/integration tests
+   - Test structure and conventions
+
+9. **Troubleshooting & FAQ**
+   - Common issues and solutions
+   - Where to find further help
+
+10. **Conventions & Best Practices**
+    - Naming conventions, folder structure, and architectural rules
+
+11. **References**
+    - Links to related documentation, ADRs, or external resources
+
+## Additional Guidelines
+
+- Include diagrams (Mermaid, PlantUML, etc.) where helpful.
+- Reference the overall project documentation style (see PROYECTO_GREENHUB_DOCUMENTACION.md) when in doubt.
+- Keep the documentation up to date with any significant changes to the module.
+
+This rule ensures that all modules are consistently documented, improving onboarding, maintainability, and collaboration across the project.
