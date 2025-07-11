@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { User } from '../../../../domain/entities/user.entity';
 
 /**
  * Response DTO for User GraphQL type
@@ -22,6 +23,12 @@ export class UserResponseDto {
    */
   @Field({ nullable: true })
   lastName?: string;
+
+  /**
+   * Email of the user (optional, only if available)
+   */
+  @Field({ nullable: true })
+  email?: string;
 
   /**
    * Avatar URL of the user

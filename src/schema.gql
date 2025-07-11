@@ -6,6 +6,7 @@ type UserResponseDto {
   id: String!
   firstName: String
   lastName: String
+  email: String
   avatar: String
   bio: String
   isActive: Boolean!
@@ -20,7 +21,39 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type AuthPayload {
+  """JWT access token for API authentication"""
+  accessToken: String!
+
+  """JWT refresh token for obtaining new access tokens"""
+  refreshToken: String!
+
+  """User information"""
+  user: UserResponseDto!
+}
+
+type TokenVerificationResult {
+  """Whether the token is valid"""
+  valid: Boolean!
+
+  """Whether the token is expired"""
+  expired: Boolean
+
+  """User ID extracted from token"""
+  userId: String
+
+  """Email extracted from token"""
+  email: String
+}
+
 type Query {
+  """Get current authenticated user information"""
+  me: UserResponseDto!
+
+  """Verify JWT token validity and decode payload"""
+  verifyToken(token: String!): TokenVerificationResult!
+
+  """Get user information by ID (requires authentication)"""
   getUserById(input: GetUserByIdRequestDto!): UserResponseDto!
 }
 
@@ -29,10 +62,56 @@ input GetUserByIdRequestDto {
 }
 
 type Mutation {
+  """Register a new user account"""
+  register(input: RegisterInput!): AuthPayload!
+
+  """Authenticate user with email and password"""
+  login(input: LoginInput!): AuthPayload!
+
+  """Logout current user and record logout event"""
+  logout: Boolean!
+
+  """Refresh access token using a valid refresh token"""
+  refreshToken(refreshToken: String!): AuthPayload!
+
+  """
+  Create a new user (Admin only - regular registration uses auth/register)
+  """
   createUser(input: CreateUserRequestDto!): UserResponseDto!
+
+  """Update user profile (users can only update their own profile)"""
   updateUser(input: UpdateUserRequestDto!): UserResponseDto!
+
+  """Delete user account (users can only delete their own account)"""
   deleteUser(input: DeleteUserRequestDto!): UserResponseDto!
+
+  """Restore a soft-deleted user (Admin only)"""
   restoreUser(input: RestoreUserRequestDto!): UserResponseDto!
+}
+
+input RegisterInput {
+  """User email address"""
+  email: String!
+
+  """User password"""
+  password: String!
+
+  """User first name"""
+  firstName: String
+
+  """User last name"""
+  lastName: String
+
+  """User phone number"""
+  phone: String
+}
+
+input LoginInput {
+  """User email address"""
+  email: String!
+
+  """User password"""
+  password: String!
 }
 
 input CreateUserRequestDto {
