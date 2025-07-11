@@ -338,10 +338,16 @@ model Farm {
   name        String
   /// Descripción opcional
   description String?
-  /// Ubicación textual (ciudad, región)
-  location    String?
+  /// Pais de la farm
+  country     String?
+  /// Estado o provincia de la farm
+  state       String?
+  /// Ciudad de la farm
+  city        String?
+  /// Código postal de la farm
+  postalCode  String?
   /// Dirección completa estructurada
-  address     Json? // { street, city, country, postal_code }
+  address     Json? // { street, city, country, postal_code, state, country }
   /// Coordenadas GPS
   coordinates Json? // { lat: number, lng: number }
   /// Zona horaria de la farm
