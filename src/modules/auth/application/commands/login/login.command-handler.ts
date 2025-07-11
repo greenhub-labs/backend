@@ -18,6 +18,8 @@ import { InvalidCredentialsException } from '../../../domain/exceptions/invalid-
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
 import { User } from '../../../../users/domain/entities/user.entity';
 import { Auth } from '../../../domain/entities/auth.entity';
+import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
+import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 
 /**
  * Auth payload response for login
@@ -30,7 +32,8 @@ export interface AuthPayload {
 
 /**
  * Command handler for user login
- * Validates credentials, records login activity, and returns JWT tokens
+ * Validates credentials, records login activity, publishes events to both
+ * NestJS CQRS and Kafka event bus, and returns JWT tokens
  *
  * @author GreenHub Labs
  */
@@ -44,6 +47,8 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     @Inject(TOKEN_SERVICE_TOKEN)
     private readonly tokenService: TokenService,
     private readonly queryBus: QueryBus,
+    private readonly nestjsEventBus: NestjsEventBusService,
+    private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
   async execute(command: LoginCommand): Promise<AuthPayload> {
@@ -82,14 +87,21 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     // 6. Update auth record with login timestamp
     await this.authRepository.update(updatedAuth);
 
-    // 7. Generate JWT tokens
+    // 7. Publish domain events to both event buses
+    const events = updatedAuth.pullDomainEvents();
+    for (const event of events) {
+      await this.nestjsEventBus.publish(event); // For internal event handlers
+      await this.kafkaEventBus.publish(event); // For external systems
+    }
+
+    // 8. Generate JWT tokens
     const tokenPair: TokenPair = await this.tokenService.generateTokenPair({
       sub: user.id.value,
       email: auth.email.value,
       sessionId: sessionId,
     });
 
-    // 8. Return auth payload
+    // 9. Return auth payload
     return {
       accessToken: tokenPair.accessToken.value,
       refreshToken: tokenPair.refreshToken.value,

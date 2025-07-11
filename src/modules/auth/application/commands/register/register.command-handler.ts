@@ -19,6 +19,8 @@ import { CreateUserCommand } from '../../../../users/application/commands/create
 import { AuthPasswordValueObject } from '../../../domain/value-objects/auth-password/auth-password.value-object';
 import { User } from '../../../../users/domain/entities/user.entity';
 import { Auth } from '../../../domain/entities/auth.entity';
+import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
+import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 
 /**
  * Auth payload response for registration
@@ -31,7 +33,8 @@ export interface AuthPayload {
 
 /**
  * Command handler for user registration
- * Creates both User and Auth entities, validates email uniqueness
+ * Creates both User and Auth entities, validates email uniqueness,
+ * publishes events to both NestJS CQRS and Kafka event bus,
  * and returns JWT tokens for immediate authentication
  *
  * @author GreenHub Labs
@@ -49,6 +52,8 @@ export class RegisterCommandHandler
     @Inject(TOKEN_SERVICE_TOKEN)
     private readonly tokenService: TokenService,
     private readonly commandBus: CommandBus,
+    private readonly nestjsEventBus: NestjsEventBusService,
+    private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
   async execute(command: RegisterCommand): Promise<AuthPayload> {
@@ -96,17 +101,24 @@ export class RegisterCommandHandler
       },
     );
 
-    // 7. Save Auth entity (this will also publish domain events)
+    // 7. Save Auth entity
     await this.authRepository.save(auth);
 
-    // 8. Generate JWT tokens
+    // 8. Publish domain events to both event buses
+    const events = auth.pullDomainEvents();
+    for (const event of events) {
+      await this.nestjsEventBus.publish(event); // For internal event handlers
+      await this.kafkaEventBus.publish(event); // For external systems
+    }
+
+    // 9. Generate JWT tokens
     const tokenPair: TokenPair = await this.tokenService.generateTokenPair({
       sub: user.id.value,
       email: command.email,
       sessionId: crypto.randomUUID(),
     });
 
-    // 9. Return auth payload
+    // 10. Return auth payload
     return {
       accessToken: tokenPair.accessToken.value,
       refreshToken: tokenPair.refreshToken.value,

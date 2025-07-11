@@ -21,6 +21,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Query {
+  """Get user information by ID (requires authentication)"""
   getUserById(input: GetUserByIdRequestDto!): UserResponseDto!
 }
 
@@ -29,9 +30,18 @@ input GetUserByIdRequestDto {
 }
 
 type Mutation {
+  """
+  Create a new user (Admin only - regular registration uses auth/register)
+  """
   createUser(input: CreateUserRequestDto!): UserResponseDto!
+
+  """Update user profile (users can only update their own profile)"""
   updateUser(input: UpdateUserRequestDto!): UserResponseDto!
+
+  """Delete user account (users can only delete their own account)"""
   deleteUser(input: DeleteUserRequestDto!): UserResponseDto!
+
+  """Restore a soft-deleted user (Admin only)"""
   restoreUser(input: RestoreUserRequestDto!): UserResponseDto!
 }
 

@@ -1,12 +1,8 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { AuthRepository } from '../../../../application/ports/auth.repository';
 import { Auth } from '../../../../domain/entities/auth.entity';
 import { AuthPrismaEntity } from '../entities/auth-prisma.entity';
-import {
-  EventBus,
-  EVENT_BUS_TOKEN,
-} from '../../../../application/ports/event-bus.service';
 
 /**
  * Prisma implementation of the AuthRepository interface
@@ -19,13 +15,8 @@ export class AuthPrismaRepository implements AuthRepository {
   /**
    * Creates a new AuthPrismaRepository instance
    * @param prisma - The Prisma client instance for database operations
-   * @param eventBus - Event bus for publishing domain events
    */
-  constructor(
-    private readonly prisma: PrismaClient,
-    @Inject(EVENT_BUS_TOKEN)
-    private readonly eventBus: EventBus,
-  ) {}
+  constructor(private readonly prisma: PrismaClient) {}
 
   /**
    * Finds auth record by user ID
@@ -62,47 +53,33 @@ export class AuthPrismaRepository implements AuthRepository {
   }
 
   /**
-   * Saves an auth record (create or update) and publishes domain events
+   * Saves an auth record (create or update)
    * @param auth - Auth entity to save
    * @returns Auth ID
    */
   async save(auth: Auth): Promise<string> {
     const authData = AuthPrismaEntity.toPrisma(auth);
 
-    // Save to database
     const savedAuth = await this.prisma.auth.upsert({
       where: { id: auth.id },
       update: authData,
       create: authData,
     });
 
-    // Publish domain events
-    const events = auth.pullDomainEvents();
-    for (const event of events) {
-      await this.eventBus.publish(event);
-    }
-
     return savedAuth.id;
   }
 
   /**
-   * Updates an existing auth record and publishes domain events
+   * Updates an existing auth record
    * @param auth - Auth entity to update
    */
   async update(auth: Auth): Promise<void> {
     const authData = AuthPrismaEntity.toPrisma(auth);
 
-    // Update in database
     await this.prisma.auth.update({
       where: { id: auth.id },
       data: authData,
     });
-
-    // Publish domain events
-    const events = auth.pullDomainEvents();
-    for (const event of events) {
-      await this.eventBus.publish(event);
-    }
   }
 
   /**
