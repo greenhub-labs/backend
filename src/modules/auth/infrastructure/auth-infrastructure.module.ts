@@ -20,6 +20,7 @@ import { AUTH_REPOSITORY_TOKEN } from '../application/ports/auth.repository';
 import { AUTH_CACHE_REPOSITORY_TOKEN } from '../application/ports/auth-cache.repository';
 import { HASHING_SERVICE_TOKEN } from '../application/ports/hashing.service';
 import { TOKEN_SERVICE_TOKEN } from '../application/ports/token.service';
+import { SharedInfrastructureModule } from 'src/shared/infrastructure/shared-infrastructure.module';
 
 /**
  * AuthInfrastructureModule
@@ -31,8 +32,6 @@ import { TOKEN_SERVICE_TOKEN } from '../application/ports/token.service';
 @Module({
   imports: [
     ConfigModule,
-    PrismaModule,
-    RedisModule, // For auth caching
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

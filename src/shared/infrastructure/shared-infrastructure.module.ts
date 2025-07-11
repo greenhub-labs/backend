@@ -1,15 +1,10 @@
 import { Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
-import { DomainExceptionFilter } from './filters/domain-exception.filter';
 import { KafkaProviderModule } from './providers/kafka/kafka.provider.module';
+import { RedisModule } from './redis/redis.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [KafkaProviderModule],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: DomainExceptionFilter,
-    },
-  ],
+  imports: [KafkaProviderModule, PrismaModule, RedisModule],
+  exports: [KafkaProviderModule, PrismaModule, RedisModule],
 })
 export class SharedInfrastructureModule {}

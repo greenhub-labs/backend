@@ -10,6 +10,7 @@ import { UsersInfrastructureModule } from '../infrastructure/users-infrastructur
 import { NestjsEventBusService } from './services/nestjs-event-bus.service';
 import { KafkaEventBusService } from './services/kafka-event-bus.service';
 import { UserCreatedIntegrationEventHandler } from './event-handlers/user-created-integration.event-handler';
+import { SharedInfrastructureModule } from 'src/shared/infrastructure/shared-infrastructure.module';
 
 /**
  * UsersApplicationModule
