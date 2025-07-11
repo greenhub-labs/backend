@@ -18,7 +18,6 @@ import { InvalidCredentialsException } from '../../../domain/exceptions/invalid-
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
 import { User } from '../../../../users/domain/entities/user.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
-import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 import {
   AuthCacheRepository,
   AUTH_CACHE_REPOSITORY_TOKEN,
@@ -54,7 +53,6 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     private readonly tokenService: TokenService,
     private readonly queryBus: QueryBus,
     private readonly nestjsEventBus: NestjsEventBusService,
-    private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
   async execute(command: LoginCommand): Promise<AuthPayload> {
@@ -112,11 +110,10 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
       userAgent: command.userAgent,
     });
 
-    // 10. Publish domain events to both event buses
+    // 10. Publish domain events to event bus
     const events = updatedAuth.pullDomainEvents();
     for (const event of events) {
       await this.nestjsEventBus.publish(event); // For internal event handlers
-      await this.kafkaEventBus.publish(event); // For external systems
     }
 
     // 11. Generate JWT tokens

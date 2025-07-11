@@ -56,17 +56,23 @@ export class StartupCheckService implements OnModuleInit {
   }
 
   private async checkKafka() {
+    this.logger.debug('Checking Kafka connection');
     const admin = this.kafka.admin();
     await admin.connect();
+    this.logger.debug('Kafka connection OK');
     await admin.disconnect();
   }
 
   private async checkPrisma() {
+    this.logger.debug('Checking Prisma connection');
     await this.prisma.$connect();
+    this.logger.debug('Prisma connection OK');
     await this.prisma.$disconnect();
   }
 
   private async checkRedis() {
+    this.logger.debug('Checking Redis connection');
     await this.redis.ping();
+    this.logger.debug('Redis connection OK');
   }
 }

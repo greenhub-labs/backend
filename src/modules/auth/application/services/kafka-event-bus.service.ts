@@ -23,10 +23,9 @@ export class KafkaEventBusService implements EventBus {
    * @throws {Error} When Kafka publishing fails
    */
   async publish(event: DomainEvent): Promise<void> {
-    this.logger.debug(
-      `Publishing event to Kafka: ${event.constructor.name}`,
-      event,
-    );
+    this.logger.debug(`Publishing event to Kafka: ${event.constructor.name}`);
+    this.logger.debug(JSON.stringify(event));
+
     try {
       const producer = this.kafka.producer();
       await producer.connect();

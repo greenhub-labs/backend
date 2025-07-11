@@ -17,6 +17,7 @@ import { VerifyTokenQueryHandler } from './queries/verify-token/verify-token.que
 // Services
 import { NestjsEventBusService } from './services/nestjs-event-bus.service';
 import { KafkaEventBusService } from './services/kafka-event-bus.service';
+import { UserLoggedInIntegrationEventHandler } from './event-handlers/user-logged-in/user-logged-in-integration.event-handler';
 
 /**
  * AuthApplicationModule
@@ -46,6 +47,7 @@ import { KafkaEventBusService } from './services/kafka-event-bus.service';
     // Event Bus Services
     NestjsEventBusService,
     KafkaEventBusService,
+    UserLoggedInIntegrationEventHandler,
   ],
   exports: [
     // Command Handlers
@@ -61,6 +63,7 @@ import { KafkaEventBusService } from './services/kafka-event-bus.service';
     // Event Bus Services
     NestjsEventBusService,
     KafkaEventBusService,
+    UserLoggedInIntegrationEventHandler,
   ],
 })
 export class AuthApplicationModule {}
