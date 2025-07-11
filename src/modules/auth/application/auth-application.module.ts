@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { AuthDomainModule } from '../domain/auth-domain.module';
+import { AuthInfrastructureModule } from '../infrastructure/auth-infrastructure.module';
 import { UsersApplicationModule } from '../../users/application/users-application.module';
 
 // Command Handlers
@@ -28,6 +29,7 @@ import { KafkaEventBusService } from './services/kafka-event-bus.service';
   imports: [
     CqrsModule,
     AuthDomainModule,
+    AuthInfrastructureModule, // For repositories and services (JWT, Hashing, Cache)
     UsersApplicationModule, // For user creation and queries
   ],
   providers: [

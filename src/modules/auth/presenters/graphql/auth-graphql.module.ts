@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { AuthResolver } from './resolvers/auth.resolver';
 import { AuthApplicationModule } from '../../application/auth-application.module';
+import { AuthInfrastructureModule } from '../../infrastructure/auth-infrastructure.module';
 
 /**
  * AuthGraphQLModule
@@ -10,7 +11,7 @@ import { AuthApplicationModule } from '../../application/auth-application.module
  * @author GreenHub Labs
  */
 @Module({
-  imports: [CqrsModule, AuthApplicationModule],
+  imports: [CqrsModule, AuthApplicationModule, AuthInfrastructureModule],
   providers: [AuthResolver],
   exports: [AuthResolver],
 })
