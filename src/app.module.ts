@@ -23,7 +23,7 @@ import { AuthModule } from './modules/auth/auth.module';
       introspection: true,
     }),
     CqrsModule,
-    //AuthModule,
+    AuthModule,
     UsersModule,
   ],
 })
