@@ -35,7 +35,7 @@ describe('UserDeletedDomainEvent', () => {
       occurredAt: new Date().toISOString(),
     });
     expect(() => {
-      // @ts-expect-error
+      // @ts-expect-error: test immutability
       event.eventId = 'changed';
     }).toThrow();
   });
