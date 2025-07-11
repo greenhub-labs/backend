@@ -25,6 +25,7 @@ import {
   JwtAuthGuard,
   Public,
 } from '../../../infrastructure/guards/jwt-auth.guard';
+import { UserMapper } from 'src/modules/users/presenters/graphql/mappers/user.mapper';
 
 /**
  * AuthResolver
@@ -140,7 +141,8 @@ export class AuthResolver {
   async me(@Context() context: any): Promise<UserResponseDto> {
     const user = context.req.user;
     const query = new MeQuery(user.userId);
-    return this.queryBus.execute(query);
+    const result = await this.queryBus.execute(query);
+    return UserMapper.fromDomain(result);
   }
 
   /**
