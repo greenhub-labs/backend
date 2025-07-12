@@ -79,21 +79,8 @@ export class Auth {
     userAgent?: string;
     sessionId?: string;
   }): Auth {
-    // Emit login event
-    this.addDomainEvent(
-      new UserLoggedInDomainEvent({
-        eventId: crypto.randomUUID(),
-        aggregateId: this.userId,
-        email: this.email.value,
-        ipAddress: loginContext.ipAddress,
-        userAgent: loginContext.userAgent,
-        sessionId: loginContext.sessionId,
-        occurredAt: new Date().toISOString(),
-      }),
-    );
-
     // Return new instance with updated lastLogin
-    return new Auth({
+    const newAuth = new Auth({
       id: this.id,
       userId: this.userId,
       email: this.email,
@@ -106,6 +93,18 @@ export class Auth {
       deletedAt: this.deletedAt,
       emitEvent: false,
     });
+    newAuth.addDomainEvent(
+      new UserLoggedInDomainEvent({
+        eventId: crypto.randomUUID(),
+        aggregateId: this.userId,
+        email: this.email.value,
+        ipAddress: loginContext.ipAddress,
+        userAgent: loginContext.userAgent,
+        sessionId: loginContext.sessionId,
+        occurredAt: new Date().toISOString(),
+      }),
+    );
+    return newAuth;
   }
 
   /**
@@ -123,18 +122,8 @@ export class Auth {
       isPasswordReset: boolean;
     },
   ): Auth {
-    // Emit password changed event
-    this.addDomainEvent(
-      new PasswordChangedDomainEvent({
-        eventId: crypto.randomUUID(),
-        aggregateId: this.id,
-        userId: this.userId,
-        passwordChangeInfo: changeContext,
-        occurredAt: new Date().toISOString(),
-      }),
-    );
-
-    return new Auth({
+    // Return new instance with updated password
+    const newAuth = new Auth({
       id: this.id,
       userId: this.userId,
       email: this.email,
@@ -147,6 +136,16 @@ export class Auth {
       deletedAt: this.deletedAt,
       emitEvent: false,
     });
+    newAuth.addDomainEvent(
+      new PasswordChangedDomainEvent({
+        eventId: crypto.randomUUID(),
+        aggregateId: this.id,
+        userId: this.userId,
+        passwordChangeInfo: changeContext,
+        occurredAt: new Date().toISOString(),
+      }),
+    );
+    return newAuth;
   }
 
   /**

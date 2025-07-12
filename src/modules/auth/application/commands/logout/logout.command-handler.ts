@@ -10,7 +10,6 @@ import {
   AUTH_CACHE_REPOSITORY_TOKEN,
 } from '../../ports/auth-cache.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
-import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 
 /**
  * LogoutCommandHandler
@@ -29,7 +28,6 @@ export class LogoutCommandHandler implements ICommandHandler<LogoutCommand> {
     @Inject(AUTH_CACHE_REPOSITORY_TOKEN)
     private readonly authCacheRepository: AuthCacheRepository,
     private readonly nestjsEventBus: NestjsEventBusService,
-    private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
   /**
@@ -68,11 +66,10 @@ export class LogoutCommandHandler implements ICommandHandler<LogoutCommand> {
     // Uncomment if you want to clear auth cache on logout:
     // await this.authCacheRepository.deleteAuth(command.userId, auth.email.value);
 
-    // 6. Publish domain events to both event buses
+    // 6. Publish domain events to event bus
     const events = auth.pullDomainEvents();
     for (const event of events) {
       await this.nestjsEventBus.publish(event); // For internal event handlers
-      await this.kafkaEventBus.publish(event); // For external systems
     }
 
     // 7. Return success

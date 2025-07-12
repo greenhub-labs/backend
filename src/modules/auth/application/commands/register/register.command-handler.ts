@@ -18,9 +18,7 @@ import {
 import { CreateUserCommand } from '../../../../users/application/commands/create-user/create-user.command';
 import { AuthPasswordValueObject } from '../../../domain/value-objects/auth-password/auth-password.value-object';
 import { User } from '../../../../users/domain/entities/user.entity';
-import { Auth } from '../../../domain/entities/auth.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
-import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 import {
   AuthCacheRepository,
   AUTH_CACHE_REPOSITORY_TOKEN,
@@ -59,7 +57,6 @@ export class RegisterCommandHandler
     private readonly tokenService: TokenService,
     private readonly commandBus: CommandBus,
     private readonly nestjsEventBus: NestjsEventBusService,
-    private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
   async execute(command: RegisterCommand): Promise<AuthPayload> {
@@ -113,11 +110,10 @@ export class RegisterCommandHandler
     // 8. Cache the newly created auth record
     await this.authCacheRepository.cacheAuth(auth);
 
-    // 9. Publish domain events to both event buses
+    // 9. Publish domain events to event bus
     const events = auth.pullDomainEvents();
     for (const event of events) {
       await this.nestjsEventBus.publish(event); // For internal event handlers
-      await this.kafkaEventBus.publish(event); // For external systems
     }
 
     // 10. Generate JWT tokens

@@ -19,9 +19,16 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "npx prisma generate",
+    "prisma:push": "npx prisma db push",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:studio": "npx prisma studio",
-    "git:clean:local": "git branch --merged main | grep -v '^* main$' | xargs git branch -d"
+    "git:clean:local": "git branch --merged main | grep -v '^* main$' | xargs git branch -d",
+    "docker:build": "docker compose build",
+    "docker:build:no-cache": "docker compose build --no-cache",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:clean": "docker compose down -v",
+    "docker:reset": "docker compose down -v && docker compose build --no-cache && docker compose up -d; pnpm prisma:generate; pnpm prisma:push"
   },
   "dependencies": {
     "@nestjs/apollo": "^13.1.0",

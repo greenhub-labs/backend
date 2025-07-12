@@ -9,6 +9,8 @@ import { UsersDomainModule } from '../domain/users-domain.module';
 import { UsersInfrastructureModule } from '../infrastructure/users-infrastructure.module';
 import { NestjsEventBusService } from './services/nestjs-event-bus.service';
 import { KafkaEventBusService } from './services/kafka-event-bus.service';
+import { UserCreatedIntegrationEventHandler } from './event-handlers/user-created-integration.event-handler';
+import { SharedInfrastructureModule } from 'src/shared/infrastructure/shared-infrastructure.module';
 
 /**
  * UsersApplicationModule
@@ -25,6 +27,7 @@ import { KafkaEventBusService } from './services/kafka-event-bus.service';
     GetUserByIdQueryHandler,
     NestjsEventBusService,
     KafkaEventBusService,
+    UserCreatedIntegrationEventHandler,
   ],
   exports: [
     CreateUserCommandHandler,

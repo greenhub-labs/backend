@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
-import { Inject, UnauthorizedException } from '@nestjs/common';
+import { Inject, Logger, UnauthorizedException } from '@nestjs/common';
 import { LoginCommand } from './login.command';
 import {
   AuthRepository,
@@ -17,9 +17,7 @@ import {
 import { InvalidCredentialsException } from '../../../domain/exceptions/invalid-credentials/invalid-credentials.exception';
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
 import { User } from '../../../../users/domain/entities/user.entity';
-import { Auth } from '../../../domain/entities/auth.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
-import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 import {
   AuthCacheRepository,
   AUTH_CACHE_REPOSITORY_TOKEN,
@@ -44,6 +42,7 @@ export interface AuthPayload {
  */
 @CommandHandler(LoginCommand)
 export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
+  private readonly logger = new Logger(LoginCommandHandler.name);
   constructor(
     @Inject(AUTH_REPOSITORY_TOKEN)
     private readonly authRepository: AuthRepository,
@@ -55,10 +54,12 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     private readonly tokenService: TokenService,
     private readonly queryBus: QueryBus,
     private readonly nestjsEventBus: NestjsEventBusService,
-    private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
   async execute(command: LoginCommand): Promise<AuthPayload> {
+    this.logger.debug('Executing login command');
+    this.logger.debug(JSON.stringify(command));
+
     // 1. Try to find auth record by email in cache first
     let auth = await this.authCacheRepository.getByEmail(command.email);
 
@@ -113,11 +114,11 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
       userAgent: command.userAgent,
     });
 
-    // 10. Publish domain events to both event buses
+    // 10. Publish domain events to event bus
     const events = updatedAuth.pullDomainEvents();
+    this.logger.debug(`Publishing ${events.length} domain events to event bus`);
     for (const event of events) {
       await this.nestjsEventBus.publish(event); // For internal event handlers
-      await this.kafkaEventBus.publish(event); // For external systems
     }
 
     // 11. Generate JWT tokens

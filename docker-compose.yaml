@@ -1,0 +1,135 @@
+version: '3.8'
+name: greenhub-labs-local-stack
+
+services:
+  database:
+    image: postgres
+    container_name: greenhub-labs-database
+    hostname: greenhub-labs-database
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - greenhub-labs-local-network
+
+  cache:
+    image: redis
+    container_name: greenhub-labs-cache
+    hostname: greenhub-labs-cache
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_USERNAME: ${REDIS_USERNAME}
+    networks:
+      - greenhub-labs-local-network
+    volumes:
+      - redis-data:/data
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: greenhub-labs-zookeeper
+    hostname: greenhub-labs-zookeeper
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - '2181:2181'
+    networks:
+      - greenhub-labs-local-network
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-log:/var/lib/zookeeper/log
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: greenhub-labs-kafka
+    hostname: greenhub-labs-kafka
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
+      - '29092:29092'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: greenhub-labs-zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - greenhub-labs-local-network
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:4.0.1
+    container_name: greenhub-labs-kafdrop
+    restart: unless-stopped
+    depends_on:
+      - kafka
+    ports:
+      - '9000:9000'
+    environment:
+      KAFKA_BROKER_CONNECT: greenhub-labs-kafka:29092
+    networks:
+      - greenhub-labs-local-network
+
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: greenhub-labs-app
+  #   hostname: greenhub-labs-app
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - database
+  #     - cache
+  #     - kafka
+  #   environment:
+  #     PORT: ${PORT}
+  #     DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@greenhub-labs-database:5432/${POSTGRES_DB}
+  #     REDIS_HOST: greenhub-labs-cache
+  #     REDIS_PORT: 6379
+  #     REDIS_PASSWORD: ${REDIS_PASSWORD}
+  #     REDIS_USERNAME: ${REDIS_USERNAME}
+  #     KAFKA_BROKER: greenhub-labs-kafka:29092
+  #     KAFKA_CLIENT_ID: greenhub-app
+  #     KAFKA_BROKERS: greenhub-labs-kafka:29092
+  #     KAFKA_TOPIC_PREFIX: greenhub-labs-
+  #     KAFKA_CONSUMER_GROUP_ID: greenhub-app
+  #     KAFKA_CONSUMER_AUTO_OFFSET_RESET: earliest
+  #     # Add other necessary environment variables here
+  #   command: sh -c "pnpm prisma migrate deploy && pnpm start:prod"
+  #   ports:
+  #     - '3000:3000'
+  #   networks:
+  #     - greenhub-labs-local-network
+
+networks:
+  greenhub-labs-local-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  zookeeper-data:
+    driver: local
+  zookeeper-log:
+    driver: local
+  kafka-data:
+    driver: local
+  # app-data:
+  #   driver: local
