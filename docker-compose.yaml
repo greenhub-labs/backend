@@ -98,9 +98,17 @@ services:
       - kafka
     environment:
       PORT: ${PORT}
-      DATABASE_URL: postgres://postgres:postgres@greenhub-labs-database:5432/postgres
-      REDIS_URL: redis://greenhub-labs-cache:6379
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@greenhub-labs-database:5432/${POSTGRES_DB}
+      REDIS_HOST: greenhub-labs-cache
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_USERNAME: ${REDIS_USERNAME}
       KAFKA_BROKER: greenhub-labs-kafka:29092
+      KAFKA_CLIENT_ID: greenhub-app
+      KAFKA_BROKERS: greenhub-labs-kafka:29092
+      KAFKA_TOPIC_PREFIX: greenhub-labs-
+      KAFKA_CONSUMER_GROUP_ID: greenhub-app
+      KAFKA_CONSUMER_AUTO_OFFSET_RESET: earliest
       # Add other necessary environment variables here
     command: sh -c "pnpm prisma migrate deploy && pnpm start:prod"
     ports:
