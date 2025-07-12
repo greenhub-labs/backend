@@ -4,6 +4,8 @@ import { UserCreatedDomainEvent } from 'src/modules/users/domain/events/user-cre
 import { KafkaEventBusService } from '../services/kafka-event-bus.service';
 import { UserCreatedIntegrationEvent } from '../events/user-created.integration-event';
 
+// TODO: Remove this because we are not using Kafka for internal events
+
 /**
  * Event handler that listens to UserCreatedDomainEvent and publishes a UserCreatedIntegrationEvent to Kafka
  */
