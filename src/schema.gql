@@ -6,9 +6,10 @@ type UserResponseDto {
   id: String!
   firstName: String
   lastName: String
-  email: String
   avatar: String
   bio: String
+  phone: String
+  email: String
   isActive: Boolean!
   isDeleted: Boolean!
   createdAt: DateTime!
@@ -47,7 +48,7 @@ type TokenVerificationResult {
 }
 
 type Query {
-  """Get current authenticated user information"""
+  """Get current authenticated user information (user + auth info)"""
   me: UserResponseDto!
 
   """Verify JWT token validity and decode payload"""

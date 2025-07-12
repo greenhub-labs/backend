@@ -19,6 +19,7 @@ import { AuthPayload } from '../dtos/responses/auth-payload.response.dto';
 import { TokenVerificationResult } from '../dtos/responses/token-verification-result.response.dto';
 import { UserResponseDto } from '../../../../users/presenters/graphql/dtos/responses/user.response.dto';
 import { AuthMapper } from '../mappers/auth.mapper';
+// import { MeResponseDto } from '../dtos/responses/me.response.dto';
 
 // Guards and decorators
 import {
@@ -132,17 +133,18 @@ export class AuthResolver {
   /**
    * Get current authenticated user
    * @param context GraphQL context containing user info from JWT guard
-   * @returns Current user data
+   * @returns Current user data (user info + auth info)
    */
   @Query(() => UserResponseDto, {
     name: 'me',
-    description: 'Get current authenticated user information',
+    description:
+      'Get current authenticated user information (user + auth info)',
   })
   async me(@Context() context: any): Promise<UserResponseDto> {
     const user = context.req.user;
     const query = new MeQuery(user.userId);
     const result = await this.queryBus.execute(query);
-    return UserMapper.fromDomain(result);
+    return UserMapper.fromDomain(result.user, result.email, result.phone);
   }
 
   /**

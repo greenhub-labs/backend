@@ -7,12 +7,17 @@ export class UserMapper {
    * @param user - User domain entity
    * @returns UserResponseDto with all value objects as primitives
    */
-  static fromDomain(user: User): UserResponseDto {
+  static fromDomain(
+    user: User,
+    email?: string,
+    phone?: string,
+  ): UserResponseDto {
     return {
       id: user.id.value,
       firstName: user.firstName?.value,
       lastName: user.lastName?.value,
-      email: (user as any).email?.value, // Only if available (for Auth context)
+      email,
+      phone,
       avatar: user.avatar?.value,
       bio: user.bio,
       isActive: user.isActive,

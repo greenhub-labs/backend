@@ -25,12 +25,6 @@ export class UserResponseDto {
   lastName?: string;
 
   /**
-   * Email of the user (optional, only if available)
-   */
-  @Field({ nullable: true })
-  email?: string;
-
-  /**
    * Avatar URL of the user
    */
   @Field({ nullable: true })
@@ -41,6 +35,18 @@ export class UserResponseDto {
    */
   @Field({ nullable: true })
   bio?: string;
+
+  /**
+   * Phone number of the user (optional, only if available)
+   */
+  @Field({ nullable: true })
+  phone?: string;
+
+  /**
+   * Email of the user (optional, only if available)
+   */
+  @Field({ nullable: true })
+  email?: string;
 
   /**
    * Whether the user is active
