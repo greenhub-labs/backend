@@ -23,10 +23,12 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:studio": "npx prisma studio",
     "git:clean:local": "git branch --merged main | grep -v '^* main$' | xargs git branch -d",
+    "docker:build": "docker compose build",
+    "docker:build:no-cache": "docker compose build --no-cache",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:clean": "docker compose down -v",
-    "docker:reset": "docker compose down -v && docker compose up -d; pnpm prisma:generate; pnpm prisma:push"
+    "docker:reset": "docker compose down -v && docker compose build --no-cache && docker compose up -d; pnpm prisma:generate; pnpm prisma:push"
   },
   "dependencies": {
     "@nestjs/apollo": "^13.1.0",

@@ -85,6 +85,29 @@ services:
     networks:
       - greenhub-labs-local-network
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: greenhub-labs-app
+    hostname: greenhub-labs-app
+    restart: unless-stopped
+    depends_on:
+      - database
+      - cache
+      - kafka
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: postgres://postgres:postgres@greenhub-labs-database:5432/postgres
+      REDIS_URL: redis://greenhub-labs-cache:6379
+      KAFKA_BROKER: greenhub-labs-kafka:29092
+      # Add other necessary environment variables here
+    command: sh -c "pnpm prisma migrate deploy && pnpm start:prod"
+    ports:
+      - '3000:3000'
+    networks:
+      - greenhub-labs-local-network
+
 networks:
   greenhub-labs-local-network:
     driver: bridge
