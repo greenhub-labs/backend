@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { LogoutCommand } from './logout.command';
 import {
   AuthRepository,
@@ -22,6 +22,8 @@ import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
  */
 @CommandHandler(LogoutCommand)
 export class LogoutCommandHandler implements ICommandHandler<LogoutCommand> {
+  private readonly logger = new Logger(LogoutCommandHandler.name);
+
   constructor(
     @Inject(AUTH_REPOSITORY_TOKEN)
     private readonly authRepository: AuthRepository,
@@ -38,6 +40,9 @@ export class LogoutCommandHandler implements ICommandHandler<LogoutCommand> {
    * @throws {NotFoundException} When user auth record is not found
    */
   async execute(command: LogoutCommand): Promise<boolean> {
+    this.logger.debug('Executing logout command');
+    this.logger.debug(JSON.stringify(command));
+
     // 1. Find auth record by user ID
     const auth = await this.authRepository.findByUserId(command.userId);
     if (!auth) {

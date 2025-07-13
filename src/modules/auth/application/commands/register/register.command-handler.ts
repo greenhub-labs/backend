@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
-import { Inject, ConflictException } from '@nestjs/common';
+import { Inject, ConflictException, Logger } from '@nestjs/common';
 import { RegisterCommand } from './register.command';
 import { AuthFactory } from '../../../domain/factories/auth/auth.factory';
 import {
@@ -45,6 +45,8 @@ export interface AuthPayload {
 export class RegisterCommandHandler
   implements ICommandHandler<RegisterCommand>
 {
+  private readonly logger = new Logger(RegisterCommandHandler.name);
+
   constructor(
     private readonly authFactory: AuthFactory,
     @Inject(AUTH_REPOSITORY_TOKEN)
@@ -60,6 +62,9 @@ export class RegisterCommandHandler
   ) {}
 
   async execute(command: RegisterCommand): Promise<AuthPayload> {
+    this.logger.debug('Executing register command');
+    this.logger.debug(JSON.stringify(command));
+
     // 1. Validate password requirements
     AuthPasswordValueObject.validatePlainPassword(command.password);
 

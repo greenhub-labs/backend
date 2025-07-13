@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
-import { Inject, UnauthorizedException } from '@nestjs/common';
+import { Inject, Logger, UnauthorizedException } from '@nestjs/common';
 import { RefreshTokenCommand } from './refresh-token.command';
 import {
   TokenService,
@@ -29,6 +29,8 @@ export interface AuthPayload {
 export class RefreshTokenCommandHandler
   implements ICommandHandler<RefreshTokenCommand>
 {
+  private readonly logger = new Logger(RefreshTokenCommandHandler.name);
+
   constructor(
     @Inject(TOKEN_SERVICE_TOKEN)
     private readonly tokenService: TokenService,
@@ -36,6 +38,9 @@ export class RefreshTokenCommandHandler
   ) {}
 
   async execute(command: RefreshTokenCommand): Promise<AuthPayload> {
+    this.logger.debug('Executing refresh token command');
+    this.logger.debug(JSON.stringify(command));
+
     // 1. Create refresh token value object (validates format)
     const refreshTokenVO = RefreshTokenValueObject.create(command.refreshToken);
 

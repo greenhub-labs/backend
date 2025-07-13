@@ -43,6 +43,7 @@ export interface AuthPayload {
 @CommandHandler(LoginCommand)
 export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
   private readonly logger = new Logger(LoginCommandHandler.name);
+
   constructor(
     @Inject(AUTH_REPOSITORY_TOKEN)
     private readonly authRepository: AuthRepository,
