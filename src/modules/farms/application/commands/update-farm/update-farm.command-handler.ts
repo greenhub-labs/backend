@@ -12,6 +12,7 @@ import {
 import { EventBus } from '../../ports/event-bus.service';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
+import { FarmEntity } from 'src/modules/farms/domain/entities/farm.entity';
 
 /**
  * Command handler for UpdateFarmCommand
@@ -32,7 +33,7 @@ export class UpdateFarmCommandHandler
    * Handles the UpdateFarmCommand
    * @param command - The command to handle
    */
-  async execute(command: UpdateFarmCommand): Promise<void> {
+  async execute(command: UpdateFarmCommand): Promise<FarmEntity> {
     // 1. Find the farm by ID
     const farm = await this.farmsRepository.findById(command.id);
     if (!farm) {
@@ -59,5 +60,6 @@ export class UpdateFarmCommandHandler
     for (const event of updatedFarm.pullDomainEvents()) {
       await this.nestjsEventBus.publish(event);
     }
+    return updatedFarm;
   }
 }

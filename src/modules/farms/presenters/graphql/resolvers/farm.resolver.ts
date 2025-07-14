@@ -99,7 +99,6 @@ export class FarmResolver {
   async deleteFarm(
     @Args('input') input: DeleteFarmRequestDto,
   ): Promise<boolean> {
-    await this.commandBus.execute(new DeleteFarmCommand(input.id));
-    return true;
+    return await this.commandBus.execute(new DeleteFarmCommand(input.id));
   }
 }

@@ -12,6 +12,7 @@ import {
   FarmsCacheRepository,
 } from '../../ports/farms-cache.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
+import { FarmEntity } from 'src/modules/farms/domain/entities/farm.entity';
 
 /**
  * Command handler for CreateFarmCommand
@@ -34,7 +35,7 @@ export class CreateFarmCommandHandler
    * Handles the CreateFarmCommand
    * @param command - The command to handle
    */
-  async execute(command: CreateFarmCommand): Promise<void> {
+  async execute(command: CreateFarmCommand): Promise<FarmEntity> {
     this.logger.debug('Executing create farm command');
     this.logger.debug(JSON.stringify(command));
 
@@ -58,5 +59,7 @@ export class CreateFarmCommandHandler
     for (const event of farm.pullDomainEvents()) {
       await this.nestjsEventBus.publish(event);
     }
+
+    return farm;
   }
 }

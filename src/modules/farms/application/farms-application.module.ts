@@ -6,6 +6,7 @@ import { UpdateFarmCommandHandler } from './commands/update-farm/update-farm.com
 import { DeleteFarmCommandHandler } from './commands/delete-farm/delete-farm.command-handler';
 // Import query handlers
 import { GetFarmByIdQueryHandler } from './queries/get-farm-by-id/get-farm-by-id.query-handler';
+import { GetAllFarmsQueryHandler } from './queries/get-all-farms/get-all-farms.query-handler';
 // Import event handlers
 // import { FarmsCreatedIntegrationEventHandler } from './event-handlers/farms-created-integration.event-handler';
 // Import services
@@ -27,6 +28,7 @@ import { FarmsInfrastructureModule } from '../infrastructure/farms-infrastructur
     UpdateFarmCommandHandler,
     DeleteFarmCommandHandler,
     GetFarmByIdQueryHandler,
+    GetAllFarmsQueryHandler,
     NestjsEventBusService,
     KafkaEventBusService,
     // FarmsCreatedIntegrationEventHandler,
@@ -36,6 +38,7 @@ import { FarmsInfrastructureModule } from '../infrastructure/farms-infrastructur
     UpdateFarmCommandHandler,
     DeleteFarmCommandHandler,
     GetFarmByIdQueryHandler,
+    GetAllFarmsQueryHandler,
     NestjsEventBusService,
     KafkaEventBusService,
   ],

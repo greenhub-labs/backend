@@ -11,6 +11,7 @@ import {
 } from '../../ports/farms-cache.repository';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
+import { FarmEntity } from 'src/modules/farms/domain/entities/farm.entity';
 
 /**
  * Command handler for DeleteFarmCommand
@@ -31,7 +32,7 @@ export class DeleteFarmCommandHandler
    * Handles the DeleteFarmCommand
    * @param command - The command to handle
    */
-  async execute(command: DeleteFarmCommand): Promise<void> {
+  async execute(command: DeleteFarmCommand): Promise<boolean> {
     // 1. Find the farm by ID
     const farm = await this.farmsRepository.findById(command.farmId);
     if (!farm) {
@@ -46,5 +47,6 @@ export class DeleteFarmCommandHandler
     for (const event of deletedFarm.pullDomainEvents()) {
       await this.nestjsEventBus.publish(event);
     }
+    return true;
   }
 }
