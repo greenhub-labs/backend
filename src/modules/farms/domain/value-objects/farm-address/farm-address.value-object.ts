@@ -1,5 +1,3 @@
-import { BaseValueObject } from 'src/shared/domain/value-objects/base.value-object';
-
 /**
  * Value Object representing the address of a Farm.
  *
@@ -17,68 +15,54 @@ export interface FarmAddressProps {
   street?: string;
 }
 
-export class FarmAddressValueObject extends BaseValueObject<FarmAddressProps> {
+export class FarmAddressValueObject {
+  public readonly value: FarmAddressProps;
   /**
    * Creates a new FarmAddressValueObject
    * @param props - The address properties
    */
   constructor(props: FarmAddressProps) {
-    super(props);
+    this.value = props;
     this.validate();
-  }
-
-  private getProps(): FarmAddressProps {
-    return (this as any).props ?? {};
   }
 
   /**
    * Returns the country of the farm
    */
   get country(): string | undefined {
-    return this.getProps().country;
+    return this.value.country;
   }
 
   /**
    * Returns the state or province of the farm
    */
   get state(): string | undefined {
-    return this.getProps().state;
+    return this.value.state;
   }
 
   /**
    * Returns the city of the farm
    */
   get city(): string | undefined {
-    return this.getProps().city;
+    return this.value.city;
   }
 
   /**
    * Returns the postal code of the farm
    */
   get postalCode(): string | undefined {
-    return this.getProps().postalCode;
+    return this.value.postalCode;
   }
 
   /**
    * Returns the street address of the farm
    */
   get street(): string | undefined {
-    return this.getProps().street;
+    return this.value.street;
   }
 
   /**
    * Validates the address properties
    */
-  protected validate(): void {
-    const props = this.getProps();
-    if (
-      !props.country &&
-      !props.state &&
-      !props.city &&
-      !props.postalCode &&
-      !props.street
-    ) {
-      throw new Error('At least one address field must be provided.');
-    }
-  }
+  protected validate(): void {}
 }

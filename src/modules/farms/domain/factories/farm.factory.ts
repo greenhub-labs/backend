@@ -32,7 +32,7 @@ export class FarmFactory {
     this.logger.debug(JSON.stringify(data));
     return new FarmEntity({
       id: new FarmIdValueObject(randomUUID()),
-      name: new FarmNameValueObject({ value: data.name }),
+      name: new FarmNameValueObject(data.name),
       description: data.description,
       address: new FarmAddressValueObject({
         country: data.country,
@@ -71,7 +71,7 @@ export class FarmFactory {
   }): FarmEntity {
     return new FarmEntity({
       id: new FarmIdValueObject(primitives.id),
-      name: new FarmNameValueObject({ value: primitives.name }),
+      name: new FarmNameValueObject(primitives.name),
       description: primitives.description,
       address: new FarmAddressValueObject({
         country: primitives.country,

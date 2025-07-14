@@ -17,7 +17,7 @@ export class FarmPrismaEntity {
   static fromPrisma(prismaData: any): FarmEntity {
     return new FarmEntity({
       id: new FarmIdValueObject(prismaData.id),
-      name: new FarmNameValueObject({ value: prismaData.name }),
+      name: new FarmNameValueObject(prismaData.name),
       description: prismaData.description ?? undefined,
       address: new FarmAddressValueObject({
         country: prismaData.country ?? '',
@@ -46,7 +46,7 @@ export class FarmPrismaEntity {
   static toPrisma(entity: FarmEntity): any {
     return {
       id: entity.id.value,
-      name: entity.name.name,
+      name: entity.name.value,
       description: entity.description,
       country: entity.address.country,
       state: entity.address.state,

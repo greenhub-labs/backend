@@ -5,7 +5,7 @@ export class FarmMapper {
   static fromDomain(entity: FarmEntity): FarmResponseDto {
     return {
       id: entity.id.value,
-      name: entity.name.name,
+      name: entity.name.value,
       description: entity.description,
       country: entity.address.country,
       state: entity.address.state,

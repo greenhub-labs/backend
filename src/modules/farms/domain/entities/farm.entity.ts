@@ -67,7 +67,7 @@ export class FarmEntity {
         new FarmCreatedDomainEvent({
           eventId: crypto.randomUUID(),
           aggregateId: this.id.value,
-          name: this.name.name,
+          name: this.name.value,
           description: this.description,
           occurredAt: this.createdAt.toISOString(),
         }),
@@ -96,9 +96,7 @@ export class FarmEntity {
   ): FarmEntity {
     const updatedFarm = new FarmEntity({
       id: this.id,
-      name: data.name
-        ? new FarmNameValueObject({ value: data.name })
-        : this.name,
+      name: data.name ? new FarmNameValueObject(data.name) : this.name,
       description: data.description ?? this.description,
       address: new FarmAddressValueObject({
         country: data.country ?? this.address.country,
@@ -120,7 +118,7 @@ export class FarmEntity {
       new FarmUpdatedDomainEvent({
         eventId: crypto.randomUUID(),
         aggregateId: updatedFarm.id.value,
-        name: updatedFarm.name.name,
+        name: updatedFarm.name.value,
         description: updatedFarm.description,
         occurredAt: updatedFarm.updatedAt.toISOString(),
       }),
@@ -148,7 +146,7 @@ export class FarmEntity {
       new FarmDeletedDomainEvent({
         eventId: crypto.randomUUID(),
         aggregateId: deletedFarm.id.value,
-        name: deletedFarm.name.name,
+        name: deletedFarm.name.value,
         description: deletedFarm.description,
         occurredAt: deletedFarm.updatedAt.toISOString(),
       }),
@@ -187,7 +185,7 @@ export class FarmEntity {
   public toPrimitives(): FarmsPrimitive {
     return {
       id: this.id.value,
-      name: this.name.name,
+      name: this.name.value,
       description: this.description,
       country: this.address.country,
       state: this.address.state,

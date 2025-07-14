@@ -1,36 +1,25 @@
-import { BaseValueObject } from 'src/shared/domain/value-objects/base.value-object';
-
 /**
  * Value Object representing the name of a Farm.
  *
  * @property name - The name of the farm
  */
-export interface FarmNameProps {
-  value: string;
-}
 
-export class FarmNameValueObject extends BaseValueObject<FarmNameProps> {
+export class FarmNameValueObject {
+  public readonly value: string;
   /**
    * Creates a new FarmNameValueObject
    * @param props - The name properties
    */
-  constructor(props: FarmNameProps) {
-    super(props);
+  constructor(value: string) {
+    this.value = value;
     this.validate();
-  }
-
-  /**
-   * Returns the name of the farm
-   */
-  get name(): string {
-    return (this as any).props.value;
   }
 
   /**
    * Validates the name value object
    */
   protected validate(): void {
-    const value = (this as any).props.value;
+    const value = this.value;
     if (!value || value.trim().length === 0) {
       throw new Error('Farm name must not be empty.');
     }
