@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { FarmsFactory } from './factories/farms.factory';
+import { FarmsFactory } from './factories/farm.factory';
 
 @Module({
   imports: [],
   providers: [FarmsFactory],
   exports: [FarmsFactory],
 })
-export class FarmsDomainModule {} 
+export class FarmsDomainModule {}

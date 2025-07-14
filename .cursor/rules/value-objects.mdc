@@ -1,6 +1,40 @@
+All Value Object class names must be prefixed with their module name (e.g., GroupDescriptionValueObject), and their file names must follow the pattern module-description.value-object.ts (e.g., group-description.value-object.ts) to ensure consistency and clarity across the project.
+
+# Value Object Update Pattern Rule
+
+When updating an entity that contains value objects (VOs) with multiple fields (e.g., Address, Coordinates), always treat value objects as immutable. To update a single field of a value object, reconstruct a new instance of the value object using the new value for the updated field and the existing values for the other fields.
+
+**Pattern:**
+
+- The entity's `update` method should accept partial primitive fields (e.g., `city`, `country`, `latitude`, etc.), not value objects directly.
+- Inside the method, create a new value object by merging the new field(s) with the current value object's fields.
+- This ensures immutability, encapsulates validation, and keeps the update API ergonomic for application/service layers.
+
+**Example:**
+
+```typescript
+update(data: Partial<{ city: string; country: string; ... }>): Entity {
+  return new Entity({
+    ...,
+    address: new AddressValueObject({
+      city: data.city ?? this.address.city,
+      country: data.country ?? this.address.country,
+      ...
+    }),
+    ...
+  });
+}
+```
+
+**Rationale:**
+
+- Value objects must be immutable and validated on construction.
+- Accepting primitives for updates avoids leaking domain logic to the application layer.
+- This pattern is preferred over exposing value objects directly in update APIs, as it centralizes validation and construction logic within the domain.
+  description:
+  globs:
+  alwaysApply: true
+
 ---
-description: 
-globs: 
-alwaysApply: true
----
+
 All Value Object class names must be prefixed with their module name (e.g., GroupDescriptionValueObject), and their file names must follow the pattern module-description.value-object.ts (e.g., group-description.value-object.ts) to ensure consistency and clarity across the project.
