@@ -1,15 +1,9 @@
 import { Module } from '@nestjs/common';
+import { FarmsFactory } from './factories/farms.factory';
 
-/**
- * FarmsDomainModule
- * Domain layer for Farms (DDD Clean Architecture)
- */
 @Module({
-  providers: [
-    // Entities, ValueObjects, DomainServices, Factories, etc.
-  ],
-  exports: [
-    // Entities, ValueObjects, DomainServices, Factories, etc.
-  ],
+  imports: [],
+  providers: [FarmsFactory],
+  exports: [FarmsFactory],
 })
-export class FarmsDomainModule {}
+export class FarmsDomainModule {} 

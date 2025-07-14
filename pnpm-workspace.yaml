@@ -1,2 +1,9 @@
 ignoredBuiltDependencies:
   - '@prisma/client'
+
+onlyBuiltDependencies:
+  - '@apollo/protobufjs'
+  - '@nestjs/core'
+  - '@prisma/engines'
+  - bcrypt
+  - prisma

@@ -28,9 +28,11 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:clean": "docker compose down -v",
-    "docker:reset": "docker compose down -v && docker compose build --no-cache && docker compose up -d; pnpm prisma:generate; pnpm prisma:push"
+    "docker:reset": "docker compose down -v && docker compose build --no-cache && docker compose up -d; pnpm prisma:generate; pnpm prisma:push",
+    "schematics:generate": "npx schematics ./node_modules/@greenhub-labs/schematics/collection.json:module --dry-run=false"
   },
   "dependencies": {
+    "@greenhub-labs/schematics": "^1.0.3",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^4.0.2",
@@ -53,6 +55,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
+    "@angular-devkit/schematics-cli": "^20.1.0",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

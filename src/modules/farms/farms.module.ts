@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
+import { FarmsDomainModule } from './domain/farms-domain.module';
+import { FarmsApplicationModule } from './application/farms-application.module';
+import { FarmsInfrastructureModule } from './infrastructure/farms-infrastructure.module';
+import { FarmsPresentersModule } from './presenters/farms-presenters.module';
 
-/**
- * FarmsModule
- * Main orchestrator for the Farms bounded context (DDD Clean Architecture)
- */
 @Module({
   imports: [
-    // FarmsDomainModule,
-    // FarmsApplicationModule,
-    // FarmsInfrastructureModule,
+    FarmsDomainModule,
+    FarmsApplicationModule,
+    FarmsInfrastructureModule,  
+    FarmsPresentersModule,
   ],
-  exports: [],
 })
-export class FarmsModule {}
+export class FarmsModule {} 
