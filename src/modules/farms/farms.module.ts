@@ -8,8 +8,8 @@ import { FarmsPresentersModule } from './presenters/farms-presenters.module';
   imports: [
     FarmsDomainModule,
     FarmsApplicationModule,
-    FarmsInfrastructureModule,  
+    FarmsInfrastructureModule,
     FarmsPresentersModule,
   ],
 })
-export class FarmsModule {} 
+export class FarmsModule {}

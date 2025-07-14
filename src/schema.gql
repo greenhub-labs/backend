@@ -47,6 +47,23 @@ type TokenVerificationResult {
   email: String
 }
 
+type FarmResponseDto {
+  id: String!
+  name: String!
+  description: String
+  country: String
+  state: String
+  city: String
+  postalCode: String
+  street: String
+  latitude: Float
+  longitude: Float
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
 type Query {
   """Get current authenticated user information (user + auth info)"""
   me: UserResponseDto!
@@ -56,9 +73,19 @@ type Query {
 
   """Get user information by ID (requires authentication)"""
   getUserById(input: GetUserByIdRequestDto!): UserResponseDto!
+
+  """Get farm information by ID (requires authentication)"""
+  getFarmById(input: GetFarmByIdRequestDto!): FarmResponseDto!
+
+  """Get all farms (requires authentication)"""
+  getAllFarms: [FarmResponseDto!]!
 }
 
 input GetUserByIdRequestDto {
+  id: String!
+}
+
+input GetFarmByIdRequestDto {
   id: String!
 }
 
@@ -88,6 +115,15 @@ type Mutation {
 
   """Restore a soft-deleted user (Admin only)"""
   restoreUser(input: RestoreUserRequestDto!): UserResponseDto!
+
+  """Create a new farm"""
+  createFarm(input: CreateFarmRequestDto!): FarmResponseDto!
+
+  """Update an existing farm"""
+  updateFarm(input: UpdateFarmRequestDto!): FarmResponseDto!
+
+  """Delete a farm by ID"""
+  deleteFarm(input: DeleteFarmRequestDto!): Boolean!
 }
 
 input RegisterInput {
@@ -135,5 +171,35 @@ input DeleteUserRequestDto {
 }
 
 input RestoreUserRequestDto {
+  id: String!
+}
+
+input CreateFarmRequestDto {
+  name: String!
+  description: String
+  country: String
+  state: String
+  city: String
+  postalCode: String
+  street: String
+  latitude: Float
+  longitude: Float
+}
+
+input UpdateFarmRequestDto {
+  id: String!
+  name: String
+  description: String
+  country: String
+  state: String
+  city: String
+  postalCode: String
+  street: String
+  latitude: Float
+  longitude: Float
+  isActive: Boolean
+}
+
+input DeleteFarmRequestDto {
   id: String!
 }

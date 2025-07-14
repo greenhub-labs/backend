@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { FarmEntity } from '../entities/farm.entity';
 import { FarmIdValueObject } from '../value-objects/farm-id/farm-id.value-object';
 import { FarmNameValueObject } from '../value-objects/farm-name/farm-name.value-object';
@@ -11,6 +11,7 @@ import { randomUUID } from 'crypto';
  */
 @Injectable()
 export class FarmFactory {
+  private readonly logger = new Logger(FarmFactory.name);
   /**
    * Creates a new FarmEntity from primitive data (e.g., from a DTO)
    * @param data - Primitive data for the farm
@@ -27,6 +28,8 @@ export class FarmFactory {
     longitude?: number;
     isActive?: boolean;
   }): FarmEntity {
+    this.logger.debug('Creating farm entity');
+    this.logger.debug(JSON.stringify(data));
     return new FarmEntity({
       id: new FarmIdValueObject(randomUUID()),
       name: new FarmNameValueObject({ value: data.name }),
