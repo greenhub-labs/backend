@@ -1,9 +1,9 @@
 import { Resolver, Subscription } from '@nestjs/graphql';
-import { FarmsResponse } from '../dtos/responses/farms.response';
+import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
 
-@Resolver(() => FarmsResponse)
+@Resolver(() => FarmResponseDto)
 export class FarmsSubscriptionResolver {
-  @Subscription(() => FarmsResponse, {
+  @Subscription(() => FarmResponseDto, {
     name: 'farmsCreated',
     filter: (payload, variables) => true, // Add your filter logic
   })
@@ -11,4 +11,4 @@ export class FarmsSubscriptionResolver {
     // Implement your subscription logic here
     return {};
   }
-} 
+}

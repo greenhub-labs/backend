@@ -1,28 +1,29 @@
 import { CreateFarmCommand } from './create-farm.command';
 import { CreateFarmCommandHandler } from './create-farm.command-handler';
 import { FarmsRepository } from '../../ports/farms.repository';
-import { EventBusServicePort } from '../../ports/event-bus.service';
-import { FarmsFactory } from '../../../domain/factories/farm.factory';
+import { EventBus } from '../../ports/event-bus.service';
+import { FarmFactory } from '../../../domain/factories/farm.factory';
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmsCacheRepository } from '../../ports/farms-cache.repository';
+import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 
 describe('CreateFarmCommandHandler', () => {
   let handler: CreateFarmCommandHandler;
   let farmsRepository: jest.Mocked<FarmsRepository>;
   let farmsCacheRepository: jest.Mocked<FarmsCacheRepository>;
-  let eventBus: jest.Mocked<EventBusServicePort>;
-  let farmsFactory: jest.Mocked<FarmsFactory>;
+  let nestjsEventBus: jest.Mocked<NestjsEventBusService>;
+  let farmFactory: jest.Mocked<FarmFactory>;
 
   beforeEach(() => {
     farmsRepository = { save: jest.fn() } as any;
     farmsCacheRepository = { set: jest.fn() } as any;
-    eventBus = { publish: jest.fn() } as any;
-    farmsFactory = { create: jest.fn() } as any;
+    nestjsEventBus = { publish: jest.fn() } as any;
+    farmFactory = { create: jest.fn() } as any;
     handler = new CreateFarmCommandHandler(
       farmsRepository,
       farmsCacheRepository,
-      eventBus,
-      farmsFactory,
+      nestjsEventBus,
+      farmFactory,
     );
   });
 
@@ -31,9 +32,9 @@ describe('CreateFarmCommandHandler', () => {
     const farm = {
       pullDomainEvents: jest.fn().mockReturnValue(['event']),
     } as any as FarmEntity;
-    farmsFactory.create.mockReturnValue(farm);
+    farmFactory.create.mockReturnValue(farm);
     await handler.execute(command);
-    expect(farmsFactory.create).toHaveBeenCalledWith({
+    expect(farmFactory.create).toHaveBeenCalledWith({
       name: 'Farm',
       description: undefined,
       country: undefined,
@@ -46,6 +47,6 @@ describe('CreateFarmCommandHandler', () => {
       isActive: undefined,
     });
     expect(farmsRepository.save).toHaveBeenCalledWith(farm);
-    expect(eventBus.publish).toHaveBeenCalledWith('event');
+    expect(nestjsEventBus.publish).toHaveBeenCalledWith('event');
   });
 });

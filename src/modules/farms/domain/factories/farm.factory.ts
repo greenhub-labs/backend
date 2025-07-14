@@ -10,7 +10,7 @@ import { randomUUID } from 'crypto';
  * Factory class for creating Farm domain objects from primitive data
  */
 @Injectable()
-export class FarmsFactory {
+export class FarmFactory {
   /**
    * Creates a new FarmEntity from primitive data (e.g., from a DTO)
    * @param data - Primitive data for the farm

@@ -9,8 +9,9 @@ import {
   FARMS_CACHE_REPOSITORY_TOKEN,
   FarmsCacheRepository,
 } from '../../ports/farms-cache.repository';
-import { EventBusServicePort } from '../../ports/event-bus.service';
+import { EventBus } from '../../ports/event-bus.service';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
+import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 
 /**
  * Command handler for UpdateFarmCommand
@@ -24,7 +25,7 @@ export class UpdateFarmCommandHandler
     private readonly farmsRepository: FarmsRepository,
     @Inject(FARMS_CACHE_REPOSITORY_TOKEN)
     private readonly farmsCacheRepository: FarmsCacheRepository,
-    private readonly eventBus: EventBusServicePort,
+    private readonly nestjsEventBus: NestjsEventBusService,
   ) {}
 
   /**
@@ -56,7 +57,7 @@ export class UpdateFarmCommandHandler
     await this.farmsCacheRepository.set(updatedFarm.id.value, updatedFarm);
     // 5. Publish domain events
     for (const event of updatedFarm.pullDomainEvents()) {
-      await this.eventBus.publish(event);
+      await this.nestjsEventBus.publish(event);
     }
   }
 }

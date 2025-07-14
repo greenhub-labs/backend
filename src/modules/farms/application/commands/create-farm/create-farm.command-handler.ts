@@ -5,12 +5,13 @@ import {
   FarmsRepository,
   FARMS_REPOSITORY_TOKEN,
 } from '../../ports/farms.repository';
-import { EventBusServicePort } from '../../ports/event-bus.service';
-import { FarmsFactory } from '../../../domain/factories/farm.factory';
+import { EventBus } from '../../ports/event-bus.service';
+import { FarmFactory } from '../../../domain/factories/farm.factory';
 import {
   FARMS_CACHE_REPOSITORY_TOKEN,
   FarmsCacheRepository,
 } from '../../ports/farms-cache.repository';
+import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 
 /**
  * Command handler for CreateFarmCommand
@@ -25,8 +26,8 @@ export class CreateFarmCommandHandler
     private readonly farmsRepository: FarmsRepository,
     @Inject(FARMS_CACHE_REPOSITORY_TOKEN)
     private readonly farmsCacheRepository: FarmsCacheRepository,
-    private readonly eventBus: EventBusServicePort,
-    private readonly farmsFactory: FarmsFactory,
+    private readonly nestjsEventBus: NestjsEventBusService,
+    private readonly farmFactory: FarmFactory,
   ) {}
 
   /**
@@ -37,7 +38,7 @@ export class CreateFarmCommandHandler
     this.logger.debug('Executing create farm command');
     this.logger.debug(JSON.stringify(command));
 
-    const farm = this.farmsFactory.create({
+    const farm = this.farmFactory.create({
       name: command.name,
       description: command.description,
       country: command.country,
@@ -55,7 +56,7 @@ export class CreateFarmCommandHandler
     await this.farmsCacheRepository.set(farm.id.value, farm);
 
     for (const event of farm.pullDomainEvents()) {
-      await this.eventBus.publish(event);
+      await this.nestjsEventBus.publish(event);
     }
   }
 }

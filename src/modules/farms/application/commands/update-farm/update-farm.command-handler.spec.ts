@@ -2,24 +2,25 @@ import { UpdateFarmCommand } from './update-farm.command';
 import { UpdateFarmCommandHandler } from './update-farm.command-handler';
 import { FarmsRepository } from '../../ports/farms.repository';
 import { FarmsCacheRepository } from '../../ports/farms-cache.repository';
-import { EventBusServicePort } from '../../ports/event-bus.service';
+import { EventBus } from '../../ports/event-bus.service';
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
+import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 
 describe('UpdateFarmCommandHandler', () => {
   let handler: UpdateFarmCommandHandler;
   let farmsRepository: jest.Mocked<FarmsRepository>;
   let farmsCacheRepository: jest.Mocked<FarmsCacheRepository>;
-  let eventBus: jest.Mocked<EventBusServicePort>;
+  let nestjsEventBus: jest.Mocked<NestjsEventBusService>;
 
   beforeEach(() => {
     farmsRepository = { findById: jest.fn(), update: jest.fn() } as any;
     farmsCacheRepository = { set: jest.fn() } as any;
-    eventBus = { publish: jest.fn() } as any;
+    nestjsEventBus = { publish: jest.fn() } as any;
     handler = new UpdateFarmCommandHandler(
       farmsRepository,
       farmsCacheRepository,
-      eventBus,
+      nestjsEventBus,
     );
   });
 
@@ -49,7 +50,7 @@ describe('UpdateFarmCommandHandler', () => {
     });
     expect(farmsRepository.update).toHaveBeenCalledWith(updatedFarm);
     expect(farmsCacheRepository.set).toHaveBeenCalledWith('id', updatedFarm);
-    expect(eventBus.publish).toHaveBeenCalledWith('event');
+    expect(nestjsEventBus.publish).toHaveBeenCalledWith('event');
   });
 
   it('should throw if farm does not exist', async () => {

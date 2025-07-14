@@ -9,8 +9,8 @@ import {
   FARMS_CACHE_REPOSITORY_TOKEN,
   FarmsCacheRepository,
 } from '../../ports/farms-cache.repository';
-import { EventBusServicePort } from '../../ports/event-bus.service';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
+import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 
 /**
  * Command handler for DeleteFarmCommand
@@ -24,7 +24,7 @@ export class DeleteFarmCommandHandler
     private readonly farmsRepository: FarmsRepository,
     @Inject(FARMS_CACHE_REPOSITORY_TOKEN)
     private readonly farmsCacheRepository: FarmsCacheRepository,
-    private readonly eventBus: EventBusServicePort,
+    private readonly nestjsEventBus: NestjsEventBusService,
   ) {}
 
   /**
@@ -44,7 +44,7 @@ export class DeleteFarmCommandHandler
     await this.farmsCacheRepository.remove(deletedFarm.id.value);
     // 4. Publish domain events
     for (const event of deletedFarm.pullDomainEvents()) {
-      await this.eventBus.publish(event);
+      await this.nestjsEventBus.publish(event);
     }
   }
 }

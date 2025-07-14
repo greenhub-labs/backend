@@ -1,8 +1,7 @@
-import { Injectable, Inject } from "@nestjs/common";
-import { EventBus } from "../ports/event-bus.service";
-import { DomainEvent } from "src/shared/domain/events/domain-event.interface";
-import { KAFKA_CLIENT } from "src/shared/infrastructure/providers/kafka/kafka.provider";
-import { Kafka } from "kafkajs";
+import { Injectable, Inject } from '@nestjs/common';
+import { KAFKA_CLIENT } from 'src/shared/infrastructure/providers/kafka/kafka.provider';
+import { Kafka } from 'kafkajs';
+import { EventBus } from '../ports/event-bus.service';
 
 /**
  * EventBus implementation for publishing events (domain or integration) to Kafka
@@ -27,7 +26,7 @@ export class KafkaEventBusService implements EventBus {
           value: JSON.stringify(event),
           headers: {
             eventType: event.constructor?.name || event.constructor.name,
-            version: event.version?.toString() || "1",
+            version: event.version?.toString() || '1',
             occurredAt:
               event.occurredAt?.toString() ||
               event.createdAt ||
@@ -47,10 +46,10 @@ export class KafkaEventBusService implements EventBus {
   private getTopicForEvent(event: any): string {
     const eventName =
       event.constructor?.name
-        ?.replace("DomainEvent", "")
-        .replace("IntegrationEvent", "") || "event";
+        ?.replace('DomainEvent', '')
+        .replace('IntegrationEvent', '') || 'event';
     // Si es integración, topic users.integration
-    if (event.constructor?.name?.endsWith("IntegrationEvent")) {
+    if (event.constructor?.name?.endsWith('IntegrationEvent')) {
       return `users.integration.${eventName.toLowerCase()}`;
     }
     return `users.${eventName.toLowerCase()}`;

@@ -1,4 +1,4 @@
-import { FarmsFactory } from './farm.factory';
+import { FarmFactory } from './farm.factory';
 import { FarmEntity } from '../entities/farm.entity';
 import { FarmIdValueObject } from '../value-objects/farm-id/farm-id.value-object';
 import { FarmNameValueObject } from '../value-objects/farm-name/farm-name.value-object';
@@ -9,10 +9,10 @@ const uuid = '123e4567-e89b-12d3-a456-426614174000';
 const now = new Date();
 
 describe('FarmsFactory', () => {
-  let factory: FarmsFactory;
+  let factory: FarmFactory;
 
   beforeEach(() => {
-    factory = new FarmsFactory();
+    factory = new FarmFactory();
   });
 
   it('should create a FarmEntity with minimal data', () => {
@@ -56,7 +56,7 @@ describe('FarmsFactory', () => {
   });
 
   it('should reconstruct a FarmEntity from primitives', () => {
-    const entity = FarmsFactory.fromPrimitives({
+    const entity = FarmFactory.fromPrimitives({
       id: uuid,
       name: 'Restored Farm',
       description: 'Restored',

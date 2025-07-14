@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FarmsPrismaRepository } from './persistance/prisma/repositories/farms-prisma.repository';
-import { FarmsRedisCacheRepository } from './cache/redis/repositories/farms-redis-cache.repository';
+import { FarmPrismaRepository } from './persistance/prisma/repositories/farm-prisma.repository';
+import { FarmsRedisCacheRepository } from './cache/redis/repositories/farm-redis-cache.repository';
 import { FARMS_REPOSITORY_TOKEN } from '../application/ports/farms.repository';
 import { FARMS_CACHE_REPOSITORY_TOKEN } from '../application/ports/farms-cache.repository';
 
@@ -13,7 +13,7 @@ import { FARMS_CACHE_REPOSITORY_TOKEN } from '../application/ports/farms-cache.r
   providers: [
     {
       provide: FARMS_REPOSITORY_TOKEN,
-      useClass: FarmsPrismaRepository,
+      useClass: FarmPrismaRepository,
     },
     {
       provide: FARMS_CACHE_REPOSITORY_TOKEN,
@@ -23,4 +23,4 @@ import { FARMS_CACHE_REPOSITORY_TOKEN } from '../application/ports/farms-cache.r
   ],
   exports: [FARMS_REPOSITORY_TOKEN, FARMS_CACHE_REPOSITORY_TOKEN],
 })
-export class FarmsInfrastructureModule {} 
+export class FarmsInfrastructureModule {}

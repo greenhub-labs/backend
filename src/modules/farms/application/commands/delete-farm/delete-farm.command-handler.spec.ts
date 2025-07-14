@@ -1,20 +1,20 @@
 import { DeleteFarmCommandHandler } from './delete-farm.command-handler';
 import { DeleteFarmCommand } from './delete-farm.command';
-import { FarmsRepositoryPort } from '../../ports/farms.repository';
+import { FarmsRepository } from '../../ports/farms.repository';
 import { FarmsCacheRepository } from '../../ports/farms-cache.repository';
-import { EventBusServicePort } from '../../ports/event-bus.service';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmIdValueObject } from '../../../domain/value-objects/farm-id/farm-id.value-object';
 import { FarmNameValueObject } from '../../../domain/value-objects/farm-name/farm-name.value-object';
 import { FarmAddressValueObject } from '../../../domain/value-objects/farm-address/farm-address.value-object';
 import { FarmCoordinatesValueObject } from '../../../domain/value-objects/farm-coordinates/farm-coordinates.value-object';
+import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 
 describe('DeleteFarmCommandHandler', () => {
   let handler: DeleteFarmCommandHandler;
-  let farmsRepository: jest.Mocked<FarmsRepositoryPort>;
+  let farmsRepository: jest.Mocked<FarmsRepository>;
   let farmsCacheRepository: jest.Mocked<FarmsCacheRepository>;
-  let eventBus: jest.Mocked<EventBusServicePort>;
+  let nestjsEventBus: jest.Mocked<NestjsEventBusService>;
 
   beforeEach(() => {
     farmsRepository = {
@@ -26,13 +26,13 @@ describe('DeleteFarmCommandHandler', () => {
       remove: jest.fn(),
       // ...other methods not used
     } as any;
-    eventBus = {
+    nestjsEventBus = {
       publish: jest.fn(),
     } as any;
     handler = new DeleteFarmCommandHandler(
       farmsRepository,
       farmsCacheRepository,
-      eventBus,
+      nestjsEventBus,
     );
   });
 
@@ -59,14 +59,14 @@ describe('DeleteFarmCommandHandler', () => {
     farmsRepository.findById.mockResolvedValue(farm);
     farmsRepository.update.mockResolvedValue(undefined);
     farmsCacheRepository.remove.mockResolvedValue(undefined);
-    eventBus.publish.mockResolvedValue(undefined);
+    nestjsEventBus.publish.mockResolvedValue(undefined);
 
     await handler.execute(new DeleteFarmCommand(farmId));
 
     expect(farmsRepository.findById).toHaveBeenCalledWith(farmId);
     expect(farmsRepository.update).toHaveBeenCalled();
     expect(farmsCacheRepository.remove).toHaveBeenCalledWith(farmId);
-    expect(eventBus.publish).toHaveBeenCalled();
+    expect(nestjsEventBus.publish).toHaveBeenCalled();
   });
 
   it('should throw FarmNotFoundException if farm does not exist', async () => {

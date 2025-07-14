@@ -1,12 +1,7 @@
 import { Module } from '@nestjs/common';
-import { FarmsGraphqlModule } from './graphql/farms-graphql.module';
 
 @Module({
-  imports: [
-    FarmsGraphqlModule, 
-  ],
-  exports: [
-    FarmsGraphqlModule, 
-  ],  
+  imports: [],
+  exports: [],
 })
-export class FarmsPresentersModule {} 
+export class FarmsPresentersModule {}

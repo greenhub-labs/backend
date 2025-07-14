@@ -15,7 +15,7 @@ export type FarmsPrimitive = {
   latitude: number;
   longitude: number;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 };

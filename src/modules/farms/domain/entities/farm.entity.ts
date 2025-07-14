@@ -6,6 +6,7 @@ import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
 import { FarmCreatedDomainEvent } from '../events/farm-created/farm-created.domain-event';
 import { FarmUpdatedDomainEvent } from '../events/farm-updated/farm-updated.domain-event';
 import { FarmDeletedDomainEvent } from '../events/farm-deleted/farm-deleted.domain-event';
+import { FarmsPrimitive } from '../primitives/farm.primitive';
 
 /**
  * Entity representing a Farm in the domain.
@@ -178,5 +179,66 @@ export class FarmEntity {
    */
   public clearDomainEvents(): void {
     (this.domainEvents as DomainEvent[]).length = 0;
+  }
+
+  /**
+   * Converts the FarmEntity to its primitive representation
+   */
+  public toPrimitives(): FarmsPrimitive {
+    return {
+      id: this.id.value,
+      name: this.name.name,
+      description: this.description,
+      country: this.address.country,
+      state: this.address.state,
+      city: this.address.city,
+      postalCode: this.address.postalCode,
+      street: this.address.street,
+      latitude: this.coordinates.latitude,
+      longitude: this.coordinates.longitude,
+      isActive: this.isActive,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+      deletedAt: this.deletedAt?.toISOString(),
+    };
+  }
+
+  /**
+   * Reconstructs a FarmEntity from its primitive representation
+   */
+  public static fromPrimitives(primitive: FarmsPrimitive): FarmEntity {
+    return new FarmEntity({
+      id: new (require('../value-objects/farm-id/farm-id.value-object').FarmIdValueObject)(
+        primitive.id,
+      ),
+      name: new (require('../value-objects/farm-name/farm-name.value-object').FarmNameValueObject)(
+        { value: primitive.name },
+      ),
+      description: primitive.description,
+      address:
+        new (require('../value-objects/farm-address/farm-address.value-object').FarmAddressValueObject)(
+          {
+            country: primitive.country,
+            state: primitive.state,
+            city: primitive.city,
+            postalCode: primitive.postalCode,
+            street: primitive.street,
+          },
+        ),
+      coordinates:
+        new (require('../value-objects/farm-coordinates/farm-coordinates.value-object').FarmCoordinatesValueObject)(
+          {
+            latitude: primitive.latitude,
+            longitude: primitive.longitude,
+          },
+        ),
+      isActive: primitive.isActive,
+      createdAt: new Date(primitive.createdAt),
+      updatedAt: new Date(primitive.updatedAt),
+      deletedAt: primitive.deletedAt
+        ? new Date(primitive.deletedAt)
+        : undefined,
+      emitEvent: false,
+    });
   }
 }
