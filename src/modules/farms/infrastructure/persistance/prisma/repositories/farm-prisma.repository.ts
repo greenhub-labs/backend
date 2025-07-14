@@ -3,6 +3,8 @@ import { FarmsRepository } from '../../../../application/ports/farms.repository'
 import { FarmEntity } from '../../../../domain/entities/farm.entity';
 import { FarmPrismaEntity } from '../entities/farm-prisma.entity';
 import { PrismaClient } from '@prisma/client';
+import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+
 /**
  * Prisma implementation of the FarmsRepositoryPort interface
  * Handles persistence operations for FarmEntity using Prisma
@@ -30,7 +32,11 @@ export class FarmPrismaRepository implements FarmsRepository {
   async save(entity: FarmEntity): Promise<void> {
     this.logger.debug('Saving farm', entity);
     const data = FarmPrismaEntity.toPrisma(entity);
-    await this.prisma.farm.create({ data });
+    await this.prisma.farm.upsert({
+      where: { id: entity.id.value },
+      update: data,
+      create: data,
+    });
   }
 
   /**
@@ -65,5 +71,36 @@ export class FarmPrismaRepository implements FarmsRepository {
       where: { id },
       data: { deletedAt: new Date() },
     });
+  }
+
+  /**
+   * Assigns a user to a farm (creates a FarmMembership)
+   * @param farmId - The Farm ID (as string)
+   * @param userId - The User ID (as string)
+   */
+  async assignUserToFarm(
+    farmId: string,
+    userId: string,
+    role: FARM_MEMBERSHIP_ROLES,
+  ): Promise<void> {
+    this.logger.debug('Assigning user to farm', farmId, userId);
+    // Buscar el id del rol OWNER por defecto
+    const roleEntity = await this.prisma.role.findUnique({
+      where: { name: role },
+    });
+    if (!roleEntity) throw new Error('Default role not found');
+    try {
+      await this.prisma.farmMembership.create({
+        data: {
+          farmId,
+          userId,
+          roleId: roleEntity.id,
+          isActive: true,
+        },
+      });
+    } catch (err) {
+      // Si ya existe la relación, ignora el error de duplicado
+      if (err.code !== 'P2002') throw err;
+    }
   }
 }

@@ -28,7 +28,7 @@ describe('GetAllFarmsQueryHandler', () => {
   it('should return an array of farms', async () => {
     const farm = new FarmEntity({
       id: new FarmIdValueObject('farm-123'),
-      name: new FarmNameValueObject({ value: 'Test Farm' }),
+      name: new FarmNameValueObject('Test Farm'),
       address: new FarmAddressValueObject({
         country: 'ES',
         state: 'Madrid',

@@ -40,7 +40,7 @@ describe('DeleteFarmCommandHandler', () => {
     const farmId = 'farm-123';
     const farm = new FarmEntity({
       id: new FarmIdValueObject(farmId),
-      name: new FarmNameValueObject({ value: 'Test Farm' }),
+      name: new FarmNameValueObject('Test Farm'),
       address: new FarmAddressValueObject({
         country: 'ES',
         state: 'Madrid',

@@ -7,13 +7,16 @@ import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
 import { CreateFarmRequestDto } from '../dtos/requests/create-farm.request.dto';
 import { UpdateFarmRequestDto } from '../dtos/requests/update-farm.request.dto';
 import { DeleteFarmRequestDto } from '../dtos/requests/delete-farm.request.dto';
+import { AssignUserToFarmRequestDto } from '../dtos/requests/assign-user-to-farm.request.dto';
 import { GetFarmByIdQuery } from '../../../application/queries/get-farm-by-id/get-farm-by-id.query';
 import { GetAllFarmsQuery } from '../../../application/queries/get-all-farms/get-all-farms.query';
 import { CreateFarmCommand } from '../../../application/commands/create-farm/create-farm.command';
 import { UpdateFarmCommand } from '../../../application/commands/update-farm/update-farm.command';
 import { DeleteFarmCommand } from '../../../application/commands/delete-farm/delete-farm.command';
+import { AssignUserToFarmCommand } from '../../../application/commands/assign-user-to-farm/assign-user-to-farm.command';
 import { FarmMapper } from '../mappers/farm.mapper';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
+import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
 
 @Resolver(() => FarmResponseDto)
 @UseGuards(JwtAuthGuard)
@@ -100,5 +103,18 @@ export class FarmResolver {
     @Args('input') input: DeleteFarmRequestDto,
   ): Promise<boolean> {
     return await this.commandBus.execute(new DeleteFarmCommand(input.id));
+  }
+
+  @Mutation(() => FarmResponseDto, {
+    name: 'assignUserToFarm',
+    description: 'Assign a user to a farm',
+  })
+  async assignUserToFarm(
+    @Args('input') input: AssignUserToFarmRequestDto,
+  ): Promise<FarmResponseDto> {
+    const farm = await this.commandBus.execute(
+      new AssignUserToFarmCommand(input.farmId, input.userId, input.role),
+    );
+    return FarmMapper.fromDomain(farm);
   }
 }

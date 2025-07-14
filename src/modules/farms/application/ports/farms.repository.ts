@@ -1,4 +1,5 @@
 import { FarmEntity } from '../../domain/entities/farm.entity';
+import { FARM_MEMBERSHIP_ROLES } from '../../domain/constants/farm-membership-roles.constant';
 
 /**
  * Port for the Farms repository (Dependency Inversion)
@@ -34,6 +35,18 @@ export interface FarmsRepository {
    * @param id - The Farm ID (as string)
    */
   delete(id: string): Promise<void>;
+
+  /**
+   * Assigns a user to a farm
+   * @param farmId - The Farm ID (as string)
+   * @param userId - The User ID (as string)
+   * @param role - The role to assign
+   */
+  assignUserToFarm(
+    farmId: string,
+    userId: string,
+    role: FARM_MEMBERSHIP_ROLES,
+  ): Promise<void>;
 }
 
 /**

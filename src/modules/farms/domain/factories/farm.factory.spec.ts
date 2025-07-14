@@ -25,7 +25,7 @@ describe('FarmsFactory', () => {
     expect(entity.address).toBeInstanceOf(FarmAddressValueObject);
     expect(entity.coordinates).toBeInstanceOf(FarmCoordinatesValueObject);
     expect(entity.id.value).toBe(uuid);
-    expect(entity.name.name).toBe('Test Farm');
+    expect(entity.name.value).toBe('Test Farm');
     expect(entity.isActive).toBe(true);
   });
 
@@ -43,7 +43,7 @@ describe('FarmsFactory', () => {
       isActive: false,
     });
     expect(entity.id.value).toBe(uuid);
-    expect(entity.name.name).toBe('Full Farm');
+    expect(entity.name.value).toBe('Full Farm');
     expect(entity.description).toBe('A complete farm');
     expect(entity.address.country).toBe('Spain');
     expect(entity.address.state).toBe('Andalusia');
@@ -74,7 +74,7 @@ describe('FarmsFactory', () => {
     });
     expect(entity).toBeInstanceOf(FarmEntity);
     expect(entity.id.value).toBe(uuid);
-    expect(entity.name.name).toBe('Restored Farm');
+    expect(entity.name.value).toBe('Restored Farm');
     expect(entity.address.city).toBe('Madrid');
     expect(entity.coordinates.latitude).toBe(40.4168);
     expect(entity.isActive).toBe(true);

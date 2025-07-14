@@ -124,6 +124,9 @@ type Mutation {
 
   """Delete a farm by ID"""
   deleteFarm(input: DeleteFarmRequestDto!): Boolean!
+
+  """Assign a user to a farm"""
+  assignUserToFarm(input: AssignUserToFarmRequestDto!): FarmResponseDto!
 }
 
 input RegisterInput {
@@ -202,4 +205,10 @@ input UpdateFarmRequestDto {
 
 input DeleteFarmRequestDto {
   id: String!
+}
+
+input AssignUserToFarmRequestDto {
+  farmId: String!
+  userId: String!
+  role: String!
 }

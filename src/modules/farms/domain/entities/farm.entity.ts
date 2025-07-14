@@ -158,7 +158,7 @@ export class FarmEntity {
    * Adds a domain event to the internal collection
    * @param event - The domain event to add
    */
-  private addDomainEvent(event: DomainEvent): void {
+  protected addDomainEvent(event: DomainEvent): void {
     this.domainEvents.push(event);
   }
 
@@ -206,30 +206,20 @@ export class FarmEntity {
    */
   public static fromPrimitives(primitive: FarmsPrimitive): FarmEntity {
     return new FarmEntity({
-      id: new (require('../value-objects/farm-id/farm-id.value-object').FarmIdValueObject)(
-        primitive.id,
-      ),
-      name: new (require('../value-objects/farm-name/farm-name.value-object').FarmNameValueObject)(
-        { value: primitive.name },
-      ),
+      id: new FarmIdValueObject(primitive.id),
+      name: new FarmNameValueObject(primitive.name),
       description: primitive.description,
-      address:
-        new (require('../value-objects/farm-address/farm-address.value-object').FarmAddressValueObject)(
-          {
-            country: primitive.country,
-            state: primitive.state,
-            city: primitive.city,
-            postalCode: primitive.postalCode,
-            street: primitive.street,
-          },
-        ),
-      coordinates:
-        new (require('../value-objects/farm-coordinates/farm-coordinates.value-object').FarmCoordinatesValueObject)(
-          {
-            latitude: primitive.latitude,
-            longitude: primitive.longitude,
-          },
-        ),
+      address: new FarmAddressValueObject({
+        country: primitive.country,
+        state: primitive.state,
+        city: primitive.city,
+        postalCode: primitive.postalCode,
+        street: primitive.street,
+      }),
+      coordinates: new FarmCoordinatesValueObject({
+        latitude: primitive.latitude,
+        longitude: primitive.longitude,
+      }),
       isActive: primitive.isActive,
       createdAt: new Date(primitive.createdAt),
       updatedAt: new Date(primitive.updatedAt),
