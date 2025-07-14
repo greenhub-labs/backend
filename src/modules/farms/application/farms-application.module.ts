@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 // Import command handlers
-import { CreateFarmsCommandHandler } from './commands/create-farms/create-farms.command-handler';
-import { UpdateFarmsCommandHandler } from './commands/update-farms/update-farms.command-handler';
-import { DeleteFarmsCommandHandler } from './commands/delete-farms/delete-farms.command-handler';
+import { CreateFarmCommandHandler } from './commands/create-farm/create-farm.command-handler';
+import { UpdateFarmCommandHandler } from './commands/update-farm/update-farm.command-handler';
+import { DeleteFarmCommandHandler } from './commands/delete-farm/delete-farm.command-handler';
 // Import query handlers
-import { GetFarmsByIdQueryHandler } from './queries/get-farms-by-id/get-farms-by-id.query-handler';
+import { GetFarmByIdQueryHandler } from './queries/get-farm-by-id/get-farm-by-id.query-handler';
 // Import event handlers
 // import { FarmsCreatedIntegrationEventHandler } from './event-handlers/farms-created-integration.event-handler';
 // Import services
@@ -23,19 +23,19 @@ import { FarmsInfrastructureModule } from '../infrastructure/farms-infrastructur
 @Module({
   imports: [CqrsModule, FarmsDomainModule, FarmsInfrastructureModule],
   providers: [
-    CreateFarmsCommandHandler,
-    UpdateFarmsCommandHandler,
-    DeleteFarmsCommandHandler,
-    GetFarmsByIdQueryHandler,
+    CreateFarmCommandHandler,
+    UpdateFarmCommandHandler,
+    DeleteFarmCommandHandler,
+    GetFarmByIdQueryHandler,
     NestjsEventBusService,
     KafkaEventBusService,
     // FarmsCreatedIntegrationEventHandler,
   ],
   exports: [
-    CreateFarmsCommandHandler,
-    UpdateFarmsCommandHandler,
-    DeleteFarmsCommandHandler,
-    GetFarmsByIdQueryHandler,
+    CreateFarmCommandHandler,
+    UpdateFarmCommandHandler,
+    DeleteFarmCommandHandler,
+    GetFarmByIdQueryHandler,
     NestjsEventBusService,
     KafkaEventBusService,
   ],

@@ -1,6 +1,6 @@
 import { CreateFarmCommand } from './create-farm.command';
 import { CreateFarmCommandHandler } from './create-farm.command-handler';
-import { FarmsRepositoryPort } from '../../ports/farms.repository';
+import { FarmsRepository } from '../../ports/farms.repository';
 import { EventBusServicePort } from '../../ports/event-bus.service';
 import { FarmsFactory } from '../../../domain/factories/farm.factory';
 import { FarmEntity } from '../../../domain/entities/farm.entity';
@@ -8,7 +8,7 @@ import { FarmsCacheRepository } from '../../ports/farms-cache.repository';
 
 describe('CreateFarmCommandHandler', () => {
   let handler: CreateFarmCommandHandler;
-  let farmsRepository: jest.Mocked<FarmsRepositoryPort>;
+  let farmsRepository: jest.Mocked<FarmsRepository>;
   let farmsCacheRepository: jest.Mocked<FarmsCacheRepository>;
   let eventBus: jest.Mocked<EventBusServicePort>;
   let farmsFactory: jest.Mocked<FarmsFactory>;

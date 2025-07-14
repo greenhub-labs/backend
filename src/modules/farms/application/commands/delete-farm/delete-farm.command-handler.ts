@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common';
 import { DeleteFarmCommand } from './delete-farm.command';
 import {
   FARMS_REPOSITORY_TOKEN,
-  FarmsRepositoryPort,
+  FarmsRepository,
 } from '../../ports/farms.repository';
 import {
   FARMS_CACHE_REPOSITORY_TOKEN,
@@ -21,7 +21,7 @@ export class DeleteFarmCommandHandler
 {
   constructor(
     @Inject(FARMS_REPOSITORY_TOKEN)
-    private readonly farmsRepository: FarmsRepositoryPort,
+    private readonly farmsRepository: FarmsRepository,
     @Inject(FARMS_CACHE_REPOSITORY_TOKEN)
     private readonly farmsCacheRepository: FarmsCacheRepository,
     private readonly eventBus: EventBusServicePort,

@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { UpdateFarmCommand } from './update-farm.command';
 import {
-  FarmsRepositoryPort,
+  FarmsRepository,
   FARMS_REPOSITORY_TOKEN,
 } from '../../ports/farms.repository';
 import {
@@ -21,7 +21,7 @@ export class UpdateFarmCommandHandler
 {
   constructor(
     @Inject(FARMS_REPOSITORY_TOKEN)
-    private readonly farmsRepository: FarmsRepositoryPort,
+    private readonly farmsRepository: FarmsRepository,
     @Inject(FARMS_CACHE_REPOSITORY_TOKEN)
     private readonly farmsCacheRepository: FarmsCacheRepository,
     private readonly eventBus: EventBusServicePort,

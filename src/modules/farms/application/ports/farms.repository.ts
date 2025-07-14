@@ -4,7 +4,7 @@ import { FarmEntity } from '../../domain/entities/farm.entity';
  * Port for the Farms repository (Dependency Inversion)
  * Defines the contract for persistence operations on Farm entities.
  */
-export interface FarmsRepositoryPort {
+export interface FarmsRepository {
   /**
    * Saves a new Farm entity
    * @param farm - The Farm entity to save

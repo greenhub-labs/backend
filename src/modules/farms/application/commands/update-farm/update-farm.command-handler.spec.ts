@@ -1,6 +1,6 @@
 import { UpdateFarmCommand } from './update-farm.command';
 import { UpdateFarmCommandHandler } from './update-farm.command-handler';
-import { FarmsRepositoryPort } from '../../ports/farms.repository';
+import { FarmsRepository } from '../../ports/farms.repository';
 import { FarmsCacheRepository } from '../../ports/farms-cache.repository';
 import { EventBusServicePort } from '../../ports/event-bus.service';
 import { FarmEntity } from '../../../domain/entities/farm.entity';
@@ -8,7 +8,7 @@ import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found
 
 describe('UpdateFarmCommandHandler', () => {
   let handler: UpdateFarmCommandHandler;
-  let farmsRepository: jest.Mocked<FarmsRepositoryPort>;
+  let farmsRepository: jest.Mocked<FarmsRepository>;
   let farmsCacheRepository: jest.Mocked<FarmsCacheRepository>;
   let eventBus: jest.Mocked<EventBusServicePort>;
 

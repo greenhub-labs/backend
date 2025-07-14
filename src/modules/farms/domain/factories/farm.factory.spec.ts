@@ -17,7 +17,6 @@ describe('FarmsFactory', () => {
 
   it('should create a FarmEntity with minimal data', () => {
     const entity = factory.create({
-      id: uuid,
       name: 'Test Farm',
     });
     expect(entity).toBeInstanceOf(FarmEntity);
@@ -32,7 +31,6 @@ describe('FarmsFactory', () => {
 
   it('should create a FarmEntity with all fields', () => {
     const entity = factory.create({
-      id: uuid,
       name: 'Full Farm',
       description: 'A complete farm',
       country: 'Spain',

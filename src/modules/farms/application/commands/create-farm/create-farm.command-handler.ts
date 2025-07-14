@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
 import { CreateFarmCommand } from './create-farm.command';
 import {
-  FarmsRepositoryPort,
+  FarmsRepository,
   FARMS_REPOSITORY_TOKEN,
 } from '../../ports/farms.repository';
 import { EventBusServicePort } from '../../ports/event-bus.service';
@@ -22,7 +22,7 @@ export class CreateFarmCommandHandler
   private readonly logger = new Logger(CreateFarmCommandHandler.name);
   constructor(
     @Inject(FARMS_REPOSITORY_TOKEN)
-    private readonly farmsRepository: FarmsRepositoryPort,
+    private readonly farmsRepository: FarmsRepository,
     @Inject(FARMS_CACHE_REPOSITORY_TOKEN)
     private readonly farmsCacheRepository: FarmsCacheRepository,
     private readonly eventBus: EventBusServicePort,
