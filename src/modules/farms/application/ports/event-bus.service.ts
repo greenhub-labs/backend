@@ -1,9 +1,13 @@
+import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
+
 /**
- * Event bus port for publishing domain events.
- * Add more methods as needed for your use case.
+ * Port for the Event Bus service (Dependency Inversion)
+ * Defines the contract for publishing domain events.
  */
-export interface EventBusService {
-  /** Publish a domain event */
-  publish(event: any): Promise<void>;
-  // Add more methods here if needed
+export interface EventBusServicePort {
+  /**
+   * Publishes a domain event
+   * @param event - The domain event to publish
+   */
+  publish(event: DomainEvent): Promise<void>;
 }

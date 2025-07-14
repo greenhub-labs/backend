@@ -4,6 +4,7 @@ import { FarmIdValueObject } from '../value-objects/farm-id/farm-id.value-object
 import { FarmNameValueObject } from '../value-objects/farm-name/farm-name.value-object';
 import { FarmAddressValueObject } from '../value-objects/farm-address/farm-address.value-object';
 import { FarmCoordinatesValueObject } from '../value-objects/farm-coordinates/farm-coordinates.value-object';
+import { randomUUID } from 'crypto';
 
 /**
  * Factory class for creating Farm domain objects from primitive data
@@ -15,7 +16,6 @@ export class FarmsFactory {
    * @param data - Primitive data for the farm
    */
   create(data: {
-    id: string;
     name: string;
     description?: string;
     country?: string;
@@ -28,7 +28,7 @@ export class FarmsFactory {
     isActive?: boolean;
   }): FarmEntity {
     return new FarmEntity({
-      id: new FarmIdValueObject(data.id),
+      id: new FarmIdValueObject(randomUUID()),
       name: new FarmNameValueObject({ value: data.name }),
       description: data.description,
       address: new FarmAddressValueObject({
