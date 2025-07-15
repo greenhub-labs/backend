@@ -1,12 +1,11 @@
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
-import { UserResponseDto } from 'src/modules/users/presenters/graphql/dtos/responses/user.response.dto';
-import { User } from 'src/modules/users/domain/entities/user.entity';
+import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
 
 export class FarmMapper {
   static fromDomain(input: {
     farm: FarmEntity;
-    members?: any[];
+    members?: { user: any; role: FARM_MEMBERSHIP_ROLES }[];
   }): FarmResponseDto {
     const { farm, members } = input;
     const dto: FarmResponseDto = {
@@ -25,11 +24,11 @@ export class FarmMapper {
       updatedAt: farm.updatedAt,
       deletedAt: farm.deletedAt,
       members:
-        members?.map((user) => ({
-          id: user.id.value,
-          firstName: user.firstName.value,
-          lastName: user.lastName.value,
-          avatar: user.avatar,
+        members?.map(({ user, role }) => ({
+          id: user.id?.value,
+          firstName: user.firstName?.value,
+          lastName: user.lastName?.value,
+          avatar: user.avatar?.value,
           bio: user.bio,
           phone: user.phone,
           email: user.email,
@@ -38,6 +37,7 @@ export class FarmMapper {
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
           deletedAt: user.deletedAt,
+          role,
         })) || undefined,
     };
     return dto;

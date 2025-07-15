@@ -13,6 +13,7 @@ import {
 } from '../../ports/farms-cache.repository';
 import { User } from 'src/modules/users/domain/entities/user.entity';
 import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
+import { FarmMemberWithRole } from '../../ports/farm-memberships.repository';
 
 /**
  * Query handler for GetFarmByIdQuery
@@ -38,7 +39,7 @@ export class GetFarmByIdQueryHandler
    */
   async execute(query: GetFarmByIdQuery): Promise<{
     farm: FarmEntity;
-    members: User[];
+    members: FarmMemberWithRole[];
   }> {
     let farm = await this.farmsCacheRepository.get(query.farmId);
     if (!farm) {
@@ -55,7 +56,7 @@ export class GetFarmByIdQueryHandler
     );
     // Asignar los miembros al aggregate si es FarmAggregate
     if ('setMembers' in farm && typeof farm.setMembers === 'function') {
-      (farm as any).setMembers(members);
+      (farm as any).setMembers(members.map((m) => m.user));
     }
     return {
       farm,

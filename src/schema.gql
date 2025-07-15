@@ -47,6 +47,24 @@ type TokenVerificationResult {
   email: String
 }
 
+type FarmMemberResponseDto {
+  id: String!
+  firstName: String
+  lastName: String
+  avatar: String
+  bio: String
+  phone: String
+  email: String
+  isActive: Boolean!
+  isDeleted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+
+  """Role of the user in this farm"""
+  role: String!
+}
+
 type FarmResponseDto {
   id: String!
   name: String!
@@ -64,7 +82,7 @@ type FarmResponseDto {
   deletedAt: DateTime
 
   """Members (users) assigned to this farm"""
-  members: [UserResponseDto!]
+  members: [FarmMemberResponseDto!]
 }
 
 type Query {
