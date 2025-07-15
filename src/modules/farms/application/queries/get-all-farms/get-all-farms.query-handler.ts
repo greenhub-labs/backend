@@ -10,6 +10,10 @@ import {
   FARMS_CACHE_REPOSITORY_TOKEN,
   FarmsCacheRepository,
 } from '../../ports/farms-cache.repository';
+import {
+  FarmMembershipsRepository,
+  FarmMemberWithRole,
+} from '../../ports/farm-memberships.repository';
 
 /**
  * Query handler for GetAllFarmsQuery
@@ -23,6 +27,8 @@ export class GetAllFarmsQueryHandler
     private readonly farmsRepository: FarmsRepository,
     @Inject(FARMS_CACHE_REPOSITORY_TOKEN)
     private readonly farmsCacheRepository: FarmsCacheRepository,
+    @Inject('FARM_MEMBERSHIPS_REPOSITORY_TOKEN')
+    private readonly farmMembershipsRepository: FarmMembershipsRepository,
   ) {}
 
   /**
@@ -30,7 +36,18 @@ export class GetAllFarmsQueryHandler
    * @param query - The query to handle
    * @returns Array of FarmEntity
    */
-  async execute(query: GetAllFarmsQuery): Promise<FarmEntity[]> {
-    return this.farmsRepository.findAll();
+  async execute(
+    query: GetAllFarmsQuery,
+  ): Promise<Array<{ farm: FarmEntity; members: FarmMemberWithRole[] }>> {
+    const farms = await this.farmsRepository.findAll();
+    const results = await Promise.all(
+      farms.map(async (farm) => {
+        const members = await this.farmMembershipsRepository.getUsersByFarmId(
+          farm.id.value,
+        );
+        return { farm, members };
+      }),
+    );
+    return results;
   }
 }
