@@ -1,7 +1,7 @@
 import { Args, Query, Resolver, Mutation, Context } from '@nestjs/graphql';
 import { UseGuards, ForbiddenException } from '@nestjs/common';
 import { GetUserByIdRequestDto } from '../dtos/requests/get-user-by-id.request.dto';
-import { UserResponseDto } from '../dtos/responses/user.response.dto';
+import { UserDetailsResponseDto } from '../dtos/responses/user.response.dto';
 import { QueryBus } from '@nestjs/cqrs';
 import { GetUserByIdQuery } from '../../../application/queries/get-user-by-id/get-user-by-id.query';
 import { CommandBus } from '@nestjs/cqrs';
@@ -26,7 +26,7 @@ import {
  * Protected by JWT authentication by default
  * Use @Public() decorator for endpoints that should be accessible without authentication
  */
-@Resolver(() => UserResponseDto)
+@Resolver(() => UserDetailsResponseDto)
 @UseGuards(JwtAuthGuard) // Apply JWT guard globally to this resolver
 export class UserResolver {
   constructor(
@@ -38,16 +38,15 @@ export class UserResolver {
    * Get a user by their unique identifier
    * @param input - Input DTO containing the user ID
    */
-  @Query(() => UserResponseDto, {
+  @Query(() => UserDetailsResponseDto, {
     name: 'getUserById',
     description: 'Get user information by ID (requires authentication)',
   })
   async getUserById(
     @Args('input') input: GetUserByIdRequestDto,
-  ): Promise<UserResponseDto> {
-    const user = await this.queryBus.execute(new GetUserByIdQuery(input.id));
-    // Mapear la entidad User del dominio al DTO de respuesta
-    return UserMapper.fromDomain(user);
+  ): Promise<UserDetailsResponseDto> {
+    const result = await this.queryBus.execute(new GetUserByIdQuery(input.id));
+    return UserMapper.toResponseDto(result);
   }
 
   /**
@@ -55,7 +54,7 @@ export class UserResolver {
    * Note: This endpoint is for administrative purposes only.
    * Regular user registration should use the auth/register mutation.
    */
-  @Mutation(() => UserResponseDto, {
+  @Mutation(() => UserDetailsResponseDto, {
     name: 'createUser',
     description:
       'Create a new user (Admin only - regular registration uses auth/register)',
@@ -63,7 +62,7 @@ export class UserResolver {
   async createUser(
     @Args('input') input: CreateUserRequestDto,
     @Context() context: any,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserDetailsResponseDto> {
     // Mapear correctamente los campos del DTO al comando
     const user = await this.commandBus.execute(
       new CreateUserCommand(
@@ -73,14 +72,14 @@ export class UserResolver {
         input.bio,
       ),
     );
-    return UserMapper.fromDomain(user);
+    return UserMapper.toResponseDto(user);
   }
 
   /**
    * Update an existing user
    * Users can only update their own profile
    */
-  @Mutation(() => UserResponseDto, {
+  @Mutation(() => UserDetailsResponseDto, {
     name: 'updateUser',
     description:
       'Update user profile (users can only update their own profile)',
@@ -88,7 +87,7 @@ export class UserResolver {
   async updateUser(
     @Args('input') input: UpdateUserRequestDto,
     @Context() context: any,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserDetailsResponseDto> {
     const currentUser = context.req.user;
 
     // Verify user can only update their own profile
@@ -105,14 +104,14 @@ export class UserResolver {
         input.bio,
       ),
     );
-    return UserMapper.fromDomain(user);
+    return UserMapper.toResponseDto(user);
   }
 
   /**
    * Delete a user (soft delete)
    * Users can only delete their own account
    */
-  @Mutation(() => UserResponseDto, {
+  @Mutation(() => UserDetailsResponseDto, {
     name: 'deleteUser',
     description:
       'Delete user account (users can only delete their own account)',
@@ -120,7 +119,7 @@ export class UserResolver {
   async deleteUser(
     @Args('input') input: DeleteUserRequestDto,
     @Context() context: any,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserDetailsResponseDto> {
     const currentUser = context.req.user;
 
     // Verify user can only delete their own account
@@ -128,21 +127,21 @@ export class UserResolver {
       throw new ForbiddenException('You can only delete your own account');
     }
     const user = await this.commandBus.execute(new DeleteUserCommand(input.id));
-    return UserMapper.fromDomain(user);
+    return UserMapper.toResponseDto(user);
   }
 
   /**
    * Restore a soft-deleted user
    * Administrative function - requires special privileges
    */
-  @Mutation(() => UserResponseDto, {
+  @Mutation(() => UserDetailsResponseDto, {
     name: 'restoreUser',
     description: 'Restore a soft-deleted user (Admin only)',
   })
   async restoreUser(
     @Args('input') input: RestoreUserRequestDto,
     @Context() context: any,
-  ): Promise<UserResponseDto> {
+  ): Promise<UserDetailsResponseDto> {
     // TODO: Add role-based authorization check for admin privileges
     // For now, any authenticated user can restore (should be restricted to admins)
     const currentUser = context.req.user;
@@ -155,6 +154,6 @@ export class UserResolver {
     const user = await this.commandBus.execute(
       new RestoreUserCommand(input.id),
     );
-    return UserMapper.fromDomain(user);
+    return UserMapper.toResponseDto(user);
   }
 }

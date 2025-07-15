@@ -14,7 +14,7 @@ import {
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { FarmEntity } from 'src/modules/farms/domain/entities/farm.entity';
 import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
-import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 import { FarmDetailsResult } from '../../dtos/farm-details.result';
 import { GetUserByIdQuery } from 'src/modules/users/application/queries/get-user-by-id/get-user-by-id.query';
 

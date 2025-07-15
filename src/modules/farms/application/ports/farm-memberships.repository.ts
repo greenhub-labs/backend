@@ -1,5 +1,6 @@
 import { User } from 'src/modules/users/domain/entities/user.entity';
-import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
+import { FarmEntity } from 'src/modules/farms/domain/entities/farm.entity';
 
 export interface FarmMemberWithRole {
   user: User;
@@ -28,4 +29,12 @@ export interface FarmMembershipsRepository {
     userId: string,
     role: FARM_MEMBERSHIP_ROLES,
   ): Promise<void>;
+
+  /**
+   * Gets all farms (and role) for a given userId
+   * @param userId - The user ID
+   */
+  getFarmsByUserId(
+    userId: string,
+  ): Promise<{ farm: FarmEntity; role: FARM_MEMBERSHIP_ROLES }[]>;
 }

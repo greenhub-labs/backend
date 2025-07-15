@@ -15,7 +15,7 @@ export class AuthMapper {
     return {
       accessToken: (auth as any).accessToken,
       refreshToken: (auth as any).refreshToken,
-      user: auth.user ? UserMapper.fromDomain(auth.user) : undefined,
+      user: auth.user ? UserMapper.toResponseDto(auth.user) : undefined,
     } as AuthPayload;
   }
 }

@@ -1,5 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { UserResponseDto } from 'src/modules/users/presenters/graphql/dtos/responses/user.response.dto';
+import { UserDetailsResponseDto } from 'src/modules/users/presenters/graphql/dtos/responses/user.response.dto';
 
 /**
  * AuthPayload DTO
@@ -28,6 +28,6 @@ export class AuthPayload {
   /**
    * Authenticated user information
    */
-  @Field(() => UserResponseDto, { description: 'User information' })
-  user: UserResponseDto;
+  @Field(() => UserDetailsResponseDto, { description: 'User information' })
+  user: UserDetailsResponseDto;
 }

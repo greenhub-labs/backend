@@ -6,7 +6,7 @@ import { FarmIdValueObject } from '../../../domain/value-objects/farm-id/farm-id
 import { FarmNameValueObject } from 'src/modules/farms/domain/value-objects/farm-name/farm-name.value-object';
 import { FarmAddressValueObject } from 'src/modules/farms/domain/value-objects/farm-address/farm-address.value-object';
 import { FarmCoordinatesValueObject } from 'src/modules/farms/domain/value-objects/farm-coordinates/farm-coordinates.value-object';
-import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 describe('AssignUserToFarmCommandHandler', () => {
   let handler: AssignUserToFarmCommandHandler;

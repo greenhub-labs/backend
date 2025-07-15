@@ -1,9 +1,9 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { UserResponseDto } from 'src/modules/users/presenters/graphql/dtos/responses/user.response.dto';
-import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+import { UserDetailsResponseDto } from 'src/modules/users/presenters/graphql/dtos/responses/user.response.dto';
+import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 @ObjectType()
-export class FarmMemberResponseDto extends UserResponseDto {
+export class FarmMemberResponseDto extends UserDetailsResponseDto {
   @Field(() => String, { description: 'Role of the user in this farm' })
   role: FARM_MEMBERSHIP_ROLES;
 }

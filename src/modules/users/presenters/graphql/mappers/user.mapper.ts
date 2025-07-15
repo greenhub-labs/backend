@@ -1,23 +1,21 @@
 import { User } from '../../../domain/entities/user.entity';
-import { UserResponseDto } from '../dtos/responses/user.response.dto';
+import {
+  UserDetailsResult,
+  UserFarmMembership,
+} from '../../../application/dtos/user-details.result';
+import {
+  UserDetailsResponseDto,
+  UserFarmMembershipDto,
+} from '../dtos/responses/user.response.dto';
+import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 export class UserMapper {
-  /**
-   * Maps a User domain entity to a UserResponseDto
-   * @param user - User domain entity
-   * @returns UserResponseDto with all value objects as primitives
-   */
-  static fromDomain(
-    user: User,
-    email?: string,
-    phone?: string,
-  ): UserResponseDto {
+  static toResponseDto(details: UserDetailsResult): UserDetailsResponseDto {
+    const { user, farms } = details;
     return {
       id: user.id.value,
       firstName: user.firstName?.value,
       lastName: user.lastName?.value,
-      email,
-      phone,
       avatar: user.avatar?.value,
       bio: user.bio,
       isActive: user.isActive,
@@ -25,6 +23,12 @@ export class UserMapper {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       deletedAt: user.deletedAt,
+      farms:
+        farms?.map((farm) => ({
+          farmId: farm.farmId,
+          farmName: farm.farmName,
+          role: farm.role as FARM_MEMBERSHIP_ROLES,
+        })) || undefined,
     };
   }
 }

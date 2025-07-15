@@ -7,7 +7,7 @@ import { FarmAddressValueObject } from '../value-objects/farm-address/farm-addre
 import { FarmCoordinatesValueObject } from '../value-objects/farm-coordinates/farm-coordinates.value-object';
 import { FarmIdValueObject } from '../value-objects/farm-id/farm-id.value-object';
 import { FarmNameValueObject } from '../value-objects/farm-name/farm-name.value-object';
-import { FARM_MEMBERSHIP_ROLES } from '../constants/farm-membership-roles.constant';
+import { FARM_MEMBERSHIP_ROLES } from '../../../../shared/domain/constants/farm-membership-roles.constant';
 import { UserNameValueObject } from 'src/modules/users/domain/value-objects/user-name/user-name.value-object';
 
 /**

@@ -16,12 +16,12 @@ import {
 } from '../../ports/token.service';
 import { InvalidCredentialsException } from '../../../domain/exceptions/invalid-credentials/invalid-credentials.exception';
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
-import { User } from '../../../../users/domain/entities/user.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import {
   AuthCacheRepository,
   AUTH_CACHE_REPOSITORY_TOKEN,
 } from '../../ports/auth-cache.repository';
+import { UserDetailsResult } from '../../../../users/application/dtos/user-details.result';
 
 /**
  * Auth payload response for login
@@ -29,7 +29,7 @@ import {
 export interface AuthPayload {
   accessToken: string;
   refreshToken: string;
-  user: User;
+  user: UserDetailsResult;
 }
 
 /**
@@ -85,8 +85,11 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     // 4. Get user entity
     const getUserQuery = new GetUserByIdQuery(auth.userId);
-    const user: User = await this.queryBus.execute(getUserQuery);
+    const { user } = await this.queryBus.execute(getUserQuery);
 
+    this.logger.debug(`User: ${JSON.stringify(user)}`);
+    this.logger.debug(`User isActive: ${user.isActive}`);
+    this.logger.debug(`User isDeleted: ${user.isDeleted}`);
     // 5. Check if user is active
     if (!user.isActive || user.isDeleted) {
       throw new UnauthorizedException('User account is inactive');
@@ -133,7 +136,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     return {
       accessToken: tokenPair.accessToken.value,
       refreshToken: tokenPair.refreshToken.value,
-      user: user,
+      user: new UserDetailsResult(user, []),
     };
   }
 }

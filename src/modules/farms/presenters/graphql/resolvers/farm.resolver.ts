@@ -16,7 +16,7 @@ import { DeleteFarmCommand } from '../../../application/commands/delete-farm/del
 import { AssignUserToFarmCommand } from '../../../application/commands/assign-user-to-farm/assign-user-to-farm.command';
 import { FarmMapper } from '../mappers/farm.mapper';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
-import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 @Resolver(() => FarmResponseDto)
 @UseGuards(JwtAuthGuard)

@@ -23,6 +23,7 @@ import {
   AuthCacheRepository,
   AUTH_CACHE_REPOSITORY_TOKEN,
 } from '../../ports/auth-cache.repository';
+import { UserDetailsResult } from '../../../../users/application/dtos/user-details.result';
 
 /**
  * Auth payload response for registration
@@ -30,7 +31,7 @@ import {
 export interface AuthPayload {
   accessToken: string;
   refreshToken: string;
-  user: User;
+  user: UserDetailsResult;
 }
 
 /**
@@ -132,7 +133,7 @@ export class RegisterCommandHandler
     return {
       accessToken: tokenPair.accessToken.value,
       refreshToken: tokenPair.refreshToken.value,
-      user: user,
+      user: new UserDetailsResult(user, []),
     };
   }
 }

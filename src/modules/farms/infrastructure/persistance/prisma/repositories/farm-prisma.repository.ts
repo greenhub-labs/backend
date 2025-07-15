@@ -3,7 +3,7 @@ import { FarmsRepository } from '../../../../application/ports/farms.repository'
 import { FarmEntity } from '../../../../domain/entities/farm.entity';
 import { FarmPrismaEntity } from '../entities/farm-prisma.entity';
 import { PrismaClient } from '@prisma/client';
-import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 /**
  * Prisma implementation of the FarmsRepositoryPort interface

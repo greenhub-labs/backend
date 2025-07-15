@@ -1,5 +1,5 @@
 import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
-import { FARM_MEMBERSHIP_ROLES } from '../../constants/farm-membership-roles.constant';
+import { FARM_MEMBERSHIP_ROLES } from '../../../../../shared/domain/constants/farm-membership-roles.constant';
 
 /**
  * Domain event emitted when a user is assigned to a farm.

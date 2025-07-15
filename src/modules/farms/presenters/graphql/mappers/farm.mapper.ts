@@ -1,6 +1,6 @@
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
-import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 import { FarmDetailsResult } from 'src/modules/farms/application/dtos/farm-details.result';
 
 export class FarmMapper {
