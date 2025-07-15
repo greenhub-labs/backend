@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler, QueryBus } from '@nestjs/cqrs';
 import { GetUserByIdQuery } from './get-user-by-id.query';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import {
   UserRepository,
   USER_REPOSITORY_TOKEN,
@@ -16,6 +16,7 @@ import { GetFarmsForUserQuery } from '../../../../farms/application/queries/get-
 import {
   UserDetailsResult,
   UserFarmMembership,
+  UserDetails,
 } from '../../dtos/user-details.result';
 
 /**
@@ -26,6 +27,8 @@ import {
 export class GetUserByIdQueryHandler
   implements IQueryHandler<GetUserByIdQuery>
 {
+  private readonly logger = new Logger(GetUserByIdQueryHandler.name);
+
   constructor(
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: UserRepository,
@@ -56,9 +59,13 @@ export class GetUserByIdQueryHandler
       new GetFarmsForUserQuery(query.id),
     );
 
-    const farmMemberships = farms.map(
-      (farm) => new UserFarmMembership(farm.farmId, farm.farmName, farm.role),
+    const farmMemberships: UserFarmMembership[] = farms.map((farm) => {
+      return new UserFarmMembership(farm.farmId, farm.farmName, farm.role);
+    });
+    this.logger.debug(`Farm memberships: ${JSON.stringify(farmMemberships)}`);
+    return new UserDetailsResult(
+      new UserDetails(user, undefined, undefined),
+      farmMemberships,
     );
-    return new UserDetailsResult(user, farmMemberships);
   }
 }

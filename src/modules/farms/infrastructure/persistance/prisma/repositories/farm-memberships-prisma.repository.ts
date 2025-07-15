@@ -69,13 +69,14 @@ export class FarmMembershipsPrismaRepository
   async getFarmsByUserId(
     userId: string,
   ): Promise<{ farm: FarmEntity; role: FARM_MEMBERSHIP_ROLES }[]> {
+    this.logger.debug('Getting farms by user id', userId);
     const memberships = await this.prisma.farmMembership.findMany({
       where: { userId, isActive: true, deletedAt: null },
       include: { farm: true, role: true },
     });
-    return memberships.map((m) => ({
-      farm: FarmPrismaEntity.fromPrisma(m.farm),
-      role: m.role.name as FARM_MEMBERSHIP_ROLES,
+    return memberships.map((membership) => ({
+      farm: FarmPrismaEntity.fromPrisma(membership.farm),
+      role: membership.role.name as FARM_MEMBERSHIP_ROLES,
     }));
   }
 }

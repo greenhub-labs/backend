@@ -35,4 +35,8 @@ export class UserDetailsResponseDto {
   deletedAt?: Date;
   @Field(() => [UserFarmMembershipDto], { nullable: true })
   farms?: UserFarmMembershipDto[];
+  @Field({ nullable: true })
+  email?: string;
+  @Field({ nullable: true })
+  phone?: string;
 }

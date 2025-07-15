@@ -1,8 +1,8 @@
 ---
-description: 
-globs: 
+description: Do unit testing
 alwaysApply: false
 ---
+
 # Unit Testing Rule
 
 Every time a new feature is added or an existing one is modified (unless the user explicitly provides an exception), unit tests must be created or updated accordingly. These tests should:

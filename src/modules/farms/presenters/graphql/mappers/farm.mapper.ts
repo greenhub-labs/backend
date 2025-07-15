@@ -28,8 +28,8 @@ export class FarmMapper {
           lastName: user.lastName?.value,
           avatar: user.avatar?.value,
           bio: user.bio,
-          phone: undefined, // No existe en User
-          email: undefined, // No existe en User
+          phone: undefined, // Doesn't exist in User
+          email: undefined, // Doesn't exist in User
           isActive: user.isActive,
           isDeleted: user.isDeleted,
           createdAt: user.createdAt,

@@ -11,24 +11,26 @@ import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membersh
 
 export class UserMapper {
   static toResponseDto(details: UserDetailsResult): UserDetailsResponseDto {
-    const { user, farms } = details;
+    const { farms, user } = details;
     return {
-      id: user.id.value,
-      firstName: user.firstName?.value,
-      lastName: user.lastName?.value,
-      avatar: user.avatar?.value,
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatar: user.avatar,
       bio: user.bio,
       isActive: user.isActive,
       isDeleted: user.isDeleted,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
+      createdAt: new Date(user.createdAt),
+      updatedAt: new Date(user.updatedAt),
+      deletedAt: user.deletedAt ? new Date(user.deletedAt) : undefined,
       farms:
         farms?.map((farm) => ({
           farmId: farm.farmId,
           farmName: farm.farmName,
           role: farm.role as FARM_MEMBERSHIP_ROLES,
         })) || undefined,
+      email: user.email,
+      phone: user.phone,
     };
   }
 }

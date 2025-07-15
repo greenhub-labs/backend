@@ -20,6 +20,8 @@ type UserDetailsResponseDto {
   updatedAt: DateTime!
   deletedAt: DateTime
   farms: [UserFarmMembershipDto!]
+  email: String
+  phone: String
 }
 
 """

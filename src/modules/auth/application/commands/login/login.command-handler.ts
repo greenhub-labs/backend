@@ -85,13 +85,11 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     // 4. Get user entity
     const getUserQuery = new GetUserByIdQuery(auth.userId);
-    const { user } = await this.queryBus.execute(getUserQuery);
+    const userDetails: UserDetailsResult =
+      await this.queryBus.execute(getUserQuery);
 
-    this.logger.debug(`User: ${JSON.stringify(user)}`);
-    this.logger.debug(`User isActive: ${user.isActive}`);
-    this.logger.debug(`User isDeleted: ${user.isDeleted}`);
     // 5. Check if user is active
-    if (!user.isActive || user.isDeleted) {
+    if (!userDetails.user.isActive || userDetails.user.isDeleted) {
       throw new UnauthorizedException('User account is inactive');
     }
 
@@ -111,7 +109,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     // 9. Cache session information
     await this.authCacheRepository.setSession(sessionId, {
-      userId: user.id.value,
+      userId: userDetails.user.id,
       email: auth.email.value,
       loginAt: new Date().toISOString(),
       ipAddress: command.ipAddress,
@@ -127,7 +125,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     // 11. Generate JWT tokens
     const tokenPair: TokenPair = await this.tokenService.generateTokenPair({
-      sub: user.id.value,
+      sub: userDetails.user.id,
       email: auth.email.value,
       sessionId: sessionId,
     });
@@ -136,7 +134,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     return {
       accessToken: tokenPair.accessToken.value,
       refreshToken: tokenPair.refreshToken.value,
-      user: new UserDetailsResult(user, []),
+      user: userDetails,
     };
   }
 }
