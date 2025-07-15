@@ -58,12 +58,13 @@ type FarmMemberResponseDto {
   lastName: String
   avatar: String
   bio: String
+  phone: String
+  email: String
   isActive: Boolean!
   isDeleted: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
-  farms: [UserFarmMembershipDto!]
 
   """Role of the user in this farm"""
   role: String!

@@ -1,9 +1,32 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { UserDetailsResponseDto } from 'src/modules/users/presenters/graphql/dtos/responses/user.response.dto';
 import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 @ObjectType()
-export class FarmMemberResponseDto extends UserDetailsResponseDto {
+export class FarmMemberResponseDto {
+  @Field()
+  id: string;
+  @Field({ nullable: true })
+  firstName?: string;
+  @Field({ nullable: true })
+  lastName?: string;
+  @Field({ nullable: true })
+  avatar?: string;
+  @Field({ nullable: true })
+  bio?: string;
+  @Field({ nullable: true })
+  phone?: string;
+  @Field({ nullable: true })
+  email?: string;
+  @Field()
+  isActive: boolean;
+  @Field()
+  isDeleted: boolean;
+  @Field()
+  createdAt: Date;
+  @Field()
+  updatedAt: Date;
+  @Field({ nullable: true })
+  deletedAt?: Date;
   @Field(() => String, { description: 'Role of the user in this farm' })
   role: FARM_MEMBERSHIP_ROLES;
 }
