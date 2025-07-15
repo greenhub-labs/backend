@@ -14,6 +14,7 @@ import {
 import { User } from 'src/modules/users/domain/entities/user.entity';
 import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
 import { FarmMemberWithRole } from '../../ports/farm-memberships.repository';
+import { FarmDetailsResult } from '../../dtos/farm-details.result';
 
 /**
  * Query handler for GetFarmByIdQuery
@@ -37,10 +38,7 @@ export class GetFarmByIdQueryHandler
    * @returns The FarmEntity if found
    * @throws FarmNotFoundException if not found
    */
-  async execute(query: GetFarmByIdQuery): Promise<{
-    farm: FarmEntity;
-    members: FarmMemberWithRole[];
-  }> {
+  async execute(query: GetFarmByIdQuery): Promise<FarmDetailsResult> {
     let farm = await this.farmsCacheRepository.get(query.farmId);
     if (!farm) {
       // If not in cache, fetch from repository
@@ -58,9 +56,6 @@ export class GetFarmByIdQueryHandler
     if ('setMembers' in farm && typeof farm.setMembers === 'function') {
       (farm as any).setMembers(members.map((m) => m.user));
     }
-    return {
-      farm,
-      members,
-    };
+    return new FarmDetailsResult(farm, members);
   }
 }

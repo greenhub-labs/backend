@@ -16,4 +16,16 @@ export interface FarmMembershipsRepository {
    * @param farmId - The farm ID
    */
   getUsersByFarmId(farmId: string): Promise<FarmMemberWithRole[]>;
+
+  /**
+   * Assigns a user to a farm with a specific role
+   * @param farmId - The farm ID
+   * @param userId - The user ID
+   * @param role - The role to assign
+   */
+  assignUserToFarm(
+    farmId: string,
+    userId: string,
+    role: FARM_MEMBERSHIP_ROLES,
+  ): Promise<void>;
 }

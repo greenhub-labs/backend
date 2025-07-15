@@ -14,6 +14,7 @@ import {
   FarmMembershipsRepository,
   FarmMemberWithRole,
 } from '../../ports/farm-memberships.repository';
+import { FarmDetailsResult } from '../../dtos/farm-details.result';
 
 /**
  * Query handler for GetAllFarmsQuery
@@ -36,16 +37,14 @@ export class GetAllFarmsQueryHandler
    * @param query - The query to handle
    * @returns Array of FarmEntity
    */
-  async execute(
-    query: GetAllFarmsQuery,
-  ): Promise<Array<{ farm: FarmEntity; members: FarmMemberWithRole[] }>> {
+  async execute(query: GetAllFarmsQuery): Promise<FarmDetailsResult[]> {
     const farms = await this.farmsRepository.findAll();
     const results = await Promise.all(
       farms.map(async (farm) => {
         const members = await this.farmMembershipsRepository.getUsersByFarmId(
           farm.id.value,
         );
-        return { farm, members };
+        return new FarmDetailsResult(farm, members);
       }),
     );
     return results;

@@ -1,6 +1,8 @@
 /**
  * Command to create a new Farm
  */
+import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+
 export class CreateFarmCommand {
   /** Name of the farm */
   readonly name: string;
@@ -22,6 +24,8 @@ export class CreateFarmCommand {
   readonly longitude?: number;
   /** Whether the farm is active */
   readonly isActive?: boolean;
+  /** User identifier (creator, will be assigned as OWNER) */
+  readonly userId: string;
 
   /**
    * Creates a new CreateFarmCommand
@@ -37,7 +41,8 @@ export class CreateFarmCommand {
     street?: string;
     latitude?: number;
     longitude?: number;
-    isActive?: boolean;
+    isActive: boolean;
+    userId: string;
   }) {
     this.name = params.name;
     this.description = params.description;
@@ -49,5 +54,6 @@ export class CreateFarmCommand {
     this.latitude = params.latitude;
     this.longitude = params.longitude;
     this.isActive = params.isActive;
+    this.userId = params.userId;
   }
 }

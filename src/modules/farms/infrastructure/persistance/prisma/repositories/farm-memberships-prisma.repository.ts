@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { FarmMembershipsRepository } from 'src/modules/farms/application/ports/farm-memberships.repository';
 import { User } from 'src/modules/users/domain/entities/user.entity';
@@ -16,6 +16,8 @@ export const FARM_MEMBERSHIPS_REPOSITORY_TOKEN =
 export class FarmMembershipsPrismaRepository
   implements FarmMembershipsRepository
 {
+  private readonly logger = new Logger(FarmMembershipsPrismaRepository.name);
+
   constructor(private readonly prisma: PrismaClient) {}
 
   async getUsersByFarmId(
@@ -29,5 +31,36 @@ export class FarmMembershipsPrismaRepository
       user: UserPrismaEntity.fromPrisma(m.user),
       role: m.role.name as FARM_MEMBERSHIP_ROLES,
     }));
+  }
+
+  /**
+   * Assigns a user to a farm (creates a FarmMembership)
+   * @param farmId - The Farm ID (as string)
+   * @param userId - The User ID (as string)
+   */
+  async assignUserToFarm(
+    farmId: string,
+    userId: string,
+    role: FARM_MEMBERSHIP_ROLES,
+  ): Promise<void> {
+    this.logger.debug('Assigning user to farm', farmId, userId);
+    // Buscar el id del rol OWNER por defecto
+    const roleEntity = await this.prisma.role.findUnique({
+      where: { name: role },
+    });
+    if (!roleEntity) throw new Error('Default role not found');
+    try {
+      await this.prisma.farmMembership.create({
+        data: {
+          farmId,
+          userId,
+          roleId: roleEntity.id,
+          isActive: true,
+        },
+      });
+    } catch (err) {
+      // Si ya existe la relación, ignora el error de duplicado
+      if (err.code !== 'P2002') throw err;
+    }
   }
 }

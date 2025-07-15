@@ -7,6 +7,7 @@ import {
   IsNumber,
   Min,
   Max,
+  IsUUID,
 } from 'class-validator';
 
 @InputType()
@@ -66,4 +67,9 @@ export class CreateFarmRequestDto {
   @Min(-180)
   @Max(180)
   longitude?: number;
+
+  @Field()
+  @IsUUID()
+  @IsNotEmpty()
+  userId: string;
 }

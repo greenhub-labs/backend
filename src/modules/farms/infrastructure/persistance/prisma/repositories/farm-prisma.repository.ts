@@ -72,35 +72,4 @@ export class FarmPrismaRepository implements FarmsRepository {
       data: { deletedAt: new Date() },
     });
   }
-
-  /**
-   * Assigns a user to a farm (creates a FarmMembership)
-   * @param farmId - The Farm ID (as string)
-   * @param userId - The User ID (as string)
-   */
-  async assignUserToFarm(
-    farmId: string,
-    userId: string,
-    role: FARM_MEMBERSHIP_ROLES,
-  ): Promise<void> {
-    this.logger.debug('Assigning user to farm', farmId, userId);
-    // Buscar el id del rol OWNER por defecto
-    const roleEntity = await this.prisma.role.findUnique({
-      where: { name: role },
-    });
-    if (!roleEntity) throw new Error('Default role not found');
-    try {
-      await this.prisma.farmMembership.create({
-        data: {
-          farmId,
-          userId,
-          roleId: roleEntity.id,
-          isActive: true,
-        },
-      });
-    } catch (err) {
-      // Si ya existe la relación, ignora el error de duplicado
-      if (err.code !== 'P2002') throw err;
-    }
-  }
 }

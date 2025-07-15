@@ -1,12 +1,10 @@
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
 import { FARM_MEMBERSHIP_ROLES } from 'src/modules/farms/domain/constants/farm-membership-roles.constant';
+import { FarmDetailsResult } from 'src/modules/farms/application/dtos/farm-details.result';
 
 export class FarmMapper {
-  static fromDomain(input: {
-    farm: FarmEntity;
-    members?: { user: any; role: FARM_MEMBERSHIP_ROLES }[];
-  }): FarmResponseDto {
+  static fromDomain(input: FarmDetailsResult): FarmResponseDto {
     const { farm, members } = input;
     const dto: FarmResponseDto = {
       id: farm.id.value,
@@ -30,8 +28,6 @@ export class FarmMapper {
           lastName: user.lastName?.value,
           avatar: user.avatar?.value,
           bio: user.bio,
-          phone: user.phone,
-          email: user.email,
           isActive: user.isActive,
           isDeleted: user.isDeleted,
           createdAt: user.createdAt,

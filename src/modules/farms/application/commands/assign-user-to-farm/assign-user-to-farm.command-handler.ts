@@ -7,6 +7,7 @@ import { FarmAggregate } from '../../../domain/aggregates/farm.aggregate';
 import { FarmIdValueObject } from '../../../domain/value-objects/farm-id/farm-id.value-object';
 import { UserIdValueObject } from 'src/modules/users/domain/value-objects/user-id/user-id.value-object';
 import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
+import { FarmDetailsResult } from '../../dtos/farm-details.result';
 
 /**
  * Command handler for assigning a user to a farm.
@@ -26,7 +27,7 @@ export class AssignUserToFarmCommandHandler
    * Executes the command to assign a user to a farm.
    * @param command - AssignUserToFarmCommand
    */
-  async execute(command: AssignUserToFarmCommand): Promise<FarmAggregate> {
+  async execute(command: AssignUserToFarmCommand): Promise<FarmDetailsResult> {
     const farmId = new FarmIdValueObject(command.farmId);
     const userId = new UserIdValueObject(command.userId);
     const farm = await this.farmsRepository.findById(farmId.value);
@@ -35,21 +36,20 @@ export class AssignUserToFarmCommandHandler
     }
     const farmAggregate = FarmAggregate.fromPrimitives(farm.toPrimitives());
     farmAggregate.assignUser(userId.value, command.role);
-    await this.farmsRepository.assignUserToFarm(
+    await this.farmMembershipsRepository.assignUserToFarm(
       farmId.value,
       userId.value,
       command.role,
     );
-    // Obtener los miembros actualizados y poblar el aggregate
-    const members = await this.farmMembershipsRepository.getUsersByFarmId(
-      farmId.value,
-    );
+    // Obtener los miembros actualizados y poblar el aggregate solo con los usuarios
+    const membersWithRole =
+      await this.farmMembershipsRepository.getUsersByFarmId(farmId.value);
     if (
       'setMembers' in farmAggregate &&
       typeof farmAggregate.setMembers === 'function'
     ) {
-      (farmAggregate as any).setMembers(members);
+      (farmAggregate as any).setMembers(membersWithRole.map((m) => m.user));
     }
-    return farmAggregate;
+    return new FarmDetailsResult(farmAggregate, membersWithRole);
   }
 }

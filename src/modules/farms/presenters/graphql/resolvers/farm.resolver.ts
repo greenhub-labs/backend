@@ -65,6 +65,7 @@ export class FarmResolver {
         latitude: input.latitude,
         longitude: input.longitude,
         isActive: true,
+        userId: input.userId,
       }),
     );
     return FarmMapper.fromDomain(farm);
@@ -112,9 +113,9 @@ export class FarmResolver {
   async assignUserToFarm(
     @Args('input') input: AssignUserToFarmRequestDto,
   ): Promise<FarmResponseDto> {
-    const farm = await this.commandBus.execute(
+    const { farm, members } = await this.commandBus.execute(
       new AssignUserToFarmCommand(input.farmId, input.userId, input.role),
     );
-    return FarmMapper.fromDomain(farm);
+    return FarmMapper.fromDomain({ farm, members });
   }
 }
