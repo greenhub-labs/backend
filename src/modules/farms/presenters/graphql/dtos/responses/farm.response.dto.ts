@@ -1,4 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { UserResponseDto } from 'src/modules/users/presenters/graphql/dtos/responses/user.response.dto';
 
 @ObjectType()
 export class FarmResponseDto {
@@ -43,4 +44,10 @@ export class FarmResponseDto {
 
   @Field({ nullable: true })
   deletedAt?: Date;
+
+  @Field(() => [UserResponseDto], {
+    nullable: true,
+    description: 'Members (users) assigned to this farm',
+  })
+  members?: UserResponseDto[];
 }

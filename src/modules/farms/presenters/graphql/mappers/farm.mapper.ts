@@ -1,23 +1,45 @@
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
+import { UserResponseDto } from 'src/modules/users/presenters/graphql/dtos/responses/user.response.dto';
+import { User } from 'src/modules/users/domain/entities/user.entity';
 
 export class FarmMapper {
-  static fromDomain(entity: FarmEntity): FarmResponseDto {
-    return {
-      id: entity.id.value,
-      name: entity.name.value,
-      description: entity.description,
-      country: entity.address.country,
-      state: entity.address.state,
-      city: entity.address.city,
-      postalCode: entity.address.postalCode,
-      street: entity.address.street,
-      latitude: entity.coordinates.latitude,
-      longitude: entity.coordinates.longitude,
-      isActive: entity.isActive,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-      deletedAt: entity.deletedAt,
+  static fromDomain(input: {
+    farm: FarmEntity;
+    members?: any[];
+  }): FarmResponseDto {
+    const { farm, members } = input;
+    const dto: FarmResponseDto = {
+      id: farm.id.value,
+      name: farm.name.value,
+      description: farm.description,
+      country: farm.address.country,
+      state: farm.address.state,
+      city: farm.address.city,
+      postalCode: farm.address.postalCode,
+      street: farm.address.street,
+      latitude: farm.coordinates.latitude,
+      longitude: farm.coordinates.longitude,
+      isActive: farm.isActive,
+      createdAt: farm.createdAt,
+      updatedAt: farm.updatedAt,
+      deletedAt: farm.deletedAt,
+      members:
+        members?.map((user) => ({
+          id: user.id.value,
+          firstName: user.firstName.value,
+          lastName: user.lastName.value,
+          avatar: user.avatar,
+          bio: user.bio,
+          phone: user.phone,
+          email: user.email,
+          isActive: user.isActive,
+          isDeleted: user.isDeleted,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+          deletedAt: user.deletedAt,
+        })) || undefined,
     };
+    return dto;
   }
 }

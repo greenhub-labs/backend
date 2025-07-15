@@ -6,6 +6,7 @@ import { FARMS_REPOSITORY_TOKEN } from '../../ports/farms.repository';
 import { FarmAggregate } from '../../../domain/aggregates/farm.aggregate';
 import { FarmIdValueObject } from '../../../domain/value-objects/farm-id/farm-id.value-object';
 import { UserIdValueObject } from 'src/modules/users/domain/value-objects/user-id/user-id.value-object';
+import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
 
 /**
  * Command handler for assigning a user to a farm.
@@ -17,6 +18,8 @@ export class AssignUserToFarmCommandHandler
   constructor(
     @Inject(FARMS_REPOSITORY_TOKEN)
     private readonly farmsRepository: FarmsRepository,
+    @Inject('FARM_MEMBERSHIPS_REPOSITORY_TOKEN')
+    private readonly farmMembershipsRepository: FarmMembershipsRepository,
   ) {}
 
   /**
@@ -37,6 +40,16 @@ export class AssignUserToFarmCommandHandler
       userId.value,
       command.role,
     );
+    // Obtener los miembros actualizados y poblar el aggregate
+    const members = await this.farmMembershipsRepository.getUsersByFarmId(
+      farmId.value,
+    );
+    if (
+      'setMembers' in farmAggregate &&
+      typeof farmAggregate.setMembers === 'function'
+    ) {
+      (farmAggregate as any).setMembers(members);
+    }
     return farmAggregate;
   }
 }

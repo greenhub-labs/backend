@@ -42,4 +42,4 @@ COPY --from=builder /usr/src/app/prisma ./prisma
 EXPOSE 3000
 
 # Default command
-CMD ["pnpm", "start:prod"] 
+CMD ["pnpm", "prod"] 

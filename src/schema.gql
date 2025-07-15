@@ -62,6 +62,9 @@ type FarmResponseDto {
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+
+  """Members (users) assigned to this farm"""
+  members: [UserResponseDto!]
 }
 
 type Query {

@@ -33,8 +33,8 @@ export class FarmResolver {
   async getFarmById(
     @Args('input') input: GetFarmByIdRequestDto,
   ): Promise<FarmResponseDto> {
-    const farm = await this.queryBus.execute(new GetFarmByIdQuery(input.id));
-    return FarmMapper.fromDomain(farm);
+    const result = await this.queryBus.execute(new GetFarmByIdQuery(input.id));
+    return FarmMapper.fromDomain(result);
   }
 
   @Query(() => [FarmResponseDto], {
