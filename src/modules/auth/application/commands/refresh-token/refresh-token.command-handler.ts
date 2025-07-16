@@ -9,15 +9,8 @@ import {
 import { RefreshTokenValueObject } from '../../../domain/value-objects/refresh-token/refresh-token.value-object';
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
 import { User } from '../../../../users/domain/entities/user.entity';
-
-/**
- * Auth payload response for token refresh
- */
-export interface AuthPayload {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
+import { AuthPayload } from '../../dtos/auth-payload.dto';
+import { UserDetailsResult } from 'src/modules/users/application/dtos/user-details.result';
 
 /**
  * Command handler for refreshing access tokens
@@ -56,10 +49,11 @@ export class RefreshTokenCommandHandler
 
     // 4. Get user entity
     const getUserQuery = new GetUserByIdQuery(userId);
-    const user: User = await this.queryBus.execute(getUserQuery);
+    const userDetailsResult: UserDetailsResult =
+      await this.queryBus.execute(getUserQuery);
 
     // 5. Check if user is still active
-    if (!user.isActive || user.isDeleted) {
+    if (!userDetailsResult.user.isActive || userDetailsResult.user.isDeleted) {
       throw new UnauthorizedException('User account is inactive');
     }
 
@@ -67,7 +61,7 @@ export class RefreshTokenCommandHandler
     return {
       accessToken: newTokenPair.accessToken.value,
       refreshToken: newTokenPair.refreshToken.value,
-      user: user,
+      user: userDetailsResult,
     };
   }
 }

@@ -4,6 +4,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
   SetMetadata,
+  Logger,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Reflector } from '@nestjs/core';
@@ -32,6 +33,7 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
  */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  private readonly logger = new Logger(JwtAuthGuard.name);
   constructor(
     private reflector: Reflector,
     @Inject(TOKEN_SERVICE_TOKEN)
@@ -73,6 +75,7 @@ export class JwtAuthGuard implements CanActivate {
 
       return true;
     } catch (error) {
+      this.logger.error('Invalid or expired access token', error);
       throw new UnauthorizedException('Invalid or expired access token');
     }
   }

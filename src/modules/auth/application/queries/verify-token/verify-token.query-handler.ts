@@ -8,17 +8,7 @@ import {
 } from '../../ports/token.service';
 import { AccessTokenValueObject } from '../../../domain/value-objects/access-token/access-token.value-object';
 import { RefreshTokenValueObject } from '../../../domain/value-objects/refresh-token/refresh-token.value-object';
-
-/**
- * Token verification result interface
- */
-export interface TokenVerificationResult {
-  valid: boolean;
-  payload?: JwtPayload;
-  expired?: boolean;
-  userId?: string;
-  email?: string;
-}
+import { TokenVerificationResult } from '../../dtos/token-verification-result.dto';
 
 /**
  * Query handler for verifying JWT tokens

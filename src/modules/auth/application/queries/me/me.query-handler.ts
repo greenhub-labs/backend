@@ -1,7 +1,6 @@
 import { IQueryHandler, QueryHandler, QueryBus } from '@nestjs/cqrs';
 import { MeQuery } from './me.query';
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
-import { User } from '../../../../users/domain/entities/user.entity';
 import { Inject, Logger } from '@nestjs/common';
 import {
   AUTH_REPOSITORY_TOKEN,

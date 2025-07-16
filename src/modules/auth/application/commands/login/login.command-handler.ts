@@ -22,15 +22,7 @@ import {
   AUTH_CACHE_REPOSITORY_TOKEN,
 } from '../../ports/auth-cache.repository';
 import { UserDetailsResult } from '../../../../users/application/dtos/user-details.result';
-
-/**
- * Auth payload response for login
- */
-export interface AuthPayload {
-  accessToken: string;
-  refreshToken: string;
-  user: UserDetailsResult;
-}
+import { AuthPayload } from '../../dtos/auth-payload.dto';
 
 /**
  * Command handler for user login
