@@ -347,13 +347,10 @@ model Farm {
   /// Código postal de la farm
   postalCode  String?
   /// Dirección completa estructurada
-  address     Json? // { street, city, country, postal_code, state, country }
+  street      String?
   /// Coordenadas GPS
-  coordinates Json? // { lat: number, lng: number }
-  /// Zona horaria de la farm
-  timezone    String   @default("UTC")
-  /// Configuraciones específicas de la farm
-  settings    Json? // { irrigation_defaults, alert_preferences, etc. }
+  latitude    Float?
+  longitude   Float?
   /// Si la farm está activa
   isActive    Boolean  @default(true)
   /// Fecha de creación
@@ -383,7 +380,7 @@ model Farm {
   /// Alertas generadas en la farm
   alerts          Alert[]
   /// Configuraciones del sistema
-  configurations  SystemConfiguration[]
+  configurations  FarmConfiguration[]
   
   @@map("farms")
 }
@@ -1766,39 +1763,55 @@ model SystemLog {
 // preferencias de alertas y parámetros de automatización
 
 /**
- * Configuración del sistema
+ * Configuración del sistema (por farm)
  * 
  * Parámetros configurables por farm para personalizar
  * el comportamiento del sistema: umbrales de sensores,
  * preferencias de alertas, configuración de IA, etc.
  */
-model SystemConfiguration {
+model FarmConfiguration {
   /// UUID único de la configuración
   id        String   @id @default(uuid())
   /// Farm a la que pertenece la configuración
   farmId    String
-  /// Clave de la configuración
-  key       String
-  /// Valor de la configuración en formato JSON
-  value     Json // { threshold: number, enabled: boolean, settings: {} }
-  /// Categoría de la configuración
-  category  String // "irrigation", "alerts", "energy", "ai", "sensors", "automation"
+  /// Notificaciones por email
+  emailNotifications        Boolean  @default(true)
+  /// Notificaciones por SMS
+  smsNotifications         Boolean  @default(false)
+  /// Notificaciones por push
+  pushNotifications        Boolean  @default(true)
+  /// Umbral de alerta crítica
+  criticalAlertThreshold   Int?     // Por ejemplo, nivel de batería mínimo
+  /// Modo de ahorro de energía nocturno
+  energySavingMode         Boolean  @default(false)
+  /// Fuente de energía preferida
+  preferredEnergySource    EnergySource @default(SOLAR)
+  /// Habilitado Home Assistant
+  homeAssistantEnabled      Boolean  @default(false)
+  /// Habilitado Telegram
+  telegramEnabled           Boolean  @default(false)
+  /// Habilitado Slack
+  slackEnabled              Boolean  @default(false)
+  // /// Idioma por defecto
+  // defaultLanguage          String   @default("es")
+  /// Zona horaria
+  timezone               String   @default("UTC")
   /// Si la configuración está activa
-  isActive  Boolean  @default(true)
+  isActive                  Boolean  @default(true)
   /// Fecha de creación
-  createdAt DateTime @default(now())
+  createdAt                 DateTime @default(now())
   /// Fecha de última actualización
-  updatedAt DateTime @updatedAt
+  updatedAt                 DateTime @updatedAt
   /// Soft delete: registro eliminado lógicamente
-  deletedAt DateTime?
+  deletedAt                 DateTime?
   
   // Relations
   /// Farm a la que pertenece
   farm Farm @relation(fields: [farmId], references: [id])
   
-  /// Una configuración por farm y clave
-  @@unique([farmId, key])
-  @@map("system_configurations")
+  /// Una configuración por farm
+  @@unique([farmId])
+  @@map("farm_configuration")
 }
 
 /**

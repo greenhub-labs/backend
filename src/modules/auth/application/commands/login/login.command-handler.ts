@@ -16,21 +16,13 @@ import {
 } from '../../ports/token.service';
 import { InvalidCredentialsException } from '../../../domain/exceptions/invalid-credentials/invalid-credentials.exception';
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
-import { User } from '../../../../users/domain/entities/user.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import {
   AuthCacheRepository,
   AUTH_CACHE_REPOSITORY_TOKEN,
 } from '../../ports/auth-cache.repository';
-
-/**
- * Auth payload response for login
- */
-export interface AuthPayload {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
+import { UserDetailsResult } from '../../../../users/application/dtos/user-details.result';
+import { AuthPayload } from '../../dtos/auth-payload.dto';
 
 /**
  * Command handler for user login
@@ -85,10 +77,11 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     // 4. Get user entity
     const getUserQuery = new GetUserByIdQuery(auth.userId);
-    const user: User = await this.queryBus.execute(getUserQuery);
+    const userDetails: UserDetailsResult =
+      await this.queryBus.execute(getUserQuery);
 
     // 5. Check if user is active
-    if (!user.isActive || user.isDeleted) {
+    if (!userDetails.user.isActive || userDetails.user.isDeleted) {
       throw new UnauthorizedException('User account is inactive');
     }
 
@@ -108,7 +101,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     // 9. Cache session information
     await this.authCacheRepository.setSession(sessionId, {
-      userId: user.id.value,
+      userId: userDetails.user.id,
       email: auth.email.value,
       loginAt: new Date().toISOString(),
       ipAddress: command.ipAddress,
@@ -124,7 +117,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     // 11. Generate JWT tokens
     const tokenPair: TokenPair = await this.tokenService.generateTokenPair({
-      sub: user.id.value,
+      sub: userDetails.user.id,
       email: auth.email.value,
       sessionId: sessionId,
     });
@@ -133,7 +126,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     return {
       accessToken: tokenPair.accessToken.value,
       refreshToken: tokenPair.refreshToken.value,
-      user: user,
+      user: userDetails,
     };
   }
 }

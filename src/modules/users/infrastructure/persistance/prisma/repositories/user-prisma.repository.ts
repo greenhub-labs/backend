@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UserRepository } from '../../../../application/ports/user.repository';
 import { User } from '../../../../domain/entities/user.entity';
 import { PrismaClient } from '@prisma/client';
@@ -10,6 +10,7 @@ import { UserPrismaEntity } from '../entities/user-prisma.entity';
  */
 @Injectable()
 export class UserPrismaRepository implements UserRepository {
+  private readonly logger = new Logger(UserPrismaRepository.name);
   /**
    * Creates a new UserPrismaRepository instance
    * @param prisma - The Prisma client instance for database operations
@@ -33,6 +34,7 @@ export class UserPrismaRepository implements UserRepository {
    * @returns Promise resolving to the ID of the saved user
    */
   async save(user: User): Promise<string> {
+    this.logger.debug(`Saving user ${JSON.stringify(user)}`);
     const data = UserPrismaEntity.toPrisma(user);
     const saved = await this.prisma.user.upsert({
       where: { id: data.id },

@@ -23,15 +23,8 @@ import {
   AuthCacheRepository,
   AUTH_CACHE_REPOSITORY_TOKEN,
 } from '../../ports/auth-cache.repository';
-
-/**
- * Auth payload response for registration
- */
-export interface AuthPayload {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-}
+import { UserDetailsResult } from '../../../../users/application/dtos/user-details.result';
+import { AuthPayload } from '../../dtos/auth-payload.dto';
 
 /**
  * Command handler for user registration
@@ -63,7 +56,6 @@ export class RegisterCommandHandler
 
   async execute(command: RegisterCommand): Promise<AuthPayload> {
     this.logger.debug('Executing register command');
-    this.logger.debug(JSON.stringify(command));
 
     // 1. Validate password requirements
     AuthPasswordValueObject.validatePlainPassword(command.password);
@@ -81,14 +73,15 @@ export class RegisterCommandHandler
       undefined, // avatar
       undefined, // bio
     );
-    const user: User = await this.commandBus.execute(createUserCommand);
+    const userDetails: UserDetailsResult =
+      await this.commandBus.execute(createUserCommand);
 
     // 4. Hash the password
     const hashedPassword = await this.hashingService.hash(command.password);
 
     // 5. Create Auth entity
     const auth = this.authFactory.createForRegistration({
-      userId: user.id.value,
+      userId: userDetails.user.id,
       email: command.email,
       hashedPassword: hashedPassword,
       phone: command.phone,
@@ -123,16 +116,19 @@ export class RegisterCommandHandler
 
     // 10. Generate JWT tokens
     const tokenPair: TokenPair = await this.tokenService.generateTokenPair({
-      sub: user.id.value,
+      sub: userDetails.user.id,
       email: command.email,
       sessionId: crypto.randomUUID(),
     });
+
+    userDetails.user.email = command.email;
+    userDetails.user.phone = command.phone;
 
     // 11. Return auth payload
     return {
       accessToken: tokenPair.accessToken.value,
       refreshToken: tokenPair.refreshToken.value,
-      user: user,
+      user: new UserDetailsResult(userDetails.user, userDetails.farms),
     };
   }
 }

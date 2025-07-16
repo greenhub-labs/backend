@@ -13,6 +13,7 @@ import {
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
 import { User } from '../../../domain/entities/user.entity';
+import { UserDetails, UserDetailsResult } from '../../dtos/user-details.result';
 
 /**
  * Command handler for creating a new user
@@ -33,7 +34,7 @@ export class CreateUserCommandHandler
     private readonly kafkaEventBus: KafkaEventBusService,
   ) {}
 
-  async execute(command: CreateUserCommand): Promise<User> {
+  async execute(command: CreateUserCommand): Promise<UserDetailsResult> {
     // 1. Create the user using the factory
     const user = this.userFactory.create({
       firstName: command.firstName,
@@ -56,6 +57,9 @@ export class CreateUserCommandHandler
     }
 
     // 5. Return the created user entity (DDD strict)
-    return user;
+    return new UserDetailsResult(
+      new UserDetails(user, undefined, undefined),
+      [],
+    );
   }
 }

@@ -2,19 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type UserResponseDto {
+type UserFarmMembershipDto {
+  farmId: String!
+  farmName: String!
+  role: String!
+}
+
+type UserDetailsResponseDto {
   id: String!
   firstName: String
   lastName: String
   avatar: String
   bio: String
-  phone: String
-  email: String
   isActive: Boolean!
   isDeleted: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
+  farms: [UserFarmMembershipDto!]
+  email: String
+  phone: String
 }
 
 """
@@ -30,7 +37,7 @@ type AuthPayload {
   refreshToken: String!
 
   """User information"""
-  user: UserResponseDto!
+  user: UserDetailsResponseDto!
 }
 
 type TokenVerificationResult {
@@ -47,18 +54,66 @@ type TokenVerificationResult {
   email: String
 }
 
+type FarmMemberResponseDto {
+  id: String!
+  firstName: String
+  lastName: String
+  avatar: String
+  bio: String
+  phone: String
+  email: String
+  isActive: Boolean!
+  isDeleted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+
+  """Role of the user in this farm"""
+  role: String!
+}
+
+type FarmResponseDto {
+  id: String!
+  name: String!
+  description: String
+  country: String
+  state: String
+  city: String
+  postalCode: String
+  street: String
+  latitude: Float
+  longitude: Float
+  isActive: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+
+  """Members (users) assigned to this farm"""
+  members: [FarmMemberResponseDto!]
+}
+
 type Query {
   """Get current authenticated user information (user + auth info)"""
-  me: UserResponseDto!
+  me: UserDetailsResponseDto!
 
   """Verify JWT token validity and decode payload"""
   verifyToken(token: String!): TokenVerificationResult!
 
   """Get user information by ID (requires authentication)"""
-  getUserById(input: GetUserByIdRequestDto!): UserResponseDto!
+  getUserById(input: GetUserByIdRequestDto!): UserDetailsResponseDto!
+
+  """Get farm information by ID (requires authentication)"""
+  getFarmById(input: GetFarmByIdRequestDto!): FarmResponseDto!
+
+  """Get all farms (requires authentication)"""
+  getAllFarms: [FarmResponseDto!]!
 }
 
 input GetUserByIdRequestDto {
+  id: String!
+}
+
+input GetFarmByIdRequestDto {
   id: String!
 }
 
@@ -78,16 +133,28 @@ type Mutation {
   """
   Create a new user (Admin only - regular registration uses auth/register)
   """
-  createUser(input: CreateUserRequestDto!): UserResponseDto!
+  createUser(input: CreateUserRequestDto!): UserDetailsResponseDto!
 
   """Update user profile (users can only update their own profile)"""
-  updateUser(input: UpdateUserRequestDto!): UserResponseDto!
+  updateUser(input: UpdateUserRequestDto!): UserDetailsResponseDto!
 
   """Delete user account (users can only delete their own account)"""
-  deleteUser(input: DeleteUserRequestDto!): UserResponseDto!
+  deleteUser(input: DeleteUserRequestDto!): UserDetailsResponseDto!
 
   """Restore a soft-deleted user (Admin only)"""
-  restoreUser(input: RestoreUserRequestDto!): UserResponseDto!
+  restoreUser(input: RestoreUserRequestDto!): UserDetailsResponseDto!
+
+  """Create a new farm"""
+  createFarm(input: CreateFarmRequestDto!): FarmResponseDto!
+
+  """Update an existing farm"""
+  updateFarm(input: UpdateFarmRequestDto!): FarmResponseDto!
+
+  """Delete a farm by ID"""
+  deleteFarm(input: DeleteFarmRequestDto!): Boolean!
+
+  """Assign a user to a farm"""
+  assignUserToFarm(input: AssignUserToFarmRequestDto!): FarmResponseDto!
 }
 
 input RegisterInput {
@@ -136,4 +203,41 @@ input DeleteUserRequestDto {
 
 input RestoreUserRequestDto {
   id: String!
+}
+
+input CreateFarmRequestDto {
+  name: String!
+  description: String
+  country: String
+  state: String
+  city: String
+  postalCode: String
+  street: String
+  latitude: Float
+  longitude: Float
+  userId: String!
+}
+
+input UpdateFarmRequestDto {
+  id: String!
+  name: String
+  description: String
+  country: String
+  state: String
+  city: String
+  postalCode: String
+  street: String
+  latitude: Float
+  longitude: Float
+  isActive: Boolean
+}
+
+input DeleteFarmRequestDto {
+  id: String!
+}
+
+input AssignUserToFarmRequestDto {
+  farmId: String!
+  userId: String!
+  role: String!
 }
