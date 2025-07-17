@@ -45,10 +45,10 @@ export class GetUserByIdQueryHandler
    */
   async execute(query: GetUserByIdQuery): Promise<UserDetailsResult> {
     // 1. Get the user from the cache
-    const user = await this.userCacheRepository.get(query.id);
+    let user = await this.userCacheRepository.get(query.id);
     if (!user) {
       // 2. Get the user from the database
-      const user = await this.userRepository.findById(query.id);
+      user = await this.userRepository.findById(query.id);
       if (!user) throw new UserNotFoundException(query.id);
       // 3. Save the user to the cache
       await this.userCacheRepository.set(user.id.value, user);
