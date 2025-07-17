@@ -132,6 +132,11 @@ enum AlertLevel {
   ERROR    /// Error del sistema
 }
 
+enum UnitMeasurement {
+  IMPERIAL /// Unidad de medida imperial
+  METRIC   /// Unidad de medida métrica
+}
+
 /// Tipos de alertas del sistema
 enum AlertType {
   SENSOR_FAILURE        /// Fallo de sensor IoT
@@ -472,10 +477,16 @@ model Plot {
   width       Float?
   /// Longitud en metros
   length      Float?
+  /// Altura en metros
+  height      Float?
   /// Área en metros cuadrados
   area        Float? 
-  /// Ubicación y dimensiones del bancal
-  location    Json? // { coordinates: [[lat,lng]], dimensions: {length, width} }
+  /// Perímetro en metros
+  perimeter   Float?
+  /// Volumen en metros cúbicos
+  volume      Float?
+  /// Unidad de medida (imperial o metric)
+  unitMeasurement String? @default("metric")
   /// Estado actual del bancal
   status      PlotStatus @default(ACTIVE)
   /// Tipo de suelo (arcilloso, arenoso, etc.)
