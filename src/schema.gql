@@ -111,8 +111,11 @@ type PlotDimensionsResponseDto {
   """Volume of the plot"""
   volume: Float
 
-  """Unit of measurement"""
+  """Unit of measurement (e.g., METERS, FEET, CENTIMETERS)"""
   unitMeasurement: String
+
+  """Category of unit measurement (METRIC or IMPERIAL)"""
+  unitMeasurementCategory: String
 }
 
 type PlotResponseDto {
@@ -336,7 +339,9 @@ input CreatePlotRequestDto {
   """Height of the plot in the specified unit"""
   height: Float
 
-  """Unit of measurement for the plot dimensions"""
+  """
+  Unit of measurement for the plot dimensions (e.g., METERS, FEET, CENTIMETERS, INCHES)
+  """
   unitMeasurement: String
 
   """Type of soil in the plot"""
@@ -371,7 +376,9 @@ input UpdatePlotRequestDto {
   """Height of the plot in the specified unit"""
   height: Float
 
-  """Unit of measurement for the plot dimensions"""
+  """
+  Unit of measurement for the plot dimensions (e.g., METERS, FEET, CENTIMETERS, INCHES)
+  """
   unitMeasurement: String
 
   """Type of soil in the plot"""

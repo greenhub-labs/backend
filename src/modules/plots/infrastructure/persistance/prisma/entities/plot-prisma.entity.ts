@@ -3,7 +3,6 @@ import { PlotIdValueObject } from '../../../../domain/value-objects/plot-id/plot
 import { PlotNameValueObject } from '../../../../domain/value-objects/plot-name/plot-name.value-object';
 import { PlotDimensionValueObject } from '../../../../domain/value-objects/plot-dimension/plot-dimension.value-object';
 import { PlotStatusValueObject } from '../../../../domain/value-objects/plot-status/plot-status.value-object';
-import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 import { PlotStatus, Prisma } from '@prisma/client';
 
 /**

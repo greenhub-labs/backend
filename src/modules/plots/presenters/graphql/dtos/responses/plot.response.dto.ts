@@ -1,5 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
+import {
+  UNIT_MEASUREMENT,
+  UNIT_MEASUREMENT_CATEGORY,
+} from 'src/shared/domain/constants/unit-measurement.constant';
 
 /**
  * PlotDimensionsResponseDto
@@ -44,10 +47,16 @@ export class PlotDimensionsResponseDto {
   volume: number;
 
   @Field(() => String, {
-    description: 'Unit of measurement',
+    description: 'Unit of measurement (e.g., METERS, FEET, CENTIMETERS)',
     nullable: true,
   })
   unitMeasurement: UNIT_MEASUREMENT;
+
+  @Field(() => String, {
+    description: 'Category of unit measurement (METRIC or IMPERIAL)',
+    nullable: true,
+  })
+  unitMeasurementCategory: UNIT_MEASUREMENT_CATEGORY;
 }
 
 /**

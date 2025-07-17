@@ -132,9 +132,19 @@ enum AlertLevel {
   ERROR    /// Error del sistema
 }
 
+/// Unidades de medida específicas para dimensiones
 enum UnitMeasurement {
-  IMPERIAL /// Unidad de medida imperial
-  METRIC   /// Unidad de medida métrica
+  // Unidades métricas
+  METERS       /// Metros (m)
+  CENTIMETERS  /// Centímetros (cm)
+  KILOMETERS   /// Kilómetros (km)
+  MILLIMETERS  /// Milímetros (mm)
+  
+  // Unidades imperiales
+  FEET         /// Pies (ft)
+  INCHES       /// Pulgadas (in)
+  YARDS        /// Yardas (yd)
+  MILES        /// Millas (mi)
 }
 
 /// Tipos de alertas del sistema
@@ -485,8 +495,8 @@ model Plot {
   perimeter   Float?
   /// Volumen en metros cúbicos
   volume      Float?
-  /// Unidad de medida (imperial o metric)
-  unitMeasurement String? @default("metric")
+  /// Unidad de medida específica para las dimensiones
+  unitMeasurement UnitMeasurement? @default(METERS)
   /// Estado actual del bancal
   status      PlotStatus @default(ACTIVE)
   /// Tipo de suelo (arcilloso, arenoso, etc.)

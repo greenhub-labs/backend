@@ -28,6 +28,7 @@ export class PlotMapper {
         perimeter: plot.dimensions.getPerimeter(),
         volume: plot.dimensions.getVolume(),
         unitMeasurement: plot.dimensions.getUnitMeasurement(),
+        unitMeasurementCategory: plot.dimensions.getUnitMeasurementCategory(),
       },
       status: plot.status.value as any,
       soilType: plot.soilType,

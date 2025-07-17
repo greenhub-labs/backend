@@ -67,7 +67,8 @@ export class UpdatePlotRequestDto {
   height?: number;
 
   @Field(() => String, {
-    description: 'Unit of measurement for the plot dimensions',
+    description:
+      'Unit of measurement for the plot dimensions (e.g., METERS, FEET, CENTIMETERS, INCHES)',
     nullable: true,
   })
   @IsOptional()
