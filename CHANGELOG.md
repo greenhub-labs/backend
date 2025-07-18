@@ -1,3 +1,12 @@
+## [0.2.4](https://github.com/greenhub-labs/backend/compare/v0.2.3...v0.2.4) (2025-07-18)
+
+
+### Bug Fixes
+
+* Add branch for automated versioning and Docker image publishing in GitHub Actions workflow ([e81d9c3](https://github.com/greenhub-labs/backend/commit/e81d9c391a4de77e478b212fd2c9a206ef4e9194))
+* Enhance GitHub Actions workflow for Docker and pnpm ([5e38ffe](https://github.com/greenhub-labs/backend/commit/5e38ffe687099b284661d74bb98a52373257d8ba))
+* Remove unused branch and Docker Scout step from GitHub Actions workflow ([7f20b51](https://github.com/greenhub-labs/backend/commit/7f20b5192d1b0e42ef36f7e893a8c5a0664711fe))
+
 ## [0.2.3](https://github.com/greenhub-labs/backend/compare/v0.2.2...v0.2.3) (2025-07-18)
 
 
