@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/greenhub-labs/backend/compare/v0.1.1...v0.2.0) (2025-07-18)
+
+
+### Features
+
+* Add @semantic-release/npm plugin and update configuration ([e5dedda](https://github.com/greenhub-labs/backend/commit/e5dedda6a5058ce6b45f1e61f36983351431c5d4))
+
 ## [0.1.1](https://github.com/greenhub-labs/backend/compare/v0.1.0...v0.1.1) (2025-07-18)
 
 
