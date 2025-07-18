@@ -1,3 +1,10 @@
+## [0.2.3](https://github.com/greenhub-labs/backend/compare/v0.2.2...v0.2.3) (2025-07-18)
+
+
+### Bug Fixes
+
+* Update pnpm install command to use --frozen-lockfile ([a8613f5](https://github.com/greenhub-labs/backend/commit/a8613f563b0174a6465296c3e61b9d00083824e0))
+
 ## [0.2.2](https://github.com/greenhub-labs/backend/compare/v0.2.1...v0.2.2) (2025-07-18)
 
 
