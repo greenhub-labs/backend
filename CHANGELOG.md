@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/greenhub-labs/backend/compare/v0.2.0...v0.2.1) (2025-07-18)
+
+
+### Bug Fixes
+
+* Update version to 0.2.1 and remove @semantic-release/npm plugin ([3557a03](https://github.com/greenhub-labs/backend/commit/3557a03f7102c085bbfc10a80671f37d30df7f07))
+
 # [0.2.0](https://github.com/greenhub-labs/backend/compare/v0.1.1...v0.2.0) (2025-07-18)
 
 
