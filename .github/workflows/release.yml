@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - 4-automate-versioning-and-docker-image-publishing-on-mergepr-to-main-github-docker-registry
 
 permissions:
   contents: write
@@ -87,9 +86,3 @@ jobs:
             -t $IMAGE_NAME:${{ env.VERSION }} \
             -t $IMAGE_NAME:latest \
             --push .
-
-      - name: Run Docker Scout
-        uses: docker/scout-action@v1
-        with:
-          command: cves
-          image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ env.VERSION }}
