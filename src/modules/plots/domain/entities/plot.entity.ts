@@ -1,40 +1,40 @@
-import { PlotIdValueObject } from '../value-objects/plot-id/plot-id.value-object';
-import { PlotNameValueObject } from '../value-objects/plot-name/plot-name.value-object';
+import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
 import { PlotCreatedDomainEvent } from '../events/plot-created/plot-created.domain-event';
-import { PlotUpdatedDomainEvent } from '../events/plot-updated/plot-updated.domain-event';
 import { PlotDeletedDomainEvent } from '../events/plot-deleted/plot-deleted.domain-event';
+import { PlotUpdatedDomainEvent } from '../events/plot-updated/plot-updated.domain-event';
 import { PlotsPrimitive } from '../primitives/plot.primitive';
-import { PlotStatusValueObject } from '../value-objects/plot-status/plot-status.value-object';
 import { PlotDimensionValueObject } from '../value-objects/plot-dimension/plot-dimension.value-object';
-import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
+import { PlotIdValueObject } from '../value-objects/plot-id/plot-id.value-object';
+import { PlotNameValueObject } from '../value-objects/plot-name/plot-name.value-object';
+import { PlotStatusValueObject } from '../value-objects/plot-status/plot-status.value-object';
 
 /**
- * Entity representing a Farm in the domain.
+ * Entity representing a Plot in the domain.
  */
 export class PlotEntity {
-  /** Unique identifier of the farm */
-  readonly id: PlotIdValueObject;
-  /** Name of the farm */
-  name: PlotNameValueObject;
-  /** Optional description of the farm */
-  description?: string;
+  /** Unique identifier of the plot */
+  private readonly _id: PlotIdValueObject;
+  /** Name of the plot */
+  private readonly _name: PlotNameValueObject;
+  /** Optional description of the plot */
+  private readonly _description?: string;
   /** Dimensions of the plot */
-  dimensions: PlotDimensionValueObject;
+  private readonly _dimensions: PlotDimensionValueObject;
   /** Status of the plot */
-  status: PlotStatusValueObject;
+  private readonly _status: PlotStatusValueObject;
   /** Soil type of the plot */
-  soilType: string;
+  private readonly _soilType: string;
   /** Soil pH of the plot */
-  soilPh: number;
+  private readonly _soilPh: number;
   /** Farm ID */
-  farmId: string;
+  private readonly _farmId: string;
   /** Creation date */
-  readonly createdAt: Date;
+  private readonly _createdAt: Date;
   /** Last update date */
-  updatedAt: Date;
+  private readonly _updatedAt: Date;
   /** Soft delete date */
-  deletedAt?: Date;
+  private readonly _deletedAt?: Date;
 
   /**
    * Internal collection of domain events
@@ -42,8 +42,8 @@ export class PlotEntity {
   private readonly domainEvents: DomainEvent[] = [];
 
   /**
-   * Creates a new FarmEntity and emits FarmCreatedDomainEvent
-   * @param params - Farm entity properties
+   * Creates a new PlotEntity and emits PlotCreatedDomainEvent
+   * @param params - Plot entity properties
    */
   constructor(params: {
     id: PlotIdValueObject;
@@ -59,46 +59,130 @@ export class PlotEntity {
     deletedAt?: Date;
     emitEvent?: boolean; // For fromPrimitives, avoid duplicate event
   }) {
-    this.id = params.id;
-    this.name = params.name;
-    this.description = params.description;
-    this.dimensions = params.dimensions;
-    this.status = params.status;
-    this.soilType = params.soilType;
-    this.soilPh = params.soilPh;
-    this.farmId = params.farmId;
-    this.createdAt = params.createdAt ?? new Date();
-    this.updatedAt = params.updatedAt ?? new Date();
-    this.deletedAt = params.deletedAt;
+    this._id = params.id;
+    this._name = params.name;
+    this._description = params.description;
+    this._dimensions = params.dimensions;
+    this._status = params.status;
+    this._soilType = params.soilType;
+    this._soilPh = params.soilPh;
+    this._farmId = params.farmId;
+    this._createdAt = params.createdAt ?? new Date();
+    this._updatedAt = params.updatedAt ?? new Date();
+    this._deletedAt = params.deletedAt;
     // Emit event only if not restoring from persistence
     if (params.emitEvent !== false) {
       this.addDomainEvent(
         new PlotCreatedDomainEvent({
           eventId: crypto.randomUUID(),
-          aggregateId: this.id.value,
-          occurredAt: this.createdAt.toISOString(),
-          name: this.name.value,
-          description: this.description,
-          width: this.dimensions.getWidth(),
-          length: this.dimensions.getLength(),
-          height: this.dimensions.getHeight(),
-          area: this.dimensions.getArea(),
-          perimeter: this.dimensions.getPerimeter(),
-          volume: this.dimensions.getVolume(),
-          unitMeasurement: this.dimensions.getUnitMeasurement(),
-          status: this.status.value,
-          soilType: this.soilType,
-          soilPh: this.soilPh,
-          farmId: this.farmId,
+          aggregateId: this._id.value,
+          occurredAt: this._createdAt.toISOString(),
+          name: this._name.value,
+          description: this._description,
+          width: this._dimensions.width,
+          length: this._dimensions.length,
+          height: this._dimensions.height,
+          area: this._dimensions.area,
+          perimeter: this._dimensions.perimeter,
+          volume: this._dimensions.volume,
+          unitMeasurement: this._dimensions.unitMeasurement,
+          status: this._status.value,
+          soilType: this._soilType,
+          soilPh: this._soilPh,
+          farmId: this._farmId,
         }),
       );
     }
   }
 
   /**
-   * Updates the farm with the given data (immutable) and emits FarmUpdatedDomainEvent
-   * @param data - The data to update the farm with
-   * @returns A new FarmEntity instance with the updated data
+   * Gets the plot ID
+   */
+  get id(): PlotIdValueObject {
+    return this._id;
+  }
+
+  /**
+   * Gets the plot name
+   */
+  get name(): PlotNameValueObject {
+    return this._name;
+  }
+
+  /**
+   * Gets the plot description
+   */
+  get description(): string | undefined {
+    return this._description;
+  }
+
+  /**
+   * Gets the plot dimensions
+   */
+  get dimensions(): PlotDimensionValueObject {
+    return this._dimensions;
+  }
+
+  /**
+   * Gets the plot status
+   */
+  get status(): PlotStatusValueObject {
+    return this._status;
+  }
+
+  /**
+   * Gets the soil type
+   */
+  get soilType(): string {
+    return this._soilType;
+  }
+
+  /**
+   * Gets the soil pH
+   */
+  get soilPh(): number {
+    return this._soilPh;
+  }
+
+  /**
+   * Gets the farm ID
+   */
+  get farmId(): string {
+    return this._farmId;
+  }
+
+  /**
+   * Gets the creation date
+   */
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  /**
+   * Gets the last update date
+   */
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  /**
+   * Gets the deletion date
+   */
+  get deletedAt(): Date | undefined {
+    return this._deletedAt;
+  }
+
+  /**
+   * Checks if the plot is deleted
+   */
+  get isDeleted(): boolean {
+    return this._deletedAt !== undefined;
+  }
+
+  /**
+   * Updates the plot with the given data (immutable) and emits PlotUpdatedDomainEvent
+   * @param data - The data to update the plot with
+   * @returns A new PlotEntity instance with the updated data
    */
   update(
     data: Partial<{
@@ -118,71 +202,71 @@ export class PlotEntity {
     }>,
   ): PlotEntity {
     const updatedPlot = new PlotEntity({
-      id: this.id,
-      name: data.name ? new PlotNameValueObject(data.name) : this.name,
-      description: data.description ?? this.description,
+      id: this._id,
+      name: data.name ? new PlotNameValueObject(data.name) : this._name,
+      description: data.description ?? this._description,
       dimensions: new PlotDimensionValueObject(
-        data.width ?? this.dimensions.getWidth(),
-        data.length ?? this.dimensions.getLength(),
-        data.height ?? this.dimensions.getHeight(),
-        data.unitMeasurement ?? this.dimensions.getUnitMeasurement(),
+        data.width ?? this._dimensions.width,
+        data.length ?? this._dimensions.length,
+        data.height ?? this._dimensions.height,
+        data.unitMeasurement ?? this._dimensions.unitMeasurement,
       ),
       status: data.status
         ? new PlotStatusValueObject(data.status)
-        : this.status,
-      soilType: data.soilType ?? this.soilType,
-      soilPh: data.soilPh ?? this.soilPh,
-      farmId: data.farmId ?? this.farmId,
-      createdAt: this.createdAt,
+        : this._status,
+      soilType: data.soilType ?? this._soilType,
+      soilPh: data.soilPh ?? this._soilPh,
+      farmId: data.farmId ?? this._farmId,
+      createdAt: this._createdAt,
       updatedAt: new Date(),
-      deletedAt: this.deletedAt,
+      deletedAt: this._deletedAt,
     });
     updatedPlot.addDomainEvent(
       new PlotUpdatedDomainEvent({
         eventId: crypto.randomUUID(),
-        aggregateId: updatedPlot.id.value,
-        occurredAt: updatedPlot.updatedAt.toISOString(),
-        name: updatedPlot.name.value,
-        description: updatedPlot.description,
-        width: updatedPlot.dimensions.getWidth(),
-        length: updatedPlot.dimensions.getLength(),
-        height: updatedPlot.dimensions.getHeight(),
-        area: updatedPlot.dimensions.getArea(),
-        perimeter: updatedPlot.dimensions.getPerimeter(),
-        volume: updatedPlot.dimensions.getVolume(),
-        unitMeasurement: updatedPlot.dimensions.getUnitMeasurement(),
-        status: updatedPlot.status.value,
-        soilType: updatedPlot.soilType,
-        soilPh: updatedPlot.soilPh,
-        farmId: updatedPlot.farmId,
+        aggregateId: updatedPlot._id.value,
+        occurredAt: updatedPlot._updatedAt.toISOString(),
+        name: updatedPlot._name.value,
+        description: updatedPlot._description,
+        width: updatedPlot._dimensions.width,
+        length: updatedPlot._dimensions.length,
+        height: updatedPlot._dimensions.height,
+        area: updatedPlot._dimensions.area,
+        perimeter: updatedPlot._dimensions.perimeter,
+        volume: updatedPlot._dimensions.volume,
+        unitMeasurement: updatedPlot._dimensions.unitMeasurement,
+        status: updatedPlot._status.value,
+        soilType: updatedPlot._soilType,
+        soilPh: updatedPlot._soilPh,
+        farmId: updatedPlot._farmId,
       }),
     );
     return updatedPlot;
   }
 
   /**
-   * Marks the farm as deleted (soft delete) and emits FarmDeletedDomainEvent
-   * @returns A new FarmEntity instance marked as deleted
+   * Marks the plot as deleted (soft delete) and emits PlotDeletedDomainEvent
+   * @returns A new PlotEntity instance marked as deleted
    */
   delete(): PlotEntity {
     const deletedPlot = new PlotEntity({
-      id: this.id,
-      name: this.name,
-      description: this.description,
-      dimensions: this.dimensions,
-      status: this.status,
-      soilType: this.soilType,
-      soilPh: this.soilPh,
-      farmId: this.farmId,
-      createdAt: this.createdAt,
+      id: this._id,
+      name: this._name,
+      description: this._description,
+      dimensions: this._dimensions,
+      status: this._status,
+      soilType: this._soilType,
+      soilPh: this._soilPh,
+      farmId: this._farmId,
+      createdAt: this._createdAt,
       updatedAt: new Date(),
       deletedAt: new Date(),
     });
     deletedPlot.addDomainEvent(
       new PlotDeletedDomainEvent({
         eventId: crypto.randomUUID(),
-        aggregateId: deletedPlot.id.value,
-        occurredAt: deletedPlot.updatedAt.toISOString(),
+        aggregateId: deletedPlot._id.value,
+        occurredAt: deletedPlot._updatedAt.toISOString(),
       }),
     );
     return deletedPlot;
@@ -214,32 +298,32 @@ export class PlotEntity {
   }
 
   /**
-   * Converts the FarmEntity to its primitive representation
+   * Converts the PlotEntity to its primitive representation
    */
   public toPrimitives(): PlotsPrimitive {
     return {
-      id: this.id.value,
-      name: this.name.value,
-      description: this.description,
-      width: this.dimensions.getWidth(),
-      length: this.dimensions.getLength(),
-      height: this.dimensions.getHeight(),
-      area: this.dimensions.getArea(),
-      perimeter: this.dimensions.getPerimeter(),
-      volume: this.dimensions.getVolume(),
-      unitMeasurement: this.dimensions.getUnitMeasurement(),
-      status: this.status.value,
-      soilType: this.soilType,
-      soilPh: this.soilPh,
-      farmId: this.farmId,
-      createdAt: this.createdAt.toISOString(),
-      updatedAt: this.updatedAt.toISOString(),
-      deletedAt: this.deletedAt?.toISOString(),
+      id: this._id.value,
+      name: this._name.value,
+      description: this._description,
+      width: this._dimensions.width,
+      length: this._dimensions.length,
+      height: this._dimensions.height,
+      area: this._dimensions.area,
+      perimeter: this._dimensions.perimeter,
+      volume: this._dimensions.volume,
+      unitMeasurement: this._dimensions.unitMeasurement,
+      status: this._status.value,
+      soilType: this._soilType,
+      soilPh: this._soilPh,
+      farmId: this._farmId,
+      createdAt: this._createdAt.toISOString(),
+      updatedAt: this._updatedAt.toISOString(),
+      deletedAt: this._deletedAt?.toISOString(),
     };
   }
 
   /**
-   * Reconstructs a FarmEntity from its primitive representation
+   * Reconstructs a PlotEntity from its primitive representation
    */
   public static fromPrimitives(primitive: PlotsPrimitive): PlotEntity {
     return new PlotEntity({
@@ -263,13 +347,5 @@ export class PlotEntity {
         : undefined,
       emitEvent: false,
     });
-  }
-
-  calculateArea(width: number, length: number): number {
-    return width * length;
-  }
-
-  calculatePerimeter(width: number, length: number): number {
-    return 2 * (width + length);
   }
 }

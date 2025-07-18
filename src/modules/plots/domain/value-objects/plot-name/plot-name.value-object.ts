@@ -7,21 +7,25 @@ import { InvalidPlotNameException } from '../../exceptions/invalid-plot-name/inv
  */
 
 export class PlotNameValueObject {
-  public readonly value: string;
+  private readonly _value: string;
   /**
    * Creates a new PlotNameValueObject
    * @param props - The name properties
    */
   constructor(value: string) {
-    this.value = value;
+    this._value = value;
     this.validate();
+  }
+
+  get value(): string {
+    return this._value;
   }
 
   /**
    * Validates the name value object
    */
   protected validate(): void {
-    const value = this.value;
+    const value = this._value;
     if (!value || value.trim().length === 0) {
       throw new InvalidPlotNameException('Plot name must not be empty.');
     }

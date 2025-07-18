@@ -1,19 +1,19 @@
-import { InvalidPlotDimensionsException } from '../../exceptions/invalid-plot-dimensions/invalid-plot-dimensions.exception';
 import {
-  UNIT_MEASUREMENT,
   convertUnit,
   getUnitMeasurementCategory,
+  UNIT_MEASUREMENT,
   UNIT_MEASUREMENT_CATEGORY,
 } from 'src/shared/domain/constants/unit-measurement.constant';
+import { InvalidPlotDimensionsException } from '../../exceptions/invalid-plot-dimensions/invalid-plot-dimensions.exception';
 
 export class PlotDimensionValueObject {
-  public readonly width: number;
-  public readonly length: number;
-  public readonly height: number;
-  public readonly area: number;
-  public readonly perimeter: number;
-  public readonly volume: number;
-  public readonly unitMeasurement: UNIT_MEASUREMENT;
+  private readonly _width: number;
+  private readonly _length: number;
+  private readonly _height: number;
+  private readonly _area: number;
+  private readonly _perimeter: number;
+  private readonly _volume: number;
+  private readonly _unitMeasurement: UNIT_MEASUREMENT;
 
   constructor(
     width?: number,
@@ -22,16 +22,76 @@ export class PlotDimensionValueObject {
     unitMeasurement?: UNIT_MEASUREMENT,
   ) {
     // Set default values for undefined dimensions
-    this.width = width ?? 0;
-    this.length = length ?? 0;
-    this.height = height ?? 0;
-    this.unitMeasurement = unitMeasurement ?? UNIT_MEASUREMENT.METERS;
+    this._width = width ?? 0;
+    this._length = length ?? 0;
+    this._height = height ?? 0;
+    this._unitMeasurement = unitMeasurement ?? UNIT_MEASUREMENT.METERS;
 
     this.validate();
 
-    this.area = this.calculateArea(this.width, this.length);
-    this.perimeter = this.calculatePerimeter(this.width, this.length);
-    this.volume = this.calculateVolume(this.width, this.length, this.height);
+    this._area = this.calculateArea(this._width, this._length);
+    this._perimeter = this.calculatePerimeter(this._width, this._length);
+    this._volume = this.calculateVolume(
+      this._width,
+      this._length,
+      this._height,
+    );
+  }
+
+  /**
+   * Gets the width of the plot
+   * @returns Width in the specified unit
+   */
+  get width(): number {
+    return this._width;
+  }
+
+  /**
+   * Gets the length of the plot
+   * @returns Length in the specified unit
+   */
+  get length(): number {
+    return this._length;
+  }
+
+  /**
+   * Gets the height of the plot
+   * @returns Height in the specified unit
+   */
+  get height(): number {
+    return this._height;
+  }
+
+  /**
+   * Gets the area of the plot
+   * @returns Area in square units
+   */
+  get area(): number {
+    return this._area;
+  }
+
+  /**
+   * Gets the perimeter of the plot
+   * @returns Perimeter in the same units
+   */
+  get perimeter(): number {
+    return this._perimeter;
+  }
+
+  /**
+   * Gets the volume of the plot
+   * @returns Volume in cubic units
+   */
+  get volume(): number {
+    return this._volume;
+  }
+
+  /**
+   * Gets the unit of measurement
+   * @returns Unit of measurement
+   */
+  get unitMeasurement(): UNIT_MEASUREMENT {
+    return this._unitMeasurement;
   }
 
   /**
@@ -40,7 +100,7 @@ export class PlotDimensionValueObject {
    * @param length - Length of the plot
    * @returns Area in square units
    */
-  calculateArea(width: number, length: number): number {
+  private calculateArea(width: number, length: number): number {
     return width * length;
   }
 
@@ -50,7 +110,7 @@ export class PlotDimensionValueObject {
    * @param length - Length of the plot
    * @returns Perimeter in the same units
    */
-  calculatePerimeter(width: number, length: number): number {
+  private calculatePerimeter(width: number, length: number): number {
     return 2 * (width + length);
   }
 
@@ -61,7 +121,11 @@ export class PlotDimensionValueObject {
    * @param height - Height of the plot
    * @returns Volume in cubic units
    */
-  calculateVolume(width: number, length: number, height: number): number {
+  private calculateVolume(
+    width: number,
+    length: number,
+    height: number,
+  ): number {
     return width * length * height;
   }
 
@@ -71,7 +135,7 @@ export class PlotDimensionValueObject {
    */
   convertToImperial(): PlotDimensionValueObject {
     if (
-      getUnitMeasurementCategory(this.unitMeasurement) ===
+      getUnitMeasurementCategory(this._unitMeasurement) ===
       UNIT_MEASUREMENT_CATEGORY.IMPERIAL
     ) {
       return this;
@@ -79,9 +143,9 @@ export class PlotDimensionValueObject {
 
     const targetUnit = UNIT_MEASUREMENT.FEET; // Default to feet for imperial
     return new PlotDimensionValueObject(
-      convertUnit(this.width, this.unitMeasurement, targetUnit),
-      convertUnit(this.length, this.unitMeasurement, targetUnit),
-      convertUnit(this.height, this.unitMeasurement, targetUnit),
+      convertUnit(this._width, this._unitMeasurement, targetUnit),
+      convertUnit(this._length, this._unitMeasurement, targetUnit),
+      convertUnit(this._height, this._unitMeasurement, targetUnit),
       targetUnit,
     );
   }
@@ -92,7 +156,7 @@ export class PlotDimensionValueObject {
    */
   convertToMetric(): PlotDimensionValueObject {
     if (
-      getUnitMeasurementCategory(this.unitMeasurement) ===
+      getUnitMeasurementCategory(this._unitMeasurement) ===
       UNIT_MEASUREMENT_CATEGORY.METRIC
     ) {
       return this;
@@ -100,9 +164,9 @@ export class PlotDimensionValueObject {
 
     const targetUnit = UNIT_MEASUREMENT.METERS; // Default to meters for metric
     return new PlotDimensionValueObject(
-      convertUnit(this.width, this.unitMeasurement, targetUnit),
-      convertUnit(this.length, this.unitMeasurement, targetUnit),
-      convertUnit(this.height, this.unitMeasurement, targetUnit),
+      convertUnit(this._width, this._unitMeasurement, targetUnit),
+      convertUnit(this._length, this._unitMeasurement, targetUnit),
+      convertUnit(this._height, this._unitMeasurement, targetUnit),
       targetUnit,
     );
   }
@@ -113,14 +177,14 @@ export class PlotDimensionValueObject {
    * @returns New PlotDimensionValueObject with the target unit
    */
   convertToUnit(targetUnit: UNIT_MEASUREMENT): PlotDimensionValueObject {
-    if (this.unitMeasurement === targetUnit) {
+    if (this._unitMeasurement === targetUnit) {
       return this;
     }
 
     return new PlotDimensionValueObject(
-      convertUnit(this.width, this.unitMeasurement, targetUnit),
-      convertUnit(this.length, this.unitMeasurement, targetUnit),
-      convertUnit(this.height, this.unitMeasurement, targetUnit),
+      convertUnit(this._width, this._unitMeasurement, targetUnit),
+      convertUnit(this._length, this._unitMeasurement, targetUnit),
+      convertUnit(this._height, this._unitMeasurement, targetUnit),
       targetUnit,
     );
   }
@@ -128,73 +192,17 @@ export class PlotDimensionValueObject {
   /**
    * Validates the plot dimensions
    */
-  validate(): void {
+  private validate(): void {
     // Allow zero values for optional dimensions
-    if (this.width < 0 || this.length < 0 || this.height < 0) {
+    if (this._width < 0 || this._length < 0 || this._height < 0) {
       throw new InvalidPlotDimensionsException(
         'Plot dimensions must be greater than or equal to 0',
       );
     }
 
-    if (!Object.values(UNIT_MEASUREMENT).includes(this.unitMeasurement)) {
+    if (!Object.values(UNIT_MEASUREMENT).includes(this._unitMeasurement)) {
       throw new InvalidPlotDimensionsException('Invalid unit measurement');
     }
-  }
-
-  /**
-   * Gets the area of the plot
-   * @returns Area in square units
-   */
-  getArea(): number {
-    return this.area;
-  }
-
-  /**
-   * Gets the perimeter of the plot
-   * @returns Perimeter in the same units
-   */
-  getPerimeter(): number {
-    return this.perimeter;
-  }
-
-  /**
-   * Gets the volume of the plot
-   * @returns Volume in cubic units
-   */
-  getVolume(): number {
-    return this.volume;
-  }
-
-  /**
-   * Gets the unit of measurement
-   * @returns Unit of measurement
-   */
-  getUnitMeasurement(): UNIT_MEASUREMENT {
-    return this.unitMeasurement;
-  }
-
-  /**
-   * Gets the width of the plot
-   * @returns Width in the specified unit
-   */
-  getWidth(): number {
-    return this.width;
-  }
-
-  /**
-   * Gets the length of the plot
-   * @returns Length in the specified unit
-   */
-  getLength(): number {
-    return this.length;
-  }
-
-  /**
-   * Gets the height of the plot
-   * @returns Height in the specified unit
-   */
-  getHeight(): number {
-    return this.height;
   }
 
   /**
@@ -202,7 +210,7 @@ export class PlotDimensionValueObject {
    * @returns Unit measurement category
    */
   getUnitMeasurementCategory(): UNIT_MEASUREMENT_CATEGORY {
-    return getUnitMeasurementCategory(this.unitMeasurement);
+    return getUnitMeasurementCategory(this._unitMeasurement);
   }
 
   /**
@@ -220,13 +228,13 @@ export class PlotDimensionValueObject {
     unitMeasurementCategory: UNIT_MEASUREMENT_CATEGORY;
   } {
     return {
-      width: this.width,
-      length: this.length,
-      height: this.height,
-      area: this.area,
-      perimeter: this.perimeter,
-      volume: this.volume,
-      unitMeasurement: this.unitMeasurement,
+      width: this._width,
+      length: this._length,
+      height: this._height,
+      area: this._area,
+      perimeter: this._perimeter,
+      volume: this._volume,
+      unitMeasurement: this._unitMeasurement,
       unitMeasurementCategory: this.getUnitMeasurementCategory(),
     };
   }

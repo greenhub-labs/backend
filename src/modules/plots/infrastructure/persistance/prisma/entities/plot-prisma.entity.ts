@@ -1,9 +1,9 @@
+import { PlotStatus, Prisma } from '@prisma/client';
 import { PlotEntity } from '../../../../domain/entities/plot.entity';
+import { PlotDimensionValueObject } from '../../../../domain/value-objects/plot-dimension/plot-dimension.value-object';
 import { PlotIdValueObject } from '../../../../domain/value-objects/plot-id/plot-id.value-object';
 import { PlotNameValueObject } from '../../../../domain/value-objects/plot-name/plot-name.value-object';
-import { PlotDimensionValueObject } from '../../../../domain/value-objects/plot-dimension/plot-dimension.value-object';
 import { PlotStatusValueObject } from '../../../../domain/value-objects/plot-status/plot-status.value-object';
-import { PlotStatus, Prisma } from '@prisma/client';
 
 /**
  * PlotPrismaEntity
@@ -47,13 +47,13 @@ export class PlotPrismaEntity {
       id: entity.id.value,
       name: entity.name.value,
       description: entity.description,
-      width: entity.dimensions.getWidth(),
-      length: entity.dimensions.getLength(),
-      height: entity.dimensions.getHeight(),
-      unitMeasurement: entity.dimensions.getUnitMeasurement(),
-      area: entity.dimensions.getArea(),
-      perimeter: entity.dimensions.getPerimeter(),
-      volume: entity.dimensions.getVolume(),
+      width: entity.dimensions.width,
+      length: entity.dimensions.length,
+      height: entity.dimensions.height,
+      unitMeasurement: entity.dimensions.unitMeasurement,
+      area: entity.dimensions.area,
+      perimeter: entity.dimensions.perimeter,
+      volume: entity.dimensions.volume,
       soilType: entity.soilType,
       soilPh: entity.soilPh,
       farm: {
@@ -77,13 +77,13 @@ export class PlotPrismaEntity {
     return {
       name: entity.name.value,
       description: entity.description,
-      width: entity.dimensions.getWidth(),
-      length: entity.dimensions.getLength(),
-      height: entity.dimensions.getHeight(),
-      unitMeasurement: entity.dimensions.getUnitMeasurement(),
-      area: entity.dimensions.getArea(),
-      perimeter: entity.dimensions.getPerimeter(),
-      volume: entity.dimensions.getVolume(),
+      width: entity.dimensions.width,
+      length: entity.dimensions.length,
+      height: entity.dimensions.height,
+      unitMeasurement: entity.dimensions.unitMeasurement,
+      area: entity.dimensions.area,
+      perimeter: entity.dimensions.perimeter,
+      volume: entity.dimensions.volume,
       soilType: entity.soilType,
       soilPh: entity.soilPh,
       status: entity.status.value as PlotStatus,

@@ -1,9 +1,5 @@
-import { Logger } from '@nestjs/common';
 import { PlotEntity } from 'src/modules/plots/domain/entities/plot.entity';
-import {
-  PlotResponseDto,
-  PlotDimensionsResponseDto,
-} from '../dtos/responses/plot.response.dto';
+import { PlotResponseDto } from '../dtos/responses/plot.response.dto';
 
 /**
  * PlotMapper
@@ -21,13 +17,13 @@ export class PlotMapper {
       name: plot.name.value,
       description: plot.description,
       dimensions: {
-        width: plot.dimensions.getWidth(),
-        length: plot.dimensions.getLength(),
-        height: plot.dimensions.getHeight(),
-        area: plot.dimensions.getArea(),
-        perimeter: plot.dimensions.getPerimeter(),
-        volume: plot.dimensions.getVolume(),
-        unitMeasurement: plot.dimensions.getUnitMeasurement(),
+        width: plot.dimensions.width,
+        length: plot.dimensions.length,
+        height: plot.dimensions.height,
+        area: plot.dimensions.area,
+        perimeter: plot.dimensions.perimeter,
+        volume: plot.dimensions.volume,
+        unitMeasurement: plot.dimensions.unitMeasurement,
         unitMeasurementCategory: plot.dimensions.getUnitMeasurementCategory(),
       },
       status: plot.status.value as any,
