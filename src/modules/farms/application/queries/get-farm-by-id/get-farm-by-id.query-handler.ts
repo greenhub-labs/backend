@@ -1,20 +1,17 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { GetFarmByIdQuery } from './get-farm-by-id.query';
-import {
-  FARMS_REPOSITORY_TOKEN,
-  FarmsRepository,
-} from '../../ports/farms.repository';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
-import { FarmEntity } from '../../../domain/entities/farm.entity';
+import { FarmDetailsResult } from '../../dtos/farm-details.result';
+import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
 import {
   FARMS_CACHE_REPOSITORY_TOKEN,
   FarmsCacheRepository,
 } from '../../ports/farms-cache.repository';
-import { User } from 'src/modules/users/domain/entities/user.entity';
-import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
-import { FarmMemberWithRole } from '../../ports/farm-memberships.repository';
-import { FarmDetailsResult } from '../../dtos/farm-details.result';
+import {
+  FARMS_REPOSITORY_TOKEN,
+  FarmsRepository,
+} from '../../ports/farms.repository';
+import { GetFarmByIdQuery } from './get-farm-by-id.query';
 
 /**
  * Query handler for GetFarmByIdQuery

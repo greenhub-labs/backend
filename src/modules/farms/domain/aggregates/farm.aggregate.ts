@@ -1,14 +1,13 @@
-import { FarmEntity } from '../entities/farm.entity';
+import { PlotEntity } from 'src/modules/plots/domain/entities/plot.entity';
 import { User } from 'src/modules/users/domain/entities/user.entity';
-import { UserIdValueObject } from 'src/modules/users/domain/value-objects/user-id/user-id.value-object';
+import { FARM_MEMBERSHIP_ROLES } from '../../../../shared/domain/constants/farm-membership-roles.constant';
+import { FarmEntity } from '../entities/farm.entity';
 import { UserAssignedToFarmDomainEvent } from '../events/user-assigned-to-farm/user-assigned-to-farm.domain-event';
 import { FarmsPrimitive } from '../primitives/farm.primitive';
 import { FarmAddressValueObject } from '../value-objects/farm-address/farm-address.value-object';
 import { FarmCoordinatesValueObject } from '../value-objects/farm-coordinates/farm-coordinates.value-object';
 import { FarmIdValueObject } from '../value-objects/farm-id/farm-id.value-object';
 import { FarmNameValueObject } from '../value-objects/farm-name/farm-name.value-object';
-import { FARM_MEMBERSHIP_ROLES } from '../../../../shared/domain/constants/farm-membership-roles.constant';
-import { UserNameValueObject } from 'src/modules/users/domain/value-objects/user-name/user-name.value-object';
 
 /**
  * Aggregate root for the Farm domain.
@@ -18,11 +17,17 @@ export class FarmAggregate extends FarmEntity {
   /** Users assigned to this farm (populated externally) */
   private _members: User[] = [];
 
+  private _plots: PlotEntity[] = [];
+
   /**
    * Gets the users assigned to this farm
    */
   get members(): User[] {
     return this._members;
+  }
+
+  get plots(): PlotEntity[] {
+    return this._plots;
   }
 
   /**
@@ -31,6 +36,10 @@ export class FarmAggregate extends FarmEntity {
    */
   setMembers(users: User[]): void {
     this._members = users;
+  }
+
+  setPlots(plots: PlotEntity[]): void {
+    this._plots = plots;
   }
 
   /**
@@ -47,6 +56,20 @@ export class FarmAggregate extends FarmEntity {
         role: role,
         occurredAt: new Date().toISOString(),
       }),
+    );
+  }
+
+  addPlot(plot: PlotEntity): void {
+    this._plots.push(plot);
+  }
+
+  removePlot(plot: PlotEntity): void {
+    this._plots = this._plots.filter((p) => p.id.value !== plot.id.value);
+  }
+
+  updatePlot(plot: PlotEntity): void {
+    this._plots = this._plots.map((p) =>
+      p.id.value === plot.id.value ? plot : p,
     );
   }
 
