@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 4-automate-versioning-and-docker-image-publishing-on-mergepr-to-main-github-docker-registry
 
 permissions:
   contents: write
