@@ -58,7 +58,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/greenhub-backend
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
           docker build -t $IMAGE_NAME:${{ env.VERSION }} -t $IMAGE_NAME:latest .
           docker push $IMAGE_NAME:${{ env.VERSION }}
           docker push $IMAGE_NAME:latest
