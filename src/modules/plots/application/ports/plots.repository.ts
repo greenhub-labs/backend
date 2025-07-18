@@ -20,8 +20,16 @@ export interface PlotsRepository {
 
   /**
    * Returns all Plot entities
+   * @returns The Plot entities or empty array if not found
    */
   findAll(): Promise<PlotEntity[]>;
+
+  /**
+   * Returns all Plot entities by farm ID
+   * @param farmId - The Farm ID (as string)
+   * @returns The Plot entities or empty array if not found
+   */
+  findAllByFarmId(farmId: string): Promise<PlotEntity[]>;
 
   /**
    * Updates an existing Farm entity

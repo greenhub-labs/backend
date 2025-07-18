@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import { PlotsCacheRepository } from '../../../../application/ports/plots-cache.repository';
 import { PlotEntity } from '../../../../domain/entities/plot.entity';
@@ -54,23 +54,23 @@ export class PlotsRedisCacheRepository implements PlotsCacheRepository {
     await pipeline.exec();
   }
 
-  async getMany(keys: string[]): Promise<Map<string, PlotEntity>> {
-    if (keys.length === 0) return new Map();
+  async getMany(keys: string[]): Promise<PlotEntity[]> {
+    if (keys.length === 0) return [];
     const cacheKeys = keys.map((key) => this.buildCacheKey(key));
     const results = await this.redis.mget(...cacheKeys);
-    const entityMap = new Map<string, PlotEntity>();
+    const entities: PlotEntity[] = [];
     for (let i = 0; i < keys.length; i++) {
       const data = results[i];
       if (data) {
         try {
           const entity = PlotRedisEntity.fromRedis(data);
-          entityMap.set(keys[i], entity);
+          entities.push(entity);
         } catch {
           await this.delete(keys[i]);
         }
       }
     }
-    return entityMap;
+    return entities;
   }
 
   async deleteMany(keys: string[]): Promise<void> {

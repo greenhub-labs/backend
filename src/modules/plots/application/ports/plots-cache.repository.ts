@@ -19,7 +19,7 @@ export interface PlotsCacheRepository {
     ttl?: number,
   ): Promise<void>;
   /** Get multiple Plot entities from cache by IDs */
-  getMany(ids: string[]): Promise<Map<string, PlotEntity>>;
+  getMany(ids: string[]): Promise<PlotEntity[]>;
   /** Delete multiple Plot entities from cache by IDs */
   deleteMany(ids: string[]): Promise<void>;
   /** Get all cached keys matching a pattern */

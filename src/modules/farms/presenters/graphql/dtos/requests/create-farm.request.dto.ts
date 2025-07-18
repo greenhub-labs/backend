@@ -1,13 +1,13 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import {
-  IsString,
   IsNotEmpty,
-  MaxLength,
-  IsOptional,
   IsNumber,
-  Min,
-  Max,
+  IsOptional,
+  IsString,
   IsUUID,
+  Max,
+  MaxLength,
+  Min,
 } from 'class-validator';
 
 @InputType()

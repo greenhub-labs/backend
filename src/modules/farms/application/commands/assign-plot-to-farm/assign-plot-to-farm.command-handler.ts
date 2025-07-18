@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
 import { GetPlotByIdQuery } from 'src/modules/plots/application/queries/get-plot-by-id/get-plot-by-id.query';
+import { GetPlotsByFarmIdQuery } from 'src/modules/plots/application/queries/get-plots-by-farm-id/get-plots-by-farm-id.query';
 import { FarmAggregate } from '../../../domain/aggregates/farm.aggregate';
 import { FarmDetailsResult } from '../../dtos/farm-details.result';
 import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
@@ -53,6 +54,11 @@ export class AssignPlotToFarmCommandHandler
       command.farmId,
     );
 
-    return new FarmDetailsResult(farmAggregate, members);
+    // 5. Get the plots of the farm
+    const plots = await this.queryBus.execute(
+      new GetPlotsByFarmIdQuery(command.farmId),
+    );
+
+    return new FarmDetailsResult(farmAggregate, members, plots);
   }
 }

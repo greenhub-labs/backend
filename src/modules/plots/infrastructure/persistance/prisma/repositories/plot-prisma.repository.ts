@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { PlotsRepository } from '../../../../application/ports/plots.repository';
 import { PlotEntity } from '../../../../domain/entities/plot.entity';
 import { PlotPrismaEntity } from '../entities/plot-prisma.entity';
-import { PrismaClient } from '@prisma/client';
-import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 /**
  * Prisma implementation of the PlotsRepositoryPort interface
@@ -49,6 +48,17 @@ export class PlotPrismaRepository implements PlotsRepository {
     const plot = await this.prisma.plot.findUnique({ where: { id } });
     if (!plot) return null;
     return PlotPrismaEntity.fromPrisma(plot);
+  }
+
+  /**
+   * Finds all plots by farm ID
+   * @param farmId - The farm ID (as string)
+   * @returns The Plot entities or empty array if not found
+   */
+  async findAllByFarmId(farmId: string): Promise<PlotEntity[]> {
+    this.logger.debug('Finding all plots by farm id', farmId);
+    const plots = await this.prisma.plot.findMany({ where: { farmId } });
+    return plots.map(PlotPrismaEntity.fromPrisma);
   }
 
   /**

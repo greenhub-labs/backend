@@ -1,12 +1,13 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
-  IsString,
-  IsOptional,
-  IsNumber,
-  IsUUID,
   IsEnum,
-  Min,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
   Max,
+  Min,
 } from 'class-validator';
 import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
 import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
@@ -97,5 +98,6 @@ export class CreatePlotRequestDto {
     description: 'ID of the farm this plot belongs to',
   })
   @IsUUID()
+  @IsNotEmpty()
   farmId: string;
 }

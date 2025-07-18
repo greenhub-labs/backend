@@ -1,11 +1,9 @@
-import { FarmEntity } from '../../../domain/entities/farm.entity';
-import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
-import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 import { FarmDetailsResult } from 'src/modules/farms/application/dtos/farm-details.result';
+import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
 
 export class FarmMapper {
   static fromDomain(input: FarmDetailsResult): FarmResponseDto {
-    const { farm, members } = input;
+    const { farm, members, plots } = input;
     const dto: FarmResponseDto = {
       id: farm.id.value,
       name: farm.name.value,
@@ -36,6 +34,30 @@ export class FarmMapper {
           updatedAt: user.updatedAt,
           deletedAt: user.deletedAt,
           role,
+        })) || undefined,
+      plots:
+        plots?.map((plot) => ({
+          id: plot.id.value,
+          name: plot.name.value,
+          description: plot.description,
+          status: plot.status.value,
+          createdAt: plot.createdAt,
+          updatedAt: plot.updatedAt,
+          deletedAt: plot.deletedAt,
+          farmId: farm.id.value,
+          soilType: plot.soilType,
+          soilPh: plot.soilPh,
+          dimensions: {
+            width: plot.dimensions.width,
+            length: plot.dimensions.length,
+            height: plot.dimensions.height,
+            area: plot.dimensions.area,
+            perimeter: plot.dimensions.perimeter,
+            volume: plot.dimensions.volume,
+            unitMeasurement: plot.dimensions.unitMeasurement,
+            unitMeasurementCategory:
+              plot.dimensions.getUnitMeasurementCategory(),
+          },
         })) || undefined,
     };
     return dto;
