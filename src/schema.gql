@@ -231,9 +231,6 @@ type Mutation {
   """Assign a user to a farm"""
   assignUserToFarm(input: AssignUserToFarmRequestDto!): FarmResponseDto!
 
-  """Assign a plot to a farm"""
-  assignPlotToFarm(input: AssignPlotToFarmRequestDto!): FarmResponseDto!
-
   """Create a new plot"""
   createPlot(input: CreatePlotRequestDto!): PlotResponseDto!
 
@@ -327,11 +324,6 @@ input AssignUserToFarmRequestDto {
   farmId: String!
   userId: String!
   role: String!
-}
-
-input AssignPlotToFarmRequestDto {
-  plotId: String!
-  farmId: String!
 }
 
 input CreatePlotRequestDto {

@@ -15,7 +15,6 @@ import { NestjsEventBusService } from './services/nestjs-event-bus.service';
 // Import domain and infrastructure modules
 import { FarmsDomainModule } from '../domain/farms-domain.module';
 import { FarmsInfrastructureModule } from '../infrastructure/farms-infrastructure.module';
-import { AssignPlotToFarmCommandHandler } from './commands/assign-plot-to-farm/assign-plot-to-farm.command-handler';
 import { AssignUserToFarmCommandHandler } from './commands/assign-user-to-farm/assign-user-to-farm.command-handler';
 import { GetFarmsForUserQueryHandler } from './queries/get-farms-for-user/get-farms-for-user.query-handler';
 
@@ -33,7 +32,6 @@ import { GetFarmsForUserQueryHandler } from './queries/get-farms-for-user/get-fa
     GetFarmByIdQueryHandler,
     GetAllFarmsQueryHandler,
     AssignUserToFarmCommandHandler,
-    AssignPlotToFarmCommandHandler,
     GetFarmsForUserQueryHandler,
     NestjsEventBusService,
     KafkaEventBusService,
@@ -46,7 +44,6 @@ import { GetFarmsForUserQueryHandler } from './queries/get-farms-for-user/get-fa
     GetFarmByIdQueryHandler,
     GetAllFarmsQueryHandler,
     AssignUserToFarmCommandHandler,
-    AssignPlotToFarmCommandHandler,
     GetFarmsForUserQueryHandler,
     NestjsEventBusService,
     KafkaEventBusService,

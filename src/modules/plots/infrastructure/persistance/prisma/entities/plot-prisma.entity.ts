@@ -86,6 +86,11 @@ export class PlotPrismaEntity {
       volume: entity.dimensions.volume,
       soilType: entity.soilType,
       soilPh: entity.soilPh,
+      farm: {
+        connect: {
+          id: entity.farmId,
+        },
+      },
       status: entity.status.value as PlotStatus,
       updatedAt: entity.updatedAt,
       deletedAt: entity.deletedAt ?? null,

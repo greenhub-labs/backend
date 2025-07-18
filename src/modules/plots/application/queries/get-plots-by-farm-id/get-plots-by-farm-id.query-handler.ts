@@ -34,7 +34,7 @@ export class GetPlotsByFarmIdQueryHandler
    */
   async execute(query: GetPlotsByFarmIdQuery): Promise<PlotDetailsResult[]> {
     let plots = await this.plotsCacheRepository.getMany([query.farmId]);
-    if (!plots) {
+    if (!plots || plots.length === 0) {
       // If not in cache, fetch from repository
       plots = await this.plotsRepository.findAllByFarmId(query.farmId);
       await this.plotsCacheRepository.setMany(

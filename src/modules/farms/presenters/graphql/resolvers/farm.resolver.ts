@@ -2,14 +2,12 @@ import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
-import { AssignPlotToFarmCommand } from 'src/modules/farms/application/commands/assign-plot-to-farm/assign-plot-to-farm.command';
 import { AssignUserToFarmCommand } from '../../../application/commands/assign-user-to-farm/assign-user-to-farm.command';
 import { CreateFarmCommand } from '../../../application/commands/create-farm/create-farm.command';
 import { DeleteFarmCommand } from '../../../application/commands/delete-farm/delete-farm.command';
 import { UpdateFarmCommand } from '../../../application/commands/update-farm/update-farm.command';
 import { GetAllFarmsQuery } from '../../../application/queries/get-all-farms/get-all-farms.query';
 import { GetFarmByIdQuery } from '../../../application/queries/get-farm-by-id/get-farm-by-id.query';
-import { AssignPlotToFarmRequestDto } from '../dtos/requests/assign-plot-to-farm.request.dto';
 import { AssignUserToFarmRequestDto } from '../dtos/requests/assign-user-to-farm.request.dto';
 import { CreateFarmRequestDto } from '../dtos/requests/create-farm.request.dto';
 import { DeleteFarmRequestDto } from '../dtos/requests/delete-farm.request.dto';
@@ -117,18 +115,5 @@ export class FarmResolver {
       new AssignUserToFarmCommand(input.farmId, input.userId, input.role),
     );
     return FarmMapper.fromDomain({ farm, members, plots: [] });
-  }
-
-  @Mutation(() => FarmResponseDto, {
-    name: 'assignPlotToFarm',
-    description: 'Assign a plot to a farm',
-  })
-  async assignPlotToFarm(
-    @Args('input') input: AssignPlotToFarmRequestDto,
-  ): Promise<FarmResponseDto> {
-    const { farm, members, plots } = await this.commandBus.execute(
-      new AssignPlotToFarmCommand(input.farmId, input.plotId),
-    );
-    return FarmMapper.fromDomain({ farm, members, plots });
   }
 }
