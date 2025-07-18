@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "0.2.0",
+  "version": "0.0.1",
   "description": "",
   "author": "",
   "private": true,
@@ -63,7 +63,6 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^12.0.2",
     "@semantic-release/release-notes-generator": "^14.0.3",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
