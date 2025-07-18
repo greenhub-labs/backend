@@ -1,0 +1,8 @@
+# [0.1.0](https://github.com/greenhub-labs/backend/compare/v0.0.1...v0.1.0) (2025-07-18)
+
+
+### Features
+
+* Add GitHub Actions workflow for release and Docker image publishing to GHCR ([7116ac9](https://github.com/greenhub-labs/backend/commit/7116ac99344539e8202dcae710fc8f784907e65d))
+* Enhance GitHub Actions workflow by adding permissions, configuring Git, and setting fetch depth for improved release process ([0ccadef](https://github.com/greenhub-labs/backend/commit/0ccadefe60aa34268d490d6418dde024cab64a87))
+* Update dependencies for semantic-release and add pnpm support in GitHub Actions workflow ([09a047a](https://github.com/greenhub-labs/backend/commit/09a047aaec5be397f05f0822020b5d0ad552d32e))
