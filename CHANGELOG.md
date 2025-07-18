@@ -1,3 +1,10 @@
+## [0.1.1](https://github.com/greenhub-labs/backend/compare/v0.1.0...v0.1.1) (2025-07-18)
+
+
+### Bug Fixes
+
+* Update Docker image name in GitHub Actions workflow to use repository name dynamically ([ee37a9d](https://github.com/greenhub-labs/backend/commit/ee37a9d15018ee6f273a3c13ead4e84bb591c520))
+
 # [0.1.0](https://github.com/greenhub-labs/backend/compare/v0.0.1...v0.1.0) (2025-07-18)
 
 
