@@ -1,3 +1,10 @@
+## [0.2.2](https://github.com/greenhub-labs/backend/compare/v0.2.1...v0.2.2) (2025-07-18)
+
+
+### Bug Fixes
+
+* update pnpm-lock.yaml to match package.json dependencies ([983c420](https://github.com/greenhub-labs/backend/commit/983c420bc1a855d1ebd5c1c1056a7ed401b04377))
+
 ## [0.2.1](https://github.com/greenhub-labs/backend/compare/v0.2.0...v0.2.1) (2025-07-18)
 
 
