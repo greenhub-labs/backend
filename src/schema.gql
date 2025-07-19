@@ -177,6 +177,9 @@ type Query {
 
   """Get all plots (requires authentication)"""
   getAllPlots: [PlotResponseDto!]!
+
+  """Get all plots by farm ID (requires authentication)"""
+  getPlotsByFarmId(farmId: String!): [PlotResponseDto!]!
 }
 
 input GetUserByIdRequestDto {

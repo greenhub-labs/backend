@@ -1,19 +1,19 @@
-import { Args, Query, Resolver, Mutation } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
-import { CommandBus } from '@nestjs/cqrs';
-import { GetPlotByIdQuery } from '../../../application/queries/get-plot-by-id/get-plot-by-id.query';
-import { GetAllPlotsQuery } from '../../../application/queries/get-all-plots/get-all-plots.query';
-import { CreatePlotCommand } from '../../../application/commands/create-plot/create-plot.command';
-import { UpdatePlotCommand } from '../../../application/commands/update-plot/update-plot.command';
-import { DeletePlotCommand } from '../../../application/commands/delete-plot/delete-plot.command';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
-import { PlotResponseDto } from '../dtos/responses/plot.response.dto';
-import { GetPlotByIdRequestDto } from '../dtos/requests/get-plot-by-id.request.dto';
-import { PlotMapper } from '../mappers/plot.mapper';
+import { GetPlotsByFarmIdQuery } from 'src/modules/plots/application/queries/get-plots-by-farm-id/get-plots-by-farm-id.query';
+import { CreatePlotCommand } from '../../../application/commands/create-plot/create-plot.command';
+import { DeletePlotCommand } from '../../../application/commands/delete-plot/delete-plot.command';
+import { UpdatePlotCommand } from '../../../application/commands/update-plot/update-plot.command';
+import { GetAllPlotsQuery } from '../../../application/queries/get-all-plots/get-all-plots.query';
+import { GetPlotByIdQuery } from '../../../application/queries/get-plot-by-id/get-plot-by-id.query';
 import { CreatePlotRequestDto } from '../dtos/requests/create-plot.request.dto';
-import { UpdatePlotRequestDto } from '../dtos/requests/update-plot.request.dto';
 import { DeletePlotRequestDto } from '../dtos/requests/delete-plot.request.dto';
+import { GetPlotByIdRequestDto } from '../dtos/requests/get-plot-by-id.request.dto';
+import { UpdatePlotRequestDto } from '../dtos/requests/update-plot.request.dto';
+import { PlotResponseDto } from '../dtos/responses/plot.response.dto';
+import { PlotMapper } from '../mappers/plot.mapper';
 
 @Resolver(() => PlotResponseDto)
 @UseGuards(JwtAuthGuard)
@@ -40,6 +40,19 @@ export class PlotResolver {
   })
   async getAllPlots(): Promise<PlotResponseDto[]> {
     const results = await this.queryBus.execute(new GetAllPlotsQuery());
+    return results.map((result) => PlotMapper.fromDomain(result.plot));
+  }
+
+  @Query(() => [PlotResponseDto], {
+    name: 'getPlotsByFarmId',
+    description: 'Get all plots by farm ID (requires authentication)',
+  })
+  async getPlotsByFarmId(
+    @Args('farmId') farmId: string,
+  ): Promise<PlotResponseDto[]> {
+    const results = await this.queryBus.execute(
+      new GetPlotsByFarmIdQuery(farmId),
+    );
     return results.map((result) => PlotMapper.fromDomain(result.plot));
   }
 
