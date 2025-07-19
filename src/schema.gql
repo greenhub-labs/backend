@@ -179,7 +179,7 @@ type Query {
   getAllPlots: [PlotResponseDto!]!
 
   """Get all plots by farm ID (requires authentication)"""
-  getPlotsByFarmId(farmId: String!): [PlotResponseDto!]!
+  getPlotsByFarmId(input: GetPlotsByFarmIdRequestDto!): [PlotResponseDto!]!
 }
 
 input GetUserByIdRequestDto {
@@ -193,6 +193,11 @@ input GetFarmByIdRequestDto {
 input GetPlotByIdRequestDto {
   """Unique identifier of the plot"""
   id: String!
+}
+
+input GetPlotsByFarmIdRequestDto {
+  """Unique identifier of the farm"""
+  farmId: String!
 }
 
 type Mutation {

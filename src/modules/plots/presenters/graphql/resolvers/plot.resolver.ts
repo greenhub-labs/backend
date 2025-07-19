@@ -11,6 +11,7 @@ import { GetPlotByIdQuery } from '../../../application/queries/get-plot-by-id/ge
 import { CreatePlotRequestDto } from '../dtos/requests/create-plot.request.dto';
 import { DeletePlotRequestDto } from '../dtos/requests/delete-plot.request.dto';
 import { GetPlotByIdRequestDto } from '../dtos/requests/get-plot-by-id.request.dto';
+import { GetPlotsByFarmIdRequestDto } from '../dtos/requests/get-plots-by-farm-id.request.dto';
 import { UpdatePlotRequestDto } from '../dtos/requests/update-plot.request.dto';
 import { PlotResponseDto } from '../dtos/responses/plot.response.dto';
 import { PlotMapper } from '../mappers/plot.mapper';
@@ -48,10 +49,10 @@ export class PlotResolver {
     description: 'Get all plots by farm ID (requires authentication)',
   })
   async getPlotsByFarmId(
-    @Args('farmId') farmId: string,
+    @Args('input') input: GetPlotsByFarmIdRequestDto,
   ): Promise<PlotResponseDto[]> {
     const results = await this.queryBus.execute(
-      new GetPlotsByFarmIdQuery(farmId),
+      new GetPlotsByFarmIdQuery(input.farmId),
     );
     return results.map((result) => PlotMapper.fromDomain(result.plot));
   }
