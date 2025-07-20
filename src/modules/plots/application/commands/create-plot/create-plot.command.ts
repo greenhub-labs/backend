@@ -2,8 +2,9 @@
  * Command to create a new Plot
  */
 
-import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
+import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
+import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 
 export class CreatePlotCommand {
   /** Name of the farm */
@@ -13,7 +14,7 @@ export class CreatePlotCommand {
   /** Status */
   readonly status?: PLOT_STATUS;
   /** Soil type */
-  readonly soilType?: string;
+  readonly soilType?: PLOT_SOIL_TYPES;
   /** Soil pH */
   readonly soilPh?: number;
   /** Width */
@@ -35,7 +36,7 @@ export class CreatePlotCommand {
     name: string;
     description?: string;
     status?: PLOT_STATUS;
-    soilType?: string;
+    soilType?: PLOT_SOIL_TYPES;
     soilPh?: number;
     width?: number;
     length?: number;

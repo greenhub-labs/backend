@@ -246,6 +246,17 @@ enum SystemStatus {
   ERROR       /// Error en el sistema
 }
 
+enum SoilType {
+  SANDY      /// Sandy soil - Loose texture, drains quickly, low fertility
+  CLAY       /// Clay soil - Heavy, retains water well, fertile but hard to work
+  SILTY      /// Silty soil - Smooth texture, good water retention, easily compacted
+  LOAM       /// Loam soil - Balanced mix of sand, silt and clay, ideal for most crops
+  CALCAREOUS /// Calcareous soil - Rich in limestone, alkaline, can limit nutrient uptake
+  PEAT       /// Peat soil - High in organic matter, very fertile, wet and acidic
+  SALINE     /// Saline soil - Contains excess soluble salts, can affect plant growth
+  VOLCANIC   /// Volcanic soil (Andosol) - Very fertile, high mineral content, excellent for high-value crops
+}
+
 // ================================
 // 👥 USER MANAGEMENT & MULTI-TENANT
 // ================================
@@ -500,7 +511,7 @@ model Plot {
   /// Estado actual del bancal
   status      PlotStatus @default(ACTIVE)
   /// Tipo de suelo (arcilloso, arenoso, etc.)
-  soilType    String?
+  soilType    SoilType? @default(LOAM)
   /// Nivel de pH del suelo (0-14)
   soilPh      Float?
   /// Farm a la que pertenece este bancal

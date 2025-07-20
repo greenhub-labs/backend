@@ -9,6 +9,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
 import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 
@@ -73,8 +74,8 @@ export class CreatePlotRequestDto {
     nullable: true,
   })
   @IsOptional()
-  @IsString()
-  soilType: string;
+  @IsEnum(PLOT_SOIL_TYPES)
+  soilType: PLOT_SOIL_TYPES;
 
   @Field(() => Number, {
     description: 'Soil pH level (0-14)',

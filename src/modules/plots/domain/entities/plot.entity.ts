@@ -7,6 +7,7 @@ import { PlotsPrimitive } from '../primitives/plot.primitive';
 import { PlotDimensionValueObject } from '../value-objects/plot-dimension/plot-dimension.value-object';
 import { PlotIdValueObject } from '../value-objects/plot-id/plot-id.value-object';
 import { PlotNameValueObject } from '../value-objects/plot-name/plot-name.value-object';
+import { PlotSoilTypeValueObject } from '../value-objects/plot-soil-type/plot-soil-type.value-object';
 import { PlotStatusValueObject } from '../value-objects/plot-status/plot-status.value-object';
 
 /**
@@ -24,7 +25,7 @@ export class PlotEntity {
   /** Status of the plot */
   private readonly _status: PlotStatusValueObject;
   /** Soil type of the plot */
-  private readonly _soilType: string;
+  private readonly _soilType?: PlotSoilTypeValueObject;
   /** Soil pH of the plot */
   private readonly _soilPh: number;
   /** Farm ID */
@@ -51,7 +52,7 @@ export class PlotEntity {
     description?: string;
     dimensions: PlotDimensionValueObject;
     status: PlotStatusValueObject;
-    soilType: string;
+    soilType?: PlotSoilTypeValueObject;
     soilPh: number;
     farmId: string;
     createdAt?: Date;
@@ -87,7 +88,7 @@ export class PlotEntity {
           volume: this._dimensions.volume,
           unitMeasurement: this._dimensions.unitMeasurement,
           status: this._status.value,
-          soilType: this._soilType,
+          soilType: this._soilType?.value,
           soilPh: this._soilPh,
           farmId: this._farmId,
         }),
@@ -133,7 +134,7 @@ export class PlotEntity {
   /**
    * Gets the soil type
    */
-  get soilType(): string {
+  get soilType(): PlotSoilTypeValueObject | undefined {
     return this._soilType;
   }
 
@@ -214,7 +215,9 @@ export class PlotEntity {
       status: data.status
         ? new PlotStatusValueObject(data.status)
         : this._status,
-      soilType: data.soilType ?? this._soilType,
+      soilType: data.soilType
+        ? new PlotSoilTypeValueObject(data.soilType)
+        : this._soilType,
       soilPh: data.soilPh ?? this._soilPh,
       farmId: data.farmId ?? this._farmId,
       createdAt: this._createdAt,
@@ -236,7 +239,7 @@ export class PlotEntity {
         volume: updatedPlot._dimensions.volume,
         unitMeasurement: updatedPlot._dimensions.unitMeasurement,
         status: updatedPlot._status.value,
-        soilType: updatedPlot._soilType,
+        soilType: updatedPlot._soilType?.value,
         soilPh: updatedPlot._soilPh,
         farmId: updatedPlot._farmId,
       }),
@@ -313,7 +316,7 @@ export class PlotEntity {
       volume: this._dimensions.volume,
       unitMeasurement: this._dimensions.unitMeasurement,
       status: this._status.value,
-      soilType: this._soilType,
+      soilType: this._soilType?.value,
       soilPh: this._soilPh,
       farmId: this._farmId,
       createdAt: this._createdAt.toISOString(),
@@ -337,7 +340,9 @@ export class PlotEntity {
         primitive.unitMeasurement as UNIT_MEASUREMENT,
       ),
       status: new PlotStatusValueObject(primitive.status),
-      soilType: primitive.soilType,
+      soilType: primitive.soilType
+        ? new PlotSoilTypeValueObject(primitive.soilType)
+        : undefined,
       soilPh: primitive.soilPh,
       farmId: primitive.farmId,
       createdAt: new Date(primitive.createdAt),

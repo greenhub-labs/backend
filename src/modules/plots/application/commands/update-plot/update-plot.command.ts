@@ -1,8 +1,9 @@
 /**
  * Command to update an existing Farm
  */
-import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
+import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
+import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 
 export class UpdatePlotCommand {
   /** Unique identifier for the plot */
@@ -14,7 +15,7 @@ export class UpdatePlotCommand {
   /** Status */
   readonly status?: PLOT_STATUS;
   /** Soil type */
-  readonly soilType?: string;
+  readonly soilType?: PLOT_SOIL_TYPES;
   /** Soil pH */
   readonly soilPh?: number;
   /** Width */
@@ -35,7 +36,7 @@ export class UpdatePlotCommand {
     name?: string;
     description?: string;
     status?: PLOT_STATUS;
-    soilType?: string;
+    soilType?: PLOT_SOIL_TYPES;
     soilPh?: number;
     width?: number;
     length?: number;

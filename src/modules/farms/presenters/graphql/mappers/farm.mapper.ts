@@ -1,4 +1,5 @@
 import { FarmDetailsResult } from 'src/modules/farms/application/dtos/farm-details.result';
+import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
 
 export class FarmMapper {
@@ -45,7 +46,7 @@ export class FarmMapper {
           updatedAt: plot.updatedAt,
           deletedAt: plot.deletedAt,
           farmId: farm.id.value,
-          soilType: plot.soilType,
+          soilType: plot.soilType?.value as PLOT_SOIL_TYPES,
           soilPh: plot.soilPh,
           dimensions: {
             width: plot.dimensions.width,

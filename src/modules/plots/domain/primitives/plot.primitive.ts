@@ -14,7 +14,7 @@ export type PlotsPrimitive = {
   volume: number;
   unitMeasurement: string;
   status: string;
-  soilType: string;
+  soilType?: string;
   soilPh: number;
   farmId: string;
   createdAt: string;

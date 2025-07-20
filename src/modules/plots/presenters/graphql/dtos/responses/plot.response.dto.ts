@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import {
   UNIT_MEASUREMENT,
   UNIT_MEASUREMENT_CATEGORY,
@@ -97,7 +98,7 @@ export class PlotResponseDto {
     description: 'Type of soil in the plot',
     nullable: true,
   })
-  soilType: string;
+  soilType: PLOT_SOIL_TYPES;
 
   @Field(() => Number, {
     description: 'Soil pH level (0-14)',

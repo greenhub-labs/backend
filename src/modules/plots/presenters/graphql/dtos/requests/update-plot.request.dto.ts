@@ -1,13 +1,14 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
-  IsString,
-  IsOptional,
-  IsNumber,
-  IsUUID,
   IsEnum,
-  Min,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
   Max,
+  Min,
 } from 'class-validator';
+import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
 import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 
@@ -80,8 +81,8 @@ export class UpdatePlotRequestDto {
     nullable: true,
   })
   @IsOptional()
-  @IsString()
-  soilType?: string;
+  @IsEnum(PLOT_SOIL_TYPES)
+  soilType?: PLOT_SOIL_TYPES;
 
   @Field(() => Number, {
     description: 'Soil pH level (0-14)',

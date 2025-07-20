@@ -1,3 +1,5 @@
+import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
+import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
 import { PlotEntity } from 'src/modules/plots/domain/entities/plot.entity';
 import { PlotResponseDto } from '../dtos/responses/plot.response.dto';
 
@@ -26,8 +28,8 @@ export class PlotMapper {
         unitMeasurement: plot.dimensions.unitMeasurement,
         unitMeasurementCategory: plot.dimensions.getUnitMeasurementCategory(),
       },
-      status: plot.status.value as any,
-      soilType: plot.soilType,
+      status: plot.status.value as PLOT_STATUS,
+      soilType: plot.soilType?.value as PLOT_SOIL_TYPES,
       soilPh: plot.soilPh,
       farmId: plot.farmId,
       createdAt: plot.createdAt,

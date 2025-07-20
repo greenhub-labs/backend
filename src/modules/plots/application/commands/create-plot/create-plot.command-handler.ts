@@ -1,19 +1,18 @@
-import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
-import { CreatePlotCommand } from './create-plot.command';
-import {
-  PLOTS_REPOSITORY_TOKEN,
-  PlotsRepository,
-} from '../../ports/plots.repository';
-import { EventBus } from '../../ports/event-bus.service';
+import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
+import { GetFarmByIdQuery } from 'src/modules/farms/application/queries/get-farm-by-id/get-farm-by-id.query';
 import { PlotFactory } from '../../../domain/factories/plot.factory';
+import { PlotDetailsResult } from '../../dtos/plot-details.result';
 import {
   PLOTS_CACHE_REPOSITORY_TOKEN,
   PlotsCacheRepository,
 } from '../../ports/plots-cache.repository';
+import {
+  PLOTS_REPOSITORY_TOKEN,
+  PlotsRepository,
+} from '../../ports/plots.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
-import { GetFarmByIdQuery } from 'src/modules/farms/application/queries/get-farm-by-id/get-farm-by-id.query';
-import { PlotDetailsResult } from '../../dtos/plot-details.result';
+import { CreatePlotCommand } from './create-plot.command';
 
 /**
  * Command handler for CreatePlotCommand

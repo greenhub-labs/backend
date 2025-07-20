@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PlotEntity } from '../entities/plot.entity';
-import { PlotNameValueObject } from '../value-objects/plot-name/plot-name.value-object';
-import { PlotIdValueObject } from '../value-objects/plot-id/plot-id.value-object';
 import { randomUUID } from 'crypto';
-import { PlotStatusValueObject } from '../value-objects/plot-status/plot-status.value-object';
-import { PlotDimensionValueObject } from '../value-objects/plot-dimension/plot-dimension.value-object';
 import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
+import { PLOT_SOIL_TYPES } from '../constants/plot-soil-types.constant';
 import { PLOT_STATUS } from '../constants/plot-status.constant';
+import { PlotEntity } from '../entities/plot.entity';
+import { PlotDimensionValueObject } from '../value-objects/plot-dimension/plot-dimension.value-object';
+import { PlotIdValueObject } from '../value-objects/plot-id/plot-id.value-object';
+import { PlotNameValueObject } from '../value-objects/plot-name/plot-name.value-object';
+import { PlotSoilTypeValueObject } from '../value-objects/plot-soil-type/plot-soil-type.value-object';
+import { PlotStatusValueObject } from '../value-objects/plot-status/plot-status.value-object';
 
 /**
  * Factory class for creating Farm domain objects from primitive data
@@ -26,7 +28,7 @@ export class PlotFactory {
     height?: number;
     unitMeasurement?: UNIT_MEASUREMENT;
     status?: PLOT_STATUS;
-    soilType?: string;
+    soilType?: PLOT_SOIL_TYPES;
     soilPh?: number;
     farmId?: string;
   }): PlotEntity {
@@ -43,7 +45,9 @@ export class PlotFactory {
         data.unitMeasurement,
       ),
       status: new PlotStatusValueObject(data.status ?? PLOT_STATUS.PREPARING),
-      soilType: data.soilType,
+      soilType: data.soilType
+        ? new PlotSoilTypeValueObject(data.soilType)
+        : undefined,
       soilPh: data.soilPh,
       farmId: data.farmId,
       createdAt: new Date(),
@@ -86,7 +90,9 @@ export class PlotFactory {
         primitives.unitMeasurement as UNIT_MEASUREMENT,
       ),
       status: new PlotStatusValueObject(primitives.status),
-      soilType: primitives.soilType,
+      soilType: primitives.soilType
+        ? new PlotSoilTypeValueObject(primitives.soilType)
+        : undefined,
       soilPh: primitives.soilPh,
       farmId: primitives.farmId,
       createdAt: new Date(primitives.createdAt),

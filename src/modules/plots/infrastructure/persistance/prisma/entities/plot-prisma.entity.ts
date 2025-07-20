@@ -1,8 +1,9 @@
-import { PlotStatus, Prisma } from '@prisma/client';
+import { PlotStatus, Prisma, SoilType } from '@prisma/client';
 import { PlotEntity } from '../../../../domain/entities/plot.entity';
 import { PlotDimensionValueObject } from '../../../../domain/value-objects/plot-dimension/plot-dimension.value-object';
 import { PlotIdValueObject } from '../../../../domain/value-objects/plot-id/plot-id.value-object';
 import { PlotNameValueObject } from '../../../../domain/value-objects/plot-name/plot-name.value-object';
+import { PlotSoilTypeValueObject } from '../../../../domain/value-objects/plot-soil-type/plot-soil-type.value-object';
 import { PlotStatusValueObject } from '../../../../domain/value-objects/plot-status/plot-status.value-object';
 
 /**
@@ -21,7 +22,9 @@ export class PlotPrismaEntity {
       name: new PlotNameValueObject(prismaData.name),
       farmId: prismaData.farmId,
       status: new PlotStatusValueObject(prismaData.status),
-      soilType: prismaData.soilType,
+      soilType: prismaData.soilType
+        ? new PlotSoilTypeValueObject(prismaData.soilType)
+        : undefined,
       soilPh: prismaData.soilPh,
       description: prismaData.description ?? undefined,
       dimensions: new PlotDimensionValueObject(
@@ -54,7 +57,7 @@ export class PlotPrismaEntity {
       area: entity.dimensions.area,
       perimeter: entity.dimensions.perimeter,
       volume: entity.dimensions.volume,
-      soilType: entity.soilType,
+      soilType: entity.soilType?.value as SoilType,
       soilPh: entity.soilPh,
       farm: {
         connect: {
@@ -84,7 +87,7 @@ export class PlotPrismaEntity {
       area: entity.dimensions.area,
       perimeter: entity.dimensions.perimeter,
       volume: entity.dimensions.volume,
-      soilType: entity.soilType,
+      soilType: entity.soilType?.value as SoilType,
       soilPh: entity.soilPh,
       farm: {
         connect: {
