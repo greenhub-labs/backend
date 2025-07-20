@@ -23,6 +23,7 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:studio": "npx prisma studio",
     "prisma:seed": "ts-node --transpile-only prisma/seed.ts",
+    "prisma:migrate:reset": "npx prisma migrate reset",
     "git:clean:local": "git branch --merged main | grep -v '^* main$' | xargs git branch -d",
     "docker:build": "docker compose build",
     "docker:build:no-cache": "docker compose build --no-cache",

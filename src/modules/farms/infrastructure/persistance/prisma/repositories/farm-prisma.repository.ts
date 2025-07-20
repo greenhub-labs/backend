@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { FarmsRepository } from '../../../../application/ports/farms.repository';
 import { FarmEntity } from '../../../../domain/entities/farm.entity';
 import { FarmPrismaEntity } from '../entities/farm-prisma.entity';
-import { PrismaClient } from '@prisma/client';
-import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 /**
  * Prisma implementation of the FarmsRepositoryPort interface
@@ -21,7 +20,9 @@ export class FarmPrismaRepository implements FarmsRepository {
    */
   async findAll(): Promise<FarmEntity[]> {
     this.logger.debug('Finding all farms');
-    const farms = await this.prisma.farm.findMany();
+    const farms = await this.prisma.farm.findMany({
+      where: { deletedAt: null },
+    });
     return farms.map(FarmPrismaEntity.fromPrisma);
   }
 
@@ -46,7 +47,9 @@ export class FarmPrismaRepository implements FarmsRepository {
    */
   async findById(id: string): Promise<FarmEntity | null> {
     this.logger.debug('Finding farm by id', id);
-    const farm = await this.prisma.farm.findUnique({ where: { id } });
+    const farm = await this.prisma.farm.findUnique({
+      where: { id, deletedAt: null },
+    });
     if (!farm) return null;
     return FarmPrismaEntity.fromPrisma(farm);
   }

@@ -1,22 +1,20 @@
-import { Args, Query, Resolver, Mutation } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
-import { CommandBus } from '@nestjs/cqrs';
-import { GetFarmByIdRequestDto } from '../dtos/requests/get-farm-by-id.request.dto';
-import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
-import { CreateFarmRequestDto } from '../dtos/requests/create-farm.request.dto';
-import { UpdateFarmRequestDto } from '../dtos/requests/update-farm.request.dto';
-import { DeleteFarmRequestDto } from '../dtos/requests/delete-farm.request.dto';
-import { AssignUserToFarmRequestDto } from '../dtos/requests/assign-user-to-farm.request.dto';
-import { GetFarmByIdQuery } from '../../../application/queries/get-farm-by-id/get-farm-by-id.query';
-import { GetAllFarmsQuery } from '../../../application/queries/get-all-farms/get-all-farms.query';
-import { CreateFarmCommand } from '../../../application/commands/create-farm/create-farm.command';
-import { UpdateFarmCommand } from '../../../application/commands/update-farm/update-farm.command';
-import { DeleteFarmCommand } from '../../../application/commands/delete-farm/delete-farm.command';
-import { AssignUserToFarmCommand } from '../../../application/commands/assign-user-to-farm/assign-user-to-farm.command';
-import { FarmMapper } from '../mappers/farm.mapper';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
-import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
+import { AssignUserToFarmCommand } from '../../../application/commands/assign-user-to-farm/assign-user-to-farm.command';
+import { CreateFarmCommand } from '../../../application/commands/create-farm/create-farm.command';
+import { DeleteFarmCommand } from '../../../application/commands/delete-farm/delete-farm.command';
+import { UpdateFarmCommand } from '../../../application/commands/update-farm/update-farm.command';
+import { GetAllFarmsQuery } from '../../../application/queries/get-all-farms/get-all-farms.query';
+import { GetFarmByIdQuery } from '../../../application/queries/get-farm-by-id/get-farm-by-id.query';
+import { AssignUserToFarmRequestDto } from '../dtos/requests/assign-user-to-farm.request.dto';
+import { CreateFarmRequestDto } from '../dtos/requests/create-farm.request.dto';
+import { DeleteFarmRequestDto } from '../dtos/requests/delete-farm.request.dto';
+import { GetFarmByIdRequestDto } from '../dtos/requests/get-farm-by-id.request.dto';
+import { UpdateFarmRequestDto } from '../dtos/requests/update-farm.request.dto';
+import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
+import { FarmMapper } from '../mappers/farm.mapper';
 
 @Resolver(() => FarmResponseDto)
 @UseGuards(JwtAuthGuard)
@@ -116,6 +114,6 @@ export class FarmResolver {
     const { farm, members } = await this.commandBus.execute(
       new AssignUserToFarmCommand(input.farmId, input.userId, input.role),
     );
-    return FarmMapper.fromDomain({ farm, members });
+    return FarmMapper.fromDomain({ farm, members, plots: [] });
   }
 }

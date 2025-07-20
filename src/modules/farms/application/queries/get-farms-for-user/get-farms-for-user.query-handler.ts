@@ -1,14 +1,11 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { GetFarmsForUserQuery } from './get-farms-for-user.query';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
 import {
-  FarmsRepository,
   FARMS_REPOSITORY_TOKEN,
+  FarmsRepository,
 } from '../../ports/farms.repository';
-import {
-  FarmMembershipsRepository,
-  FarmMemberWithRole,
-} from '../../ports/farm-memberships.repository';
+import { GetFarmsForUserQuery } from './get-farms-for-user.query';
 
 @QueryHandler(GetFarmsForUserQuery)
 export class GetFarmsForUserQueryHandler

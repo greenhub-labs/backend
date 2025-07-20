@@ -1,0 +1,10 @@
+export enum PLOT_SOIL_TYPES {
+  SANDY = 'SANDY',
+  CLAY = 'CLAY',
+  SILTY = 'SILTY',
+  LOAM = 'LOAM',
+  CALCAREOUS = 'CALCAREOUS',
+  PEAT = 'PEAT',
+  SALINE = 'SALINE',
+  VOLCANIC = 'VOLCANIC',
+}

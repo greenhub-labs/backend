@@ -1,20 +1,19 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { UpdateFarmCommand } from './update-farm.command';
-import {
-  FarmsRepository,
-  FARMS_REPOSITORY_TOKEN,
-} from '../../ports/farms.repository';
+import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
+import { GetPlotsByFarmIdQuery } from 'src/modules/plots/application/queries/get-plots-by-farm-id/get-plots-by-farm-id.query';
+import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
+import { FarmDetailsResult } from '../../dtos/farm-details.result';
+import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
 import {
   FARMS_CACHE_REPOSITORY_TOKEN,
   FarmsCacheRepository,
 } from '../../ports/farms-cache.repository';
-import { EventBus } from '../../ports/event-bus.service';
-import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
+import {
+  FARMS_REPOSITORY_TOKEN,
+  FarmsRepository,
+} from '../../ports/farms.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
-import { FarmEntity } from 'src/modules/farms/domain/entities/farm.entity';
-import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
-import { FarmDetailsResult } from '../../dtos/farm-details.result';
+import { UpdateFarmCommand } from './update-farm.command';
 
 /**
  * Command handler for UpdateFarmCommand
@@ -31,6 +30,7 @@ export class UpdateFarmCommandHandler
     private readonly nestjsEventBus: NestjsEventBusService,
     @Inject('FARM_MEMBERSHIPS_REPOSITORY_TOKEN')
     private readonly farmMembershipsRepository: FarmMembershipsRepository,
+    private readonly queryBus: QueryBus,
   ) {}
 
   /**
@@ -68,6 +68,14 @@ export class UpdateFarmCommandHandler
     const members = await this.farmMembershipsRepository.getUsersByFarmId(
       updatedFarm.id.value,
     );
-    return new FarmDetailsResult(updatedFarm, members);
+    // 7. Get the plots for the farm
+    const plots = await this.queryBus.execute(
+      new GetPlotsByFarmIdQuery(updatedFarm.id.value),
+    );
+    return new FarmDetailsResult(
+      updatedFarm,
+      members,
+      plots.map((plot) => plot.plot),
+    );
   }
 }

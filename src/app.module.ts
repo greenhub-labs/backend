@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 import { StartupCheckService } from './shared/application/services/startup-check.service';
 import { FarmsModule } from './modules/farms/farms.module';
+import { PlotsModule } from './modules/plots/plots.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { FarmsModule } from './modules/farms/farms.module';
     UsersModule,
     SharedModule,
     FarmsModule,
+    PlotsModule,
   ],
   providers: [StartupCheckService],
 })

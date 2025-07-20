@@ -54,6 +54,67 @@ type TokenVerificationResult {
   email: String
 }
 
+type PlotDimensionsResponseDto {
+  """Width of the plot"""
+  width: Float
+
+  """Length of the plot"""
+  length: Float
+
+  """Height of the plot"""
+  height: Float
+
+  """Area of the plot"""
+  area: Float
+
+  """Perimeter of the plot"""
+  perimeter: Float
+
+  """Volume of the plot"""
+  volume: Float
+
+  """Unit of measurement (e.g., METERS, FEET, CENTIMETERS)"""
+  unitMeasurement: String
+
+  """Category of unit measurement (METRIC or IMPERIAL)"""
+  unitMeasurementCategory: String
+}
+
+type PlotResponseDto {
+  """Unique identifier of the plot"""
+  id: String!
+
+  """Name of the plot"""
+  name: String!
+
+  """Optional description of the plot"""
+  description: String
+
+  """Dimensions of the plot"""
+  dimensions: PlotDimensionsResponseDto
+
+  """Status of the plot"""
+  status: String
+
+  """Type of soil in the plot"""
+  soilType: String
+
+  """Soil pH level (0-14)"""
+  soilPh: Float
+
+  """ID of the farm this plot belongs to"""
+  farmId: String
+
+  """Date when the plot was created"""
+  createdAt: DateTime
+
+  """Date when the plot was last updated"""
+  updatedAt: DateTime
+
+  """Date when the plot was deleted (soft delete)"""
+  deletedAt: DateTime
+}
+
 type FarmMemberResponseDto {
   id: String!
   firstName: String
@@ -90,6 +151,9 @@ type FarmResponseDto {
 
   """Members (users) assigned to this farm"""
   members: [FarmMemberResponseDto!]
+
+  """Plots assigned to this farm"""
+  plots: [PlotResponseDto!]
 }
 
 type Query {
@@ -107,6 +171,15 @@ type Query {
 
   """Get all farms (requires authentication)"""
   getAllFarms: [FarmResponseDto!]!
+
+  """Get plot information by ID (requires authentication)"""
+  getPlotById(input: GetPlotByIdRequestDto!): PlotResponseDto!
+
+  """Get all plots (requires authentication)"""
+  getAllPlots: [PlotResponseDto!]!
+
+  """Get all plots by farm ID (requires authentication)"""
+  getPlotsByFarmId(input: GetPlotsByFarmIdRequestDto!): [PlotResponseDto!]!
 }
 
 input GetUserByIdRequestDto {
@@ -115,6 +188,16 @@ input GetUserByIdRequestDto {
 
 input GetFarmByIdRequestDto {
   id: String!
+}
+
+input GetPlotByIdRequestDto {
+  """Unique identifier of the plot"""
+  id: String!
+}
+
+input GetPlotsByFarmIdRequestDto {
+  """Unique identifier of the farm"""
+  farmId: String!
 }
 
 type Mutation {
@@ -155,6 +238,15 @@ type Mutation {
 
   """Assign a user to a farm"""
   assignUserToFarm(input: AssignUserToFarmRequestDto!): FarmResponseDto!
+
+  """Create a new plot"""
+  createPlot(input: CreatePlotRequestDto!): PlotResponseDto!
+
+  """Update an existing plot"""
+  updatePlot(input: UpdatePlotRequestDto!): PlotResponseDto!
+
+  """Delete a plot by ID"""
+  deletePlot(input: DeletePlotRequestDto!): Boolean!
 }
 
 input RegisterInput {
@@ -240,4 +332,77 @@ input AssignUserToFarmRequestDto {
   farmId: String!
   userId: String!
   role: String!
+}
+
+input CreatePlotRequestDto {
+  """Name of the plot"""
+  name: String!
+
+  """Optional description of the plot"""
+  description: String
+
+  """Width of the plot in the specified unit"""
+  width: Float
+
+  """Length of the plot in the specified unit"""
+  length: Float
+
+  """Height of the plot in the specified unit"""
+  height: Float
+
+  """
+  Unit of measurement for the plot dimensions (e.g., METERS, FEET, CENTIMETERS, INCHES)
+  """
+  unitMeasurement: String
+
+  """Type of soil in the plot"""
+  soilType: String
+
+  """Soil pH level (0-14)"""
+  soilPh: Float
+
+  """Status of the plot"""
+  status: String
+
+  """ID of the farm this plot belongs to"""
+  farmId: String!
+}
+
+input UpdatePlotRequestDto {
+  """Unique identifier of the plot to update"""
+  id: String!
+
+  """Name of the plot"""
+  name: String
+
+  """Optional description of the plot"""
+  description: String
+
+  """Width of the plot in the specified unit"""
+  width: Float
+
+  """Length of the plot in the specified unit"""
+  length: Float
+
+  """Height of the plot in the specified unit"""
+  height: Float
+
+  """
+  Unit of measurement for the plot dimensions (e.g., METERS, FEET, CENTIMETERS, INCHES)
+  """
+  unitMeasurement: String
+
+  """Type of soil in the plot"""
+  soilType: String
+
+  """Soil pH level (0-14)"""
+  soilPh: Float
+
+  """Status of the plot"""
+  status: String
+}
+
+input DeletePlotRequestDto {
+  """Unique identifier of the plot to delete"""
+  id: String!
 }

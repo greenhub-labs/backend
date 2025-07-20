@@ -1,4 +1,5 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { PlotResponseDto } from 'src/modules/plots/presenters/graphql/dtos/responses/plot.response.dto';
 import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 @ObjectType()
@@ -30,7 +31,6 @@ export class FarmMemberResponseDto {
   @Field(() => String, { description: 'Role of the user in this farm' })
   role: FARM_MEMBERSHIP_ROLES;
 }
-
 @ObjectType()
 export class FarmResponseDto {
   @Field()
@@ -66,4 +66,9 @@ export class FarmResponseDto {
     description: 'Members (users) assigned to this farm',
   })
   members?: FarmMemberResponseDto[];
+  @Field(() => [PlotResponseDto], {
+    nullable: true,
+    description: 'Plots assigned to this farm',
+  })
+  plots?: PlotResponseDto[];
 }

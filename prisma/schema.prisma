@@ -132,6 +132,21 @@ enum AlertLevel {
   ERROR    /// Error del sistema
 }
 
+/// Unidades de medida específicas para dimensiones
+enum UnitMeasurement {
+  // Unidades métricas
+  METERS       /// Metros (m)
+  CENTIMETERS  /// Centímetros (cm)
+  KILOMETERS   /// Kilómetros (km)
+  MILLIMETERS  /// Milímetros (mm)
+  
+  // Unidades imperiales
+  FEET         /// Pies (ft)
+  INCHES       /// Pulgadas (in)
+  YARDS        /// Yardas (yd)
+  MILES        /// Millas (mi)
+}
+
 /// Tipos de alertas del sistema
 enum AlertType {
   SENSOR_FAILURE        /// Fallo de sensor IoT
@@ -229,6 +244,17 @@ enum SystemStatus {
   OFFLINE     /// Fuera de línea
   MAINTENANCE /// En mantenimiento
   ERROR       /// Error en el sistema
+}
+
+enum SoilType {
+  SANDY      /// Sandy soil - Loose texture, drains quickly, low fertility
+  CLAY       /// Clay soil - Heavy, retains water well, fertile but hard to work
+  SILTY      /// Silty soil - Smooth texture, good water retention, easily compacted
+  LOAM       /// Loam soil - Balanced mix of sand, silt and clay, ideal for most crops
+  CALCAREOUS /// Calcareous soil - Rich in limestone, alkaline, can limit nutrient uptake
+  PEAT       /// Peat soil - High in organic matter, very fertile, wet and acidic
+  SALINE     /// Saline soil - Contains excess soluble salts, can affect plant growth
+  VOLCANIC   /// Volcanic soil (Andosol) - Very fertile, high mineral content, excellent for high-value crops
 }
 
 // ================================
@@ -472,14 +498,20 @@ model Plot {
   width       Float?
   /// Longitud en metros
   length      Float?
+  /// Altura en metros
+  height      Float?
   /// Área en metros cuadrados
   area        Float? 
-  /// Ubicación y dimensiones del bancal
-  location    Json? // { coordinates: [[lat,lng]], dimensions: {length, width} }
+  /// Perímetro en metros
+  perimeter   Float?
+  /// Volumen en metros cúbicos
+  volume      Float?
+  /// Unidad de medida específica para las dimensiones
+  unitMeasurement UnitMeasurement? @default(METERS)
   /// Estado actual del bancal
   status      PlotStatus @default(ACTIVE)
   /// Tipo de suelo (arcilloso, arenoso, etc.)
-  soilType    String?
+  soilType    SoilType? @default(LOAM)
   /// Nivel de pH del suelo (0-14)
   soilPh      Float?
   /// Farm a la que pertenece este bancal
