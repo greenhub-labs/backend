@@ -20,7 +20,9 @@ export class PlotPrismaRepository implements PlotsRepository {
    */
   async findAll(): Promise<PlotEntity[]> {
     this.logger.debug('Finding all plots');
-    const plots = await this.prisma.plot.findMany();
+    const plots = await this.prisma.plot.findMany({
+      where: { deletedAt: null },
+    });
     return plots.map(PlotPrismaEntity.fromPrisma);
   }
 
@@ -45,7 +47,9 @@ export class PlotPrismaRepository implements PlotsRepository {
    */
   async findById(id: string): Promise<PlotEntity | null> {
     this.logger.debug('Finding plot by id', id);
-    const plot = await this.prisma.plot.findUnique({ where: { id } });
+    const plot = await this.prisma.plot.findUnique({
+      where: { id, deletedAt: null },
+    });
     if (!plot) return null;
     return PlotPrismaEntity.fromPrisma(plot);
   }
@@ -57,7 +61,9 @@ export class PlotPrismaRepository implements PlotsRepository {
    */
   async findAllByFarmId(farmId: string): Promise<PlotEntity[]> {
     this.logger.debug('Finding all plots by farm id', farmId);
-    const plots = await this.prisma.plot.findMany({ where: { farmId } });
+    const plots = await this.prisma.plot.findMany({
+      where: { farmId, deletedAt: null },
+    });
     return plots.map(PlotPrismaEntity.fromPrisma);
   }
 
