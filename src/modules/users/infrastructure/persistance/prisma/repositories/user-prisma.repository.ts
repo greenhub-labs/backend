@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { UserRepository } from '../../../../application/ports/user.repository';
 import { User } from '../../../../domain/entities/user.entity';
-import { PrismaClient } from '@prisma/client';
 import { UserPrismaEntity } from '../entities/user-prisma.entity';
 
 /**
@@ -23,7 +23,10 @@ export class UserPrismaRepository implements UserRepository {
    * @returns Promise resolving to the User entity if found, null otherwise
    */
   async findById(id: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    this.logger.debug(`Finding user by id ${id}`);
+    const user = await this.prisma.user.findUnique({
+      where: { id, deletedAt: null },
+    });
     if (!user) return null;
     return UserPrismaEntity.fromPrisma(user);
   }
