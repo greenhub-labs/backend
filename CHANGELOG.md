@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/greenhub-labs/backend/compare/v0.3.0...v0.4.0) (2025-07-20)
+
+
+### Features
+
+* **release:** Enhance semantic-release workflow to capture new version ([dee7b0e](https://github.com/greenhub-labs/backend/commit/dee7b0ec67e331bb7f1180621ea96c1baf0f981b))
+
 # [0.3.0](https://github.com/greenhub-labs/backend/compare/v0.2.4...v0.3.0) (2025-07-20)
 
 
