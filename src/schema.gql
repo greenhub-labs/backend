@@ -109,6 +109,7 @@ type CropResponseDto {
 
   """Additional notes"""
   notes: String
+  cropVariety: CropVarietyResponseDto
 
   """Date when the crop was created"""
   createdAt: String

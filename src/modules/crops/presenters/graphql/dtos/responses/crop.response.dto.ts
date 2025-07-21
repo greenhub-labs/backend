@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { CropVarietyResponseDto } from './crop-variety.response.dto';
 
 /**
  * CropResponseDto
@@ -38,6 +39,9 @@ export class CropResponseDto {
 
   @Field(() => String, { description: 'Additional notes', nullable: true })
   notes?: string;
+
+  @Field(() => CropVarietyResponseDto, { nullable: true })
+  cropVariety?: CropVarietyResponseDto;
 
   @Field(() => String, {
     description: 'Date when the crop was created',
