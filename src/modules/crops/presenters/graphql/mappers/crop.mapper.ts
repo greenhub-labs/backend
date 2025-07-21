@@ -1,22 +1,28 @@
-import { CropEntity } from '../../../domain/entities/crop.entity';
+import { CropDetailsResult } from 'src/modules/crops/application/dtos/crop-details.result';
+import { CropEntity } from 'src/modules/crops/domain/entities/crop.entity';
 import { CropResponseDto } from '../dtos/responses/crop.response.dto';
 
 export class CropMapper {
-  static fromDomain(entity: CropEntity): CropResponseDto {
+  static fromDomain(entity: CropDetailsResult): CropResponseDto {
+    const { crop } = entity;
+    return CropMapper.fromEntity(crop);
+  }
+
+  static fromEntity(crop: CropEntity): CropResponseDto {
     return {
-      id: entity.id.value,
-      plotId: entity.plotId,
-      varietyId: entity.varietyId,
-      plantingDate: entity.plantingDate?.toISOString(),
-      expectedHarvest: entity.expectedHarvest?.toISOString(),
-      actualHarvest: entity.actualHarvest?.toISOString(),
-      quantity: entity.quantity,
-      status: entity.status?.value,
-      plantingMethod: entity.plantingMethod?.value,
-      notes: entity.notes,
-      createdAt: entity.createdAt?.toISOString(),
-      updatedAt: entity.updatedAt?.toISOString(),
-      deletedAt: entity.deletedAt?.toISOString(),
+      id: crop.id.value,
+      plotId: crop.plotId,
+      varietyId: crop.varietyId,
+      plantingDate: crop.plantingDate?.toISOString(),
+      expectedHarvest: crop.expectedHarvest?.toISOString(),
+      actualHarvest: crop.actualHarvest?.toISOString(),
+      quantity: crop.quantity,
+      status: crop.status?.value,
+      plantingMethod: crop.plantingMethod?.value,
+      notes: crop.notes,
+      createdAt: crop.createdAt?.toISOString(),
+      updatedAt: crop.updatedAt?.toISOString(),
+      deletedAt: crop.deletedAt?.toISOString(),
     };
   }
 }

@@ -1,6 +1,7 @@
+import { CropMapper } from 'src/modules/crops/presenters/graphql/mappers/crop.mapper';
+import { PlotDetailsResult } from 'src/modules/plots/application/dtos/plot-details.result';
 import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
-import { PlotEntity } from 'src/modules/plots/domain/entities/plot.entity';
 import { PlotResponseDto } from '../dtos/responses/plot.response.dto';
 
 /**
@@ -13,7 +14,8 @@ export class PlotMapper {
    * @param plot - The domain PlotEntity
    * @returns GraphQL response DTO
    */
-  static fromDomain(plot: PlotEntity): PlotResponseDto {
+  static fromDomain(plotDetails: PlotDetailsResult): PlotResponseDto {
+    const { plot, crops } = plotDetails;
     return {
       id: plot.id.value,
       name: plot.name.value,
@@ -35,6 +37,7 @@ export class PlotMapper {
       createdAt: plot.createdAt,
       updatedAt: plot.updatedAt,
       deletedAt: plot.deletedAt,
+      crops: crops ? crops.map(CropMapper.fromEntity) : [],
     };
   }
 }

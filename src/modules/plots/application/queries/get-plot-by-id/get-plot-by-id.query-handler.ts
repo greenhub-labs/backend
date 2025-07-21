@@ -1,17 +1,17 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
-import { GetPlotByIdQuery } from './get-plot-by-id.query';
-import {
-  PLOTS_REPOSITORY_TOKEN,
-  PlotsRepository,
-} from '../../ports/plots.repository';
+import { IQueryHandler, QueryBus, QueryHandler } from '@nestjs/cqrs';
+import { GetCropsByPlotIdQuery } from 'src/modules/crops/application/queries/get-crops-by-plot-id/get-crops-by-plot-id.query';
 import { PlotNotFoundException } from '../../../domain/exceptions/plot-not-found/plot-not-found.exception';
-import { PlotEntity } from '../../../domain/entities/plot.entity';
+import { PlotDetailsResult } from '../../dtos/plot-details.result';
 import {
   PLOTS_CACHE_REPOSITORY_TOKEN,
   PlotsCacheRepository,
 } from '../../ports/plots-cache.repository';
-import { PlotDetailsResult } from '../../dtos/plot-details.result';
+import {
+  PLOTS_REPOSITORY_TOKEN,
+  PlotsRepository,
+} from '../../ports/plots.repository';
+import { GetPlotByIdQuery } from './get-plot-by-id.query';
 
 /**
  * Query handler for GetPlotByIdQuery
@@ -25,6 +25,7 @@ export class GetPlotByIdQueryHandler
     private readonly plotsRepository: PlotsRepository,
     @Inject(PLOTS_CACHE_REPOSITORY_TOKEN)
     private readonly plotsCacheRepository: PlotsCacheRepository,
+    private readonly queryBus: QueryBus,
   ) {}
 
   /**
@@ -43,6 +44,10 @@ export class GetPlotByIdQueryHandler
     if (!plot) {
       throw new PlotNotFoundException(query.plotId);
     }
-    return new PlotDetailsResult(plot);
+
+    const crops = await this.queryBus.execute(
+      new GetCropsByPlotIdQuery(plot.id.value),
+    );
+    return new PlotDetailsResult(plot, crops);
   }
 }

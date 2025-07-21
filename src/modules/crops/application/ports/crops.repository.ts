@@ -25,13 +25,6 @@ export interface CropsRepository {
   findAll(): Promise<CropEntity[]>;
 
   /**
-   * Returns all Crop entities by farm ID
-   * @param farmId - The Farm ID (as string)
-   * @returns The Crop entities or empty array if not found
-   */
-  findAllByFarmId(farmId: string): Promise<CropEntity[]>;
-
-  /**
    * Returns all Crop entities by plot ID
    * @param plotId - The Plot ID (as string)
    * @returns The Crop entities or empty array if not found

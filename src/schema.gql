@@ -179,6 +179,9 @@ type PlotResponseDto {
 
   """Date when the plot was deleted (soft delete)"""
   deletedAt: DateTime
+
+  """Crops associated with this plot"""
+  crops: [CropResponseDto!]
 }
 
 type FarmMemberResponseDto {

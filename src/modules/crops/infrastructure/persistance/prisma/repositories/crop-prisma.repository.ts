@@ -13,9 +13,6 @@ export class CropPrismaRepository implements CropsRepository {
   private readonly logger = new Logger(CropPrismaRepository.name);
 
   constructor(private readonly prisma: PrismaClient) {}
-  findAllByFarmId(farmId: string): Promise<CropEntity[]> {
-    throw new Error('Method not implemented.');
-  }
 
   /**
    * Finds all farms

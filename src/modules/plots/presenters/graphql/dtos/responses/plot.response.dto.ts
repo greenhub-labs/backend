@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { CropResponseDto } from 'src/modules/crops/presenters/graphql/dtos/responses/crop.response.dto';
 import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import {
   UNIT_MEASUREMENT,
@@ -129,4 +130,10 @@ export class PlotResponseDto {
     nullable: true,
   })
   deletedAt?: Date;
+
+  @Field(() => [CropResponseDto], {
+    description: 'Crops associated with this plot',
+    nullable: true,
+  })
+  crops?: CropResponseDto[];
 }
