@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { CROP_PLANTING_METHODS } from '../constants/crop-planting-methods.constant';
+import { CROP_STATUS } from '../constants/crop-status.constant';
 import { CropEntity } from '../entities/crop.entity';
 import { CropIdValueObject } from '../value-objects/crop-id/crop-id.value-object';
 import { CropPlantingMethodValueObject } from '../value-objects/crop-planting-method/crop-planting-method.value-object';
@@ -36,8 +38,12 @@ export class CropFactory {
       expectedHarvest: data.expectedHarvest,
       actualHarvest: data.actualHarvest,
       quantity: data.quantity,
-      status: new CropStatusValueObject(data.status),
-      plantingMethod: new CropPlantingMethodValueObject(data.plantingMethod),
+      status: data.status
+        ? new CropStatusValueObject(data.status)
+        : new CropStatusValueObject(CROP_STATUS.PLANNED),
+      plantingMethod: data.plantingMethod
+        ? new CropPlantingMethodValueObject(data.plantingMethod)
+        : new CropPlantingMethodValueObject(CROP_PLANTING_METHODS.DIRECT_SEED),
       notes: data.notes,
       createdAt: new Date(),
       updatedAt: new Date(),

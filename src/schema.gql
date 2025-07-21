@@ -255,6 +255,12 @@ type Query {
 
   """Get all crops by plot ID (requires authentication)"""
   getCropsByPlotId(plotId: String!): [CropResponseDto!]!
+
+  """Get a crop variety by ID"""
+  getCropVarietyById(id: String!): CropVarietyResponseDto!
+
+  """Get all crop varieties"""
+  getAllCropVarieties: [CropVarietyResponseDto!]!
 }
 
 input GetUserByIdRequestDto {

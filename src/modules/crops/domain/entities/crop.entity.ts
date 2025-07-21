@@ -66,9 +66,9 @@ export class CropEntity {
     this._id = params.id;
     this._plotId = params.plotId;
     this._varietyId = params.varietyId;
-    this._plantingDate = params.plantingDate;
-    this._expectedHarvest = params.expectedHarvest;
-    this._actualHarvest = params.actualHarvest;
+    this._plantingDate = params.plantingDate ?? undefined;
+    this._expectedHarvest = params.expectedHarvest ?? undefined;
+    this._actualHarvest = params.actualHarvest ?? undefined;
     this._quantity = params.quantity;
     this._status = params.status;
     this._plantingMethod = params.plantingMethod;
@@ -85,9 +85,9 @@ export class CropEntity {
           occurredAt: this._createdAt.toISOString(),
           plotId: this._plotId,
           varietyId: this._varietyId,
-          plantingDate: this._plantingDate.toISOString(),
-          expectedHarvest: this._expectedHarvest.toISOString(),
-          actualHarvest: this._actualHarvest.toISOString(),
+          plantingDate: this._plantingDate?.toISOString(),
+          expectedHarvest: this._expectedHarvest?.toISOString(),
+          actualHarvest: this._actualHarvest?.toISOString(),
           quantity: this._quantity,
           status: this._status.value,
           plantingMethod: this._plantingMethod?.value,
@@ -314,9 +314,15 @@ export class CropEntity {
       id: this._id.value,
       plotId: this._plotId,
       varietyId: this._varietyId,
-      plantingDate: this._plantingDate.toISOString(),
-      expectedHarvest: this._expectedHarvest.toISOString(),
-      actualHarvest: this._actualHarvest.toISOString(),
+      plantingDate: this._plantingDate
+        ? this._plantingDate.toISOString()
+        : undefined,
+      expectedHarvest: this._expectedHarvest
+        ? this._expectedHarvest.toISOString()
+        : undefined,
+      actualHarvest: this._actualHarvest
+        ? this._actualHarvest.toISOString()
+        : undefined,
       quantity: this._quantity,
       status: this._status.value,
       plantingMethod: this._plantingMethod?.value,

@@ -1,7 +1,9 @@
 import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
+import { GetAllCropsVarietiesQuery } from 'src/modules/crops/application/queries/get-all-crops-varieties/get-all-crops-varieties.query';
+import { GetCropVarietyByIdQuery } from 'src/modules/crops/application/queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
 import { CreateCropVarietyCommand } from '../../../application/commands/create-crop-variety/create-crop-variety.command';
 import { DeleteCropVarietyCommand } from '../../../application/commands/delete-crop-variety/delete-crop-variety.command';
 import { UpdateCropVarietyCommand } from '../../../application/commands/update-crop-variety/update-crop-variety.command';
@@ -18,6 +20,26 @@ export class CropVarietyResolver {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
+
+  @Query(() => CropVarietyResponseDto, {
+    name: 'getCropVarietyById',
+    description: 'Get a crop variety by ID',
+  })
+  async getCropVarietyById(
+    @Args('id', { type: () => String }) id: string,
+  ): Promise<CropVarietyResponseDto> {
+    const result = await this.queryBus.execute(new GetCropVarietyByIdQuery(id));
+    return CropVarietyMapper.fromDomain(result);
+  }
+
+  @Query(() => [CropVarietyResponseDto], {
+    name: 'getAllCropVarieties',
+    description: 'Get all crop varieties',
+  })
+  async getAllCropVarieties(): Promise<CropVarietyResponseDto[]> {
+    const result = await this.queryBus.execute(new GetAllCropsVarietiesQuery());
+    return result.map(CropVarietyMapper.fromDomain);
+  }
 
   @Mutation(() => CropVarietyResponseDto, {
     name: 'createCropVariety',
@@ -60,6 +82,4 @@ export class CropVarietyResolver {
       new DeleteCropVarietyCommand(input.id),
     );
   }
-
-  // Queries para consultar variedades de cultivo (por ID, todas, etc.) pueden añadirse aquí
 }
