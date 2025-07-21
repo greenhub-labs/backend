@@ -1,16 +1,17 @@
 // DDD Clean Architecture modules integration in progress
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
-import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { SharedModule } from './shared/shared.module';
-import { StartupCheckService } from './shared/application/services/startup-check.service';
+import { CropsModule } from './modules/crops/crops.module';
 import { FarmsModule } from './modules/farms/farms.module';
 import { PlotsModule } from './modules/plots/plots.module';
+import { UsersModule } from './modules/users/users.module';
+import { StartupCheckService } from './shared/application/services/startup-check.service';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PlotsModule } from './modules/plots/plots.module';
     SharedModule,
     FarmsModule,
     PlotsModule,
+    CropsModule,
   ],
   providers: [StartupCheckService],
 })

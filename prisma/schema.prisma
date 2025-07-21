@@ -569,9 +569,13 @@ model CropVariety {
   /// Requerimientos de luz solar
   sunRequirements   String? // "full", "partial", "shade"
   /// Temperatura ideal de crecimiento
-  idealTemperature  Json? // { min: number, max: number }
-  /// Rango de pH ideal del suelo
-  idealPh           Json? // { min: number, max: number }
+  minIdealTemperature Float?
+  /// Temperatura máxima ideal de crecimiento
+  maxIdealTemperature Float?
+  /// pH mínimo ideal del suelo
+  minIdealPh        Float?
+  /// pH máximo ideal del suelo
+  maxIdealPh        Float?
   /// Plantas compatibles para siembra asociada
   compatibleWith    String[]
   /// Plantas incompatibles (evitar cercanía)
