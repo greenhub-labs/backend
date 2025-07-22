@@ -1,8 +1,8 @@
-import { PlotPrismaRepository } from './crop-prisma.repository';
+import { CropPrismaRepository } from './crop-prisma.repository';
 
-describe('PlotPrismaRepository', () => {
+describe('CropPrismaRepository', () => {
   it('should be defined', () => {
-    const repo = new PlotPrismaRepository({} as any);
+    const repo = new CropPrismaRepository({} as any);
     expect(repo).toBeDefined();
   });
 });

@@ -66,6 +66,8 @@ describe('CropVarietyResolver', () => {
       );
       expect(CropVarietyMapper.fromDomain).toHaveBeenCalledWith(
         mockDomainResult,
+        0,
+        [mockDomainResult],
       );
       expect(result).toEqual([mockDto]);
     });

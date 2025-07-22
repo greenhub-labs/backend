@@ -2,7 +2,7 @@ import { CropEntity } from '../../../../domain/entities/crop.entity';
 import { CropRedisEntity } from '../entities/crop-redis.entity';
 import { CropsRedisCacheRepository } from './crop-redis-cache.repository';
 
-jest.mock('../entities/plots-redis.entity');
+jest.mock('../entities/crop-redis.entity');
 
 describe('CropsRedisCacheRepository', () => {
   let repository: CropsRedisCacheRepository;
@@ -29,7 +29,7 @@ describe('CropsRedisCacheRepository', () => {
   });
 
   describe('setMany', () => {
-    it('should set multiple plots in cache', async () => {
+    it('should set multiple crops in cache', async () => {
       const pipeline = { setex: jest.fn().mockReturnThis(), exec: jest.fn() };
       redis.pipeline.mockReturnValue(pipeline);
       await repository.setMany([
@@ -61,7 +61,7 @@ describe('CropsRedisCacheRepository', () => {
   });
 
   describe('deleteMany', () => {
-    it('should delete multiple plots from cache', async () => {
+    it('should delete multiple crops from cache', async () => {
       await repository.deleteMany(['crop-1', 'crop-2']);
       expect(redis.del).toHaveBeenCalledWith('crops:crop-1', 'crops:crop-2');
     });
@@ -86,16 +86,16 @@ describe('CropsRedisCacheRepository', () => {
 
   describe('expire', () => {
     it('should set TTL for a cache entry', async () => {
-      await repository.expire('plot-1', 10);
-      expect(redis.expire).toHaveBeenCalledWith('plots:plot-1', 10);
+      await repository.expire('crop-1', 10);
+      expect(redis.expire).toHaveBeenCalledWith('crops:crop-1', 10);
     });
   });
 
   describe('clear', () => {
-    it('should delete all plots cache keys', async () => {
-      redis.keys.mockResolvedValue(['plots:plot-1', 'plots:plot-2']);
+    it('should delete all crops cache keys', async () => {
+      redis.keys.mockResolvedValue(['crops:crop-1', 'crops:crop-2']);
       await repository.clear();
-      expect(redis.del).toHaveBeenCalledWith('plots:plot-1', 'plots:plot-2');
+      expect(redis.del).toHaveBeenCalledWith('crops:crop-1', 'crops:crop-2');
     });
     it('should do nothing if no keys', async () => {
       redis.keys.mockResolvedValue([]);
@@ -107,8 +107,8 @@ describe('CropsRedisCacheRepository', () => {
   describe('remove', () => {
     it('should call delete', async () => {
       const spy = jest.spyOn(repository, 'delete');
-      await repository.remove('plot-1');
-      expect(spy).toHaveBeenCalledWith('plot-1');
+      await repository.remove('crop-1');
+      expect(spy).toHaveBeenCalledWith('crop-1');
     });
   });
 });
