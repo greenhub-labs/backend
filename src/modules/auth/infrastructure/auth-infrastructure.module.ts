@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { PrismaModule } from '../../../shared/infrastructure/prisma/prisma.module';
-import { RedisModule } from '../../../shared/infrastructure/redis/redis.module';
 
 // Repository implementations
 import { AuthPrismaRepository } from './persistance/prisma/repositories/auth-prisma.repository';
@@ -20,7 +18,6 @@ import { AUTH_REPOSITORY_TOKEN } from '../application/ports/auth.repository';
 import { AUTH_CACHE_REPOSITORY_TOKEN } from '../application/ports/auth-cache.repository';
 import { HASHING_SERVICE_TOKEN } from '../application/ports/hashing.service';
 import { TOKEN_SERVICE_TOKEN } from '../application/ports/token.service';
-import { SharedInfrastructureModule } from 'src/shared/infrastructure/shared-infrastructure.module';
 
 /**
  * AuthInfrastructureModule

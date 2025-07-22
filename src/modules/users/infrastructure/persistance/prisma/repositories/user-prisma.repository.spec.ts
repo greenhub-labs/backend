@@ -1,7 +1,6 @@
 import { UserPrismaRepository } from './user-prisma.repository';
 import { User } from '../../../../domain/entities/user.entity';
 import { UserPrismaEntity } from '../entities/user-prisma.entity';
-import { PrismaClient } from '@prisma/client';
 
 jest.mock('../entities/user-prisma.entity');
 

@@ -6,7 +6,6 @@ import {
   PlotsRepository,
 } from '../../ports/plots.repository';
 import { PlotNotFoundException } from '../../../domain/exceptions/plot-not-found/plot-not-found.exception';
-import { PlotEntity } from '../../../domain/entities/plot.entity';
 import {
   PLOTS_CACHE_REPOSITORY_TOKEN,
   PlotsCacheRepository,
