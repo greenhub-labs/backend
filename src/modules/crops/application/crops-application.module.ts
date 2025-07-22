@@ -19,8 +19,8 @@ import { GetCropsByPlotIdQueryHandler } from './queries/get-crops-by-plot-id/get
 import { NestjsEventBusService } from './services/nestjs-event-bus.service';
 
 /**
- * FarmsApplicationModule
- * Application layer for Farms (DDD Clean Architecture)
+ * CropsApplicationModule
+ * Application layer for Crops (DDD Clean Architecture)
  * Add more handlers and services as needed
  */
 @Module({
