@@ -8,7 +8,6 @@ import {
 } from '../../ports/token.service';
 import { RefreshTokenValueObject } from '../../../domain/value-objects/refresh-token/refresh-token.value-object';
 import { GetUserByIdQuery } from '../../../../users/application/queries/get-user-by-id/get-user-by-id.query';
-import { User } from '../../../../users/domain/entities/user.entity';
 import { AuthPayload } from '../../dtos/auth-payload.dto';
 import { UserDetailsResult } from 'src/modules/users/application/dtos/user-details.result';
 

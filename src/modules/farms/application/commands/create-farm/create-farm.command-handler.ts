@@ -5,14 +5,12 @@ import {
   FarmsRepository,
   FARMS_REPOSITORY_TOKEN,
 } from '../../ports/farms.repository';
-import { EventBus } from '../../ports/event-bus.service';
 import { FarmFactory } from '../../../domain/factories/farm.factory';
 import {
   FARMS_CACHE_REPOSITORY_TOKEN,
   FarmsCacheRepository,
 } from '../../ports/farms-cache.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
-import { FarmEntity } from 'src/modules/farms/domain/entities/farm.entity';
 import { FarmMembershipsRepository } from '../../ports/farm-memberships.repository';
 import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 import { FarmDetailsResult } from '../../dtos/farm-details.result';

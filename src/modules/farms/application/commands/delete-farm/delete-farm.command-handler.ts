@@ -11,7 +11,6 @@ import {
 } from '../../ports/farms-cache.repository';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
-import { FarmEntity } from 'src/modules/farms/domain/entities/farm.entity';
 
 /**
  * Command handler for DeleteFarmCommand

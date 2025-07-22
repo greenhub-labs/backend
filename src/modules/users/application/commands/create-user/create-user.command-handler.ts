@@ -12,7 +12,6 @@ import {
 } from '../../ports/user-cache.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { KafkaEventBusService } from '../../services/kafka-event-bus.service';
-import { User } from '../../../domain/entities/user.entity';
 import { UserDetails, UserDetailsResult } from '../../dtos/user-details.result';
 
 /**

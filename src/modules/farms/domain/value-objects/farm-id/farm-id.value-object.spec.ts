@@ -1,4 +1,3 @@
-import { FarmIdValueObject } from './farm-id.value-object';
 // TODO: Import exception if needed
 
 describe('FarmIdValueObject', () => {

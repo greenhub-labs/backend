@@ -2,7 +2,6 @@ import { UpdateFarmCommand } from './update-farm.command';
 import { UpdateFarmCommandHandler } from './update-farm.command-handler';
 import { FarmsRepository } from '../../ports/farms.repository';
 import { FarmsCacheRepository } from '../../ports/farms-cache.repository';
-import { EventBus } from '../../ports/event-bus.service';
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmNotFoundException } from '../../../domain/exceptions/farm-not-found/farm-not-found.exception';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';

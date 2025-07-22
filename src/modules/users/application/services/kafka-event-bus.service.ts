@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { EventBus } from '../ports/event-bus.service';
-import { DomainEvent } from 'src/shared/domain/events/domain-event.interface';
 import { KAFKA_CLIENT } from 'src/shared/infrastructure/providers/kafka/kafka.provider';
 import { Kafka } from 'kafkajs';
 

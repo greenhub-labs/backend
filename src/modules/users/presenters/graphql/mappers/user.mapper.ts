@@ -1,12 +1,5 @@
-import { User } from '../../../domain/entities/user.entity';
-import {
-  UserDetailsResult,
-  UserFarmMembership,
-} from '../../../application/dtos/user-details.result';
-import {
-  UserDetailsResponseDto,
-  UserFarmMembershipDto,
-} from '../dtos/responses/user.response.dto';
+import { UserDetailsResult } from '../../../application/dtos/user-details.result';
+import { UserDetailsResponseDto } from '../dtos/responses/user.response.dto';
 import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 export class UserMapper {

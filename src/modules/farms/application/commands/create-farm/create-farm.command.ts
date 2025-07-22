@@ -1,7 +1,6 @@
 /**
  * Command to create a new Farm
  */
-import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 
 export class CreateFarmCommand {
   /** Name of the farm */

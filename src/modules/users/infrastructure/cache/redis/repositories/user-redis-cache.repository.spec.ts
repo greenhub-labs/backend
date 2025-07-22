@@ -1,7 +1,6 @@
 import { UserRedisCacheRepository } from './user-redis-cache.repository';
 import { User } from '../../../../domain/entities/user.entity';
 import { UserRedisEntity } from '../entities/user-redis.entity';
-import Redis from 'ioredis';
 
 jest.mock('../entities/user-redis.entity');
 

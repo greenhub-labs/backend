@@ -9,9 +9,7 @@ import {
   UserCacheRepository,
   USER_CACHE_REPOSITORY_TOKEN,
 } from '../../ports/user-cache.repository';
-import { User } from '../../../domain/entities/user.entity';
 import { UserNotFoundException } from '../../../domain/exceptions/user-not-found/user-not-found.exception';
-import { FARM_MEMBERSHIP_ROLES } from 'src/shared/domain/constants/farm-membership-roles.constant';
 import { GetFarmsForUserQuery } from '../../../../farms/application/queries/get-farms-for-user/get-farms-for-user.query';
 import {
   UserDetailsResult,
