@@ -16,10 +16,7 @@ import { RestoreUserCommand } from '../../../application/commands/restore-user/r
 import { UserMapper } from '../mappers/user.mapper';
 
 // Auth guards and decorators
-import {
-  JwtAuthGuard,
-  Public,
-} from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
 
 /**
  * GraphQL resolver for User

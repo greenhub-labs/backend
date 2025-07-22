@@ -17,7 +17,6 @@ import {
 } from '../../ports/token.service';
 import { CreateUserCommand } from '../../../../users/application/commands/create-user/create-user.command';
 import { AuthPasswordValueObject } from '../../../domain/value-objects/auth-password/auth-password.value-object';
-import { User } from '../../../../users/domain/entities/user.entity';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import {
   AuthCacheRepository,

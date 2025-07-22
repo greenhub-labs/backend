@@ -1,5 +1,4 @@
 import { FarmEntity } from '../../domain/entities/farm.entity';
-import { FARM_MEMBERSHIP_ROLES } from '../../../../shared/domain/constants/farm-membership-roles.constant';
 
 /**
  * Port for the Farms repository (Dependency Inversion)

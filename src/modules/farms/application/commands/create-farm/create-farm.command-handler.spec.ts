@@ -1,7 +1,6 @@
 import { CreateFarmCommand } from './create-farm.command';
 import { CreateFarmCommandHandler } from './create-farm.command-handler';
 import { FarmsRepository } from '../../ports/farms.repository';
-import { EventBus } from '../../ports/event-bus.service';
 import { FarmFactory } from '../../../domain/factories/farm.factory';
 import { FarmEntity } from '../../../domain/entities/farm.entity';
 import { FarmsCacheRepository } from '../../ports/farms-cache.repository';

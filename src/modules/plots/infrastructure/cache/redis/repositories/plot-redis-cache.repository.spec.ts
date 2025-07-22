@@ -1,8 +1,8 @@
-import { PlotsRedisCacheRepository } from './plot-redis-cache.repository';
 import { PlotEntity } from '../../../../domain/entities/plot.entity';
 import { PlotRedisEntity } from '../entities/plot-redis.entity';
+import { PlotsRedisCacheRepository } from './plot-redis-cache.repository';
 
-jest.mock('../entities/plots-redis.entity');
+jest.mock('../entities/plot-redis.entity');
 
 describe('PlotsRedisCacheRepository', () => {
   let repository: PlotsRedisCacheRepository;
@@ -56,7 +56,7 @@ describe('PlotsRedisCacheRepository', () => {
     });
     it('should return empty map if keys is empty', async () => {
       const result = await repository.getMany([]);
-      expect(result.size).toBe(0);
+      expect(result.length).toBe(0);
     });
   });
 
