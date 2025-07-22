@@ -78,7 +78,7 @@ export class PlotResolver {
         farmId: input.farmId,
       }),
     );
-    return PlotMapper.fromDomain(result.plot);
+    return PlotMapper.fromDomain(result);
   }
 
   @Mutation(() => PlotResponseDto, {
@@ -102,7 +102,7 @@ export class PlotResolver {
         status: input.status,
       }),
     );
-    return PlotMapper.fromDomain(result.plot);
+    return PlotMapper.fromDomain(result);
   }
 
   @Mutation(() => Boolean, {

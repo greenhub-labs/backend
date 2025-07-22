@@ -1,3 +1,4 @@
+import { QueryBus } from '@nestjs/cqrs';
 import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
 import { PlotDimensionValueObject } from 'src/modules/plots/domain/value-objects/plot-dimension/plot-dimension.value-object';
@@ -8,6 +9,7 @@ import { PlotEntity } from '../../../domain/entities/plot.entity';
 import { PlotNotFoundException } from '../../../domain/exceptions/plot-not-found/plot-not-found.exception';
 import { PlotIdValueObject } from '../../../domain/value-objects/plot-id/plot-id.value-object';
 import { PlotNameValueObject } from '../../../domain/value-objects/plot-name/plot-name.value-object';
+import { PlotDetailsResult } from '../../dtos/plot-details.result';
 import { PlotsCacheRepository } from '../../ports/plots-cache.repository';
 import { PlotsRepository } from '../../ports/plots.repository';
 import { GetPlotByIdQuery } from './get-plot-by-id.query';
@@ -17,6 +19,8 @@ describe('GetPlotByIdQueryHandler', () => {
   let handler: GetPlotByIdQueryHandler;
   let plotsRepository: jest.Mocked<PlotsRepository>;
   let plotsCacheRepository: jest.Mocked<PlotsCacheRepository>;
+  let queryBus: jest.Mocked<QueryBus>;
+
   beforeEach(() => {
     plotsRepository = {
       findById: jest.fn(),
@@ -25,9 +29,13 @@ describe('GetPlotByIdQueryHandler', () => {
       get: jest.fn(),
       set: jest.fn(),
     } as any;
+    queryBus = {
+      execute: jest.fn(),
+    } as any;
     handler = new GetPlotByIdQueryHandler(
       plotsRepository,
       plotsCacheRepository,
+      queryBus,
     );
   });
 
@@ -49,14 +57,22 @@ describe('GetPlotByIdQueryHandler', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+
     plotsRepository.findById.mockResolvedValue(plot);
+    queryBus.execute.mockResolvedValue([]); // Mock empty crops array
+
     const result = await handler.execute(new GetPlotByIdQuery(uuid));
+
+    expect(result).toBeInstanceOf(PlotDetailsResult);
     expect(result.plot).toEqual(plot);
+    expect(result.crops).toEqual([]);
     expect(plotsRepository.findById).toHaveBeenCalledWith(uuid);
   });
 
   it('should throw PlotNotFoundException if not found', async () => {
     plotsRepository.findById.mockResolvedValue(null);
+    plotsCacheRepository.get.mockResolvedValue(null);
+
     await expect(
       handler.execute(new GetPlotByIdQuery('not-found')),
     ).rejects.toBeInstanceOf(PlotNotFoundException);

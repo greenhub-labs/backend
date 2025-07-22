@@ -1,3 +1,4 @@
+import { PlotDetailsResult } from 'src/modules/plots/application/dtos/plot-details.result';
 import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
 import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
 import { PlotEntity } from 'src/modules/plots/domain/entities/plot.entity';
@@ -32,7 +33,9 @@ describe('PlotMapper', () => {
         updatedAt: new Date('2023-01-02'),
       });
 
-      const result = PlotMapper.fromDomain(plot);
+      const plotDetails = new PlotDetailsResult(plot, []);
+
+      const result = PlotMapper.fromDomain(plotDetails);
 
       expect(result.id).toBe(validUuid);
       expect(result.name).toBe('Test Plot');
@@ -71,7 +74,9 @@ describe('PlotMapper', () => {
         updatedAt: new Date('2023-01-02'),
       });
 
-      const result = PlotMapper.fromDomain(plot);
+      const plotDetails = new PlotDetailsResult(plot, []);
+
+      const result = PlotMapper.fromDomain(plotDetails);
 
       expect(result.id).toBe(validUuid);
       expect(result.name).toBe('Test Plot');
@@ -106,7 +111,9 @@ describe('PlotMapper', () => {
         deletedAt: new Date('2023-01-03'),
       });
 
-      const result = PlotMapper.fromDomain(plot);
+      const plotDetails = new PlotDetailsResult(plot, []);
+
+      const result = PlotMapper.fromDomain(plotDetails);
 
       expect(result.id).toBe(validUuid);
       expect(result.name).toBe('Test Plot');
@@ -130,7 +137,9 @@ describe('PlotMapper', () => {
         updatedAt: new Date('2023-01-02'),
       });
 
-      const result = PlotMapper.fromDomain(plot);
+      const plotDetails = new PlotDetailsResult(plot, []);
+
+      const result = PlotMapper.fromDomain(plotDetails);
 
       expect(result.dimensions.unitMeasurement).toBe(UNIT_MEASUREMENT.FEET);
       expect(result.dimensions.unitMeasurementCategory).toBe('IMPERIAL');
