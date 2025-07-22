@@ -1,3 +1,5 @@
+import { CROP_PLANTING_METHODS } from '../constants/crop-planting-methods.constant';
+import { CROP_STATUS } from '../constants/crop-status.constant';
 import { CropEntity } from '../entities/crop.entity';
 import { CropIdValueObject } from '../value-objects/crop-id/crop-id.value-object';
 import { CropPlantingMethodValueObject } from '../value-objects/crop-planting-method/crop-planting-method.value-object';
@@ -22,8 +24,8 @@ describe('CropsFactory', () => {
       expectedHarvest: new Date(),
       actualHarvest: new Date(),
       quantity: 100,
-      status: 'Test Status',
-      plantingMethod: 'Test Planting Method',
+      status: CROP_STATUS.PLANTED,
+      plantingMethod: CROP_PLANTING_METHODS.DIRECT_SEED,
       notes: 'Test Notes',
     });
     expect(entity).toBeInstanceOf(CropEntity);
@@ -50,8 +52,8 @@ describe('CropsFactory', () => {
       expectedHarvest: new Date(),
       actualHarvest: new Date(),
       quantity: 100,
-      status: 'Test Status',
-      plantingMethod: 'Test Planting Method',
+      status: CROP_STATUS.PLANTED,
+      plantingMethod: CROP_PLANTING_METHODS.DIRECT_SEED,
       notes: 'Test Notes',
     });
     expect(entity.id.value).toBe(uuid);
@@ -75,8 +77,8 @@ describe('CropsFactory', () => {
       expectedHarvest: new Date().toISOString(),
       actualHarvest: new Date().toISOString(),
       quantity: 100,
-      status: 'Test Status',
-      plantingMethod: 'Test Planting Method',
+      status: CROP_STATUS.PLANTED,
+      plantingMethod: CROP_PLANTING_METHODS.DIRECT_SEED,
       notes: 'Test Notes',
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),

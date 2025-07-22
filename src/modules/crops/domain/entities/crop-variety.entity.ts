@@ -183,6 +183,7 @@ export class CropVarietyEntity {
       createdAt: this._createdAt,
       updatedAt: new Date(),
       deletedAt: this._deletedAt,
+      emitEvent: false,
     });
     updated.addDomainEvent(
       new CropVarietyUpdatedDomainEvent({
@@ -224,6 +225,7 @@ export class CropVarietyEntity {
       createdAt: this._createdAt,
       updatedAt: new Date(),
       deletedAt: new Date(),
+      emitEvent: false,
     });
     deleted.addDomainEvent(
       new CropVarietyDeletedDomainEvent({

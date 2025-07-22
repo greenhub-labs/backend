@@ -240,6 +240,7 @@ export class CropEntity {
       createdAt: this._createdAt,
       updatedAt: new Date(),
       deletedAt: this._deletedAt,
+      emitEvent: false,
     });
     updatedCrop.addDomainEvent(
       new CropUpdatedDomainEvent({
@@ -283,6 +284,7 @@ export class CropEntity {
       createdAt: this._createdAt,
       updatedAt: new Date(),
       deletedAt: new Date(),
+      emitEvent: false,
     });
     deletedCrop.addDomainEvent(
       new CropDeletedDomainEvent({
