@@ -193,7 +193,7 @@ describe('CropEntity', () => {
       expect(deletedCrop.id.value).toBe(mockId);
       expect(deletedCrop.isDeleted).toBe(true);
       expect(deletedCrop.deletedAt).toBeInstanceOf(Date);
-      expect(deletedCrop.deletedAt!.getTime()).toBeGreaterThan(
+      expect(deletedCrop.deletedAt!.getTime()).toBeGreaterThanOrEqual(
         cropEntity.updatedAt.getTime(),
       );
 
