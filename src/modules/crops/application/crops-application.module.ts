@@ -41,7 +41,6 @@ import { NestjsEventBusService } from './services/nestjs-event-bus.service';
     GetAllCropsVarietiesQueryHandler,
     GetCropVarietyByScientificNameQueryHandler,
     NestjsEventBusService,
-    // FarmsCreatedIntegrationEventHandler,
   ],
   exports: [
     CreateCropCommandHandler,
