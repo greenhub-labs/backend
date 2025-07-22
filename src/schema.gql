@@ -263,6 +263,9 @@ type Query {
   """Get a crop variety by ID"""
   getCropVarietyById(id: String!): CropVarietyResponseDto!
 
+  """Get a crop variety by its scientific name"""
+  getCropVarietyByScientificName(input: GetCropVarietyByScientificNameRequestDto!): CropVarietyResponseDto!
+
   """Get all crop varieties"""
   getAllCropVarieties: [CropVarietyResponseDto!]!
 }
@@ -288,6 +291,11 @@ input GetPlotsByFarmIdRequestDto {
 input GetCropByIdRequestDto {
   """Crop unique identifier"""
   cropId: String!
+}
+
+input GetCropVarietyByScientificNameRequestDto {
+  """Scientific name of the crop variety"""
+  scientificName: String!
 }
 
 type Mutation {

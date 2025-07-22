@@ -78,4 +78,23 @@ export class CropVarietyPrismaRepository implements CropVarietyRepository {
       data: { deletedAt: new Date() },
     });
   }
+
+  /**
+   * Finds a crop variety by its scientific name
+   * @param scientificName - The scientific name
+   * @returns The crop variety entity or null if not found
+   */
+  async findByScientificName(
+    scientificName: string,
+  ): Promise<CropVarietyEntity | null> {
+    this.logger.debug(
+      'Finding crop variety by scientific name',
+      scientificName,
+    );
+    const cropVariety = await this.prisma.cropVariety.findFirst({
+      where: { scientificName, deletedAt: null },
+    });
+    if (!cropVariety) return null;
+    return CropVarietyPrismaEntity.fromPrisma(cropVariety);
+  }
 }

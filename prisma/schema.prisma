@@ -551,7 +551,7 @@ model CropVariety {
   /// Nombre común de la variedad
   name              String
   /// Nombre científico (ej: Solanum lycopersicum)
-  scientificName    String?
+  scientificName    String? @unique
   /// Categoría del cultivo
   type              CropType
   /// Descripción detallada de la variedad
@@ -595,6 +595,7 @@ model CropVariety {
   /// Cultivos que usan esta variedad
   crops Crop[]
   
+  @@index([scientificName])
   @@map("crop_varieties")
 }
 

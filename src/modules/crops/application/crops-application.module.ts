@@ -14,6 +14,7 @@ import { GetAllCropsVarietiesQueryHandler } from './queries/get-all-crops-variet
 import { GetAllCropsQueryHandler } from './queries/get-all-crops/get-all-crops.query-handler';
 import { GetCropByIdQueryHandler } from './queries/get-crop-by-id/get-crop-by-id.query-handler';
 import { GetCropVarietyByIdQueryHandler } from './queries/get-crop-variety-by-id/get-crop-variety-by-id.query-handler';
+import { GetCropVarietyByScientificNameQueryHandler } from './queries/get-crop-variety-by-scientific-name/get-crop-variety-by-scientific-name.query-handler';
 import { GetCropsByPlotIdQueryHandler } from './queries/get-crops-by-plot-id/get-crops-by-plot-id.query-handler';
 import { NestjsEventBusService } from './services/nestjs-event-bus.service';
 
@@ -38,6 +39,7 @@ import { NestjsEventBusService } from './services/nestjs-event-bus.service';
     DeleteCropVarietyCommandHandler,
     GetCropVarietyByIdQueryHandler,
     GetAllCropsVarietiesQueryHandler,
+    GetCropVarietyByScientificNameQueryHandler,
     NestjsEventBusService,
     // FarmsCreatedIntegrationEventHandler,
   ],
@@ -55,6 +57,7 @@ import { NestjsEventBusService } from './services/nestjs-event-bus.service';
     DeleteCropVarietyCommandHandler,
     GetCropVarietyByIdQueryHandler,
     GetAllCropsVarietiesQueryHandler,
+    GetCropVarietyByScientificNameQueryHandler,
     NestjsEventBusService,
   ],
 })

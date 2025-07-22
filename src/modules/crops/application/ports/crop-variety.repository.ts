@@ -35,6 +35,15 @@ export interface CropVarietyRepository {
    * @param id - The CropVariety ID (as string)
    */
   delete(id: string): Promise<void>;
+
+  /**
+   * Finds a CropVariety entity by its scientific name
+   * @param scientificName - The scientific name of the CropVariety
+   * @returns The CropVariety entity or null if not found
+   */
+  findByScientificName(
+    scientificName: string,
+  ): Promise<CropVarietyEntity | null>;
 }
 
 /**
