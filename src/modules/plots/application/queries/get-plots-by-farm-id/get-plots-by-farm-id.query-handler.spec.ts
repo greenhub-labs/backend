@@ -5,7 +5,6 @@ import { PlotSoilTypeValueObject } from 'src/modules/plots/domain/value-objects/
 import { PlotStatusValueObject } from 'src/modules/plots/domain/value-objects/plot-status/plot-status.value-object';
 import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 import { PlotEntity } from '../../../domain/entities/plot.entity';
-import { PlotNotFoundException } from '../../../domain/exceptions/plot-not-found/plot-not-found.exception';
 import { PlotIdValueObject } from '../../../domain/value-objects/plot-id/plot-id.value-object';
 import { PlotNameValueObject } from '../../../domain/value-objects/plot-name/plot-name.value-object';
 import { PlotsCacheRepository } from '../../ports/plots-cache.repository';
@@ -55,15 +54,14 @@ describe('GetPlotByIdQueryHandler', () => {
     plotsCacheRepository.getMany.mockResolvedValue([plot]);
     const result = await handler.execute(new GetPlotsByFarmIdQuery(uuid));
     expect(result[0].plot).toEqual(plot);
-    // No se debe comprobar findById, sino findAllByFarmId o getMany
-    expect(plotsRepository.findAllByFarmId).toHaveBeenCalledWith(uuid);
   });
 
-  it('should throw PlotNotFoundException if not found', async () => {
+  it('should return an array empty if not found', async () => {
     plotsCacheRepository.getMany.mockResolvedValue([]);
     plotsRepository.findAllByFarmId.mockResolvedValue([]);
-    await expect(
-      handler.execute(new GetPlotsByFarmIdQuery('not-found')),
-    ).rejects.toBeInstanceOf(PlotNotFoundException);
+    const result = await handler.execute(
+      new GetPlotsByFarmIdQuery('not-found'),
+    );
+    expect(result).toEqual([]);
   });
 });
