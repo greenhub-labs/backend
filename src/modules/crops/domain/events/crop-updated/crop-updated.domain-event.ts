@@ -40,8 +40,6 @@ export class CropUpdatedDomainEvent implements DomainEvent {
     eventId: string;
     aggregateId: string;
     occurredAt: string;
-    plotId: string;
-    varietyId: string;
     plantingDate?: string;
     expectedHarvest?: string;
     actualHarvest?: string;
@@ -53,8 +51,6 @@ export class CropUpdatedDomainEvent implements DomainEvent {
     this.eventId = params.eventId;
     this.aggregateId = params.aggregateId;
     this.occurredAt = params.occurredAt;
-    this.plotId = params.plotId;
-    this.varietyId = params.varietyId;
     this.plantingDate = params.plantingDate;
     this.expectedHarvest = params.expectedHarvest;
     this.actualHarvest = params.actualHarvest;

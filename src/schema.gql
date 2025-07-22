@@ -548,12 +548,6 @@ input UpdateCropRequestDto {
   """Crop unique identifier"""
   id: String!
 
-  """Plot ID where the crop is planted"""
-  plotId: String
-
-  """Crop variety ID"""
-  varietyId: String
-
   """Actual planting date"""
   plantingDate: String
 

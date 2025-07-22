@@ -47,8 +47,6 @@ export class UpdateCropCommandHandler
     }
     // 2. Update the crop entity
     const updatedCrop = crop.update({
-      plotId: command.plotId,
-      varietyId: command.varietyId,
       plantingDate: command.plantingDate,
       expectedHarvest: command.expectedHarvest,
       actualHarvest: command.actualHarvest,

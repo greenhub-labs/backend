@@ -18,19 +18,6 @@ export class UpdateCropRequestDto {
   @IsUUID()
   id: string;
 
-  @Field(() => String, {
-    description: 'Plot ID where the crop is planted',
-    nullable: true,
-  })
-  @IsOptional()
-  @IsUUID()
-  plotId?: string;
-
-  @Field(() => String, { description: 'Crop variety ID', nullable: true })
-  @IsOptional()
-  @IsUUID()
-  varietyId?: string;
-
   @Field(() => String, { description: 'Actual planting date', nullable: true })
   @IsOptional()
   @IsDateString()

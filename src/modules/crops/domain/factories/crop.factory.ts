@@ -3,7 +3,10 @@ import { randomUUID } from 'crypto';
 import { CROP_PLANTING_METHODS } from '../constants/crop-planting-methods.constant';
 import { CROP_STATUS } from '../constants/crop-status.constant';
 import { CropEntity } from '../entities/crop.entity';
+import { CropActualHarvestDateValueObject } from '../value-objects/crop-actual-harvest-date/crop-actual-harvest-date.value-object';
+import { CropExpectedHarvestDateValueObject } from '../value-objects/crop-expected-harvest-date/crop-expected-harvest-date.value-object';
 import { CropIdValueObject } from '../value-objects/crop-id/crop-id.value-object';
+import { CropPlantingDateValueObject } from '../value-objects/crop-planting-date/crop-planting-date.value-object';
 import { CropPlantingMethodValueObject } from '../value-objects/crop-planting-method/crop-planting-method.value-object';
 import { CropStatusValueObject } from '../value-objects/crop-status/crop-status.value-object';
 
@@ -34,9 +37,11 @@ export class CropFactory {
       id: new CropIdValueObject(randomUUID()),
       plotId: data.plotId,
       varietyId: data.varietyId,
-      plantingDate: data.plantingDate,
-      expectedHarvest: data.expectedHarvest,
-      actualHarvest: data.actualHarvest,
+      plantingDate: new CropPlantingDateValueObject(data.plantingDate),
+      expectedHarvest: new CropExpectedHarvestDateValueObject(
+        data.expectedHarvest,
+      ),
+      actualHarvest: new CropActualHarvestDateValueObject(data.actualHarvest),
       quantity: data.quantity,
       status: data.status
         ? new CropStatusValueObject(data.status)
@@ -74,9 +79,15 @@ export class CropFactory {
       id: new CropIdValueObject(primitives.id),
       plotId: primitives.plotId,
       varietyId: primitives.varietyId,
-      plantingDate: new Date(primitives.plantingDate),
-      expectedHarvest: new Date(primitives.expectedHarvest),
-      actualHarvest: new Date(primitives.actualHarvest),
+      plantingDate: new CropPlantingDateValueObject(
+        new Date(primitives.plantingDate),
+      ),
+      expectedHarvest: new CropExpectedHarvestDateValueObject(
+        new Date(primitives.expectedHarvest),
+      ),
+      actualHarvest: new CropActualHarvestDateValueObject(
+        new Date(primitives.actualHarvest),
+      ),
       quantity: primitives.quantity,
       status: new CropStatusValueObject(primitives.status),
       plantingMethod: new CropPlantingMethodValueObject(

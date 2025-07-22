@@ -9,6 +9,7 @@ export class CropMapper {
     cropVariety: CropVarietyEntity;
   }): CropResponseDto {
     const { crop, cropVariety } = entity;
+
     return {
       id: crop.id.value,
       plotId: crop.plotId,
@@ -29,7 +30,10 @@ export class CropMapper {
     };
   }
 
-  static fromEntity(crop: CropEntity, cropVariety?: any): CropResponseDto {
+  static fromEntity(
+    crop: CropEntity,
+    cropVariety?: CropVarietyEntity,
+  ): CropResponseDto {
     return {
       id: crop.id.value,
       plotId: crop.plotId,

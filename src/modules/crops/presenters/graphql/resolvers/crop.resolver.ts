@@ -33,7 +33,7 @@ export class CropResolver {
     const result = await this.queryBus.execute(
       new GetCropByIdQuery(input.cropId),
     );
-    return CropMapper.fromDomain(result.crop);
+    return CropMapper.fromDomain(result);
   }
 
   @Query(() => [CropResponseDto], {
@@ -42,7 +42,7 @@ export class CropResolver {
   })
   async getAllCrops(): Promise<CropResponseDto[]> {
     const results = await this.queryBus.execute(new GetAllCropsQuery());
-    return results.map((result) => CropMapper.fromDomain(result.crop));
+    return results.map((result) => CropMapper.fromDomain(result));
   }
 
   @Query(() => [CropResponseDto], {
@@ -55,7 +55,7 @@ export class CropResolver {
     const results = await this.queryBus.execute(
       new GetCropsByPlotIdQuery(plotId),
     );
-    return results.map((result) => CropMapper.fromDomain(result.crop));
+    return results.map((result) => CropMapper.fromDomain(result));
   }
 
   @Mutation(() => CropResponseDto, {
@@ -84,7 +84,7 @@ export class CropResolver {
         notes: input.notes,
       }),
     );
-    return CropMapper.fromDomain(result.crop);
+    return CropMapper.fromDomain(result);
   }
 
   @Mutation(() => CropResponseDto, {
@@ -97,8 +97,6 @@ export class CropResolver {
     const result = await this.commandBus.execute(
       new UpdateCropCommand({
         id: input.id,
-        plotId: input.plotId,
-        varietyId: input.varietyId,
         plantingDate: input.plantingDate
           ? new Date(input.plantingDate)
           : undefined,
@@ -114,7 +112,7 @@ export class CropResolver {
         notes: input.notes,
       }),
     );
-    return CropMapper.fromDomain(result.crop);
+    return CropMapper.fromDomain(result);
   }
 
   @Mutation(() => Boolean, {

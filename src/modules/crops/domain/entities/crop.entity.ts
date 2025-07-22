@@ -3,7 +3,10 @@ import { CropCreatedDomainEvent } from '../events/crop-created/crop-created.doma
 import { CropDeletedDomainEvent } from '../events/crop-deleted/crop-deleted.domain-event';
 import { CropUpdatedDomainEvent } from '../events/crop-updated/crop-updated.domain-event';
 import { CropPrimitive } from '../primitives/crop.primitive';
+import { CropActualHarvestDateValueObject } from '../value-objects/crop-actual-harvest-date/crop-actual-harvest-date.value-object';
+import { CropExpectedHarvestDateValueObject } from '../value-objects/crop-expected-harvest-date/crop-expected-harvest-date.value-object';
 import { CropIdValueObject } from '../value-objects/crop-id/crop-id.value-object';
+import { CropPlantingDateValueObject } from '../value-objects/crop-planting-date/crop-planting-date.value-object';
 import { CropPlantingMethodValueObject } from '../value-objects/crop-planting-method/crop-planting-method.value-object';
 import { CropStatusValueObject } from '../value-objects/crop-status/crop-status.value-object';
 
@@ -18,11 +21,11 @@ export class CropEntity {
   /** Variety ID */
   private readonly _varietyId: string;
   /** Planting date */
-  private readonly _plantingDate: Date;
+  private readonly _plantingDate: CropPlantingDateValueObject;
   /** Expected harvest */
-  private readonly _expectedHarvest: Date;
+  private readonly _expectedHarvest: CropExpectedHarvestDateValueObject;
   /** Actual harvest */
-  private readonly _actualHarvest: Date;
+  private readonly _actualHarvest: CropActualHarvestDateValueObject;
   /** Quantity */
   private readonly _quantity: number;
   /** Status of the crop */
@@ -51,9 +54,9 @@ export class CropEntity {
     id: CropIdValueObject;
     plotId: string;
     varietyId: string;
-    plantingDate: Date;
-    expectedHarvest: Date;
-    actualHarvest: Date;
+    plantingDate: CropPlantingDateValueObject;
+    expectedHarvest: CropExpectedHarvestDateValueObject;
+    actualHarvest: CropActualHarvestDateValueObject;
     quantity: number;
     status: CropStatusValueObject;
     plantingMethod?: CropPlantingMethodValueObject;
@@ -66,9 +69,9 @@ export class CropEntity {
     this._id = params.id;
     this._plotId = params.plotId;
     this._varietyId = params.varietyId;
-    this._plantingDate = params.plantingDate ?? undefined;
-    this._expectedHarvest = params.expectedHarvest ?? undefined;
-    this._actualHarvest = params.actualHarvest ?? undefined;
+    this._plantingDate = params.plantingDate;
+    this._expectedHarvest = params.expectedHarvest;
+    this._actualHarvest = params.actualHarvest;
     this._quantity = params.quantity;
     this._status = params.status;
     this._plantingMethod = params.plantingMethod;
@@ -121,21 +124,21 @@ export class CropEntity {
   /**
    * Gets the planting date
    */
-  get plantingDate(): Date {
+  get plantingDate(): CropPlantingDateValueObject {
     return this._plantingDate;
   }
 
   /**
    * Gets the expected harvest
    */
-  get expectedHarvest(): Date {
+  get expectedHarvest(): CropExpectedHarvestDateValueObject {
     return this._expectedHarvest;
   }
 
   /**
    * Gets the actual harvest
    */
-  get actualHarvest(): Date {
+  get actualHarvest(): CropActualHarvestDateValueObject {
     return this._actualHarvest;
   }
 
@@ -217,9 +220,15 @@ export class CropEntity {
       id: this._id,
       plotId: data.plotId ?? this._plotId,
       varietyId: data.varietyId ?? this._varietyId,
-      plantingDate: data.plantingDate ?? this._plantingDate,
-      expectedHarvest: data.expectedHarvest ?? this._expectedHarvest,
-      actualHarvest: data.actualHarvest ?? this._actualHarvest,
+      plantingDate: data.plantingDate
+        ? new CropPlantingDateValueObject(data.plantingDate)
+        : this._plantingDate,
+      expectedHarvest: data.expectedHarvest
+        ? new CropExpectedHarvestDateValueObject(data.expectedHarvest)
+        : this._expectedHarvest,
+      actualHarvest: data.actualHarvest
+        ? new CropActualHarvestDateValueObject(data.actualHarvest)
+        : this._actualHarvest,
       quantity: data.quantity ?? this._quantity,
       status: data.status
         ? new CropStatusValueObject(data.status)
@@ -237,11 +246,15 @@ export class CropEntity {
         eventId: crypto.randomUUID(),
         aggregateId: updatedCrop._id.value,
         occurredAt: updatedCrop._updatedAt.toISOString(),
-        plotId: updatedCrop.plotId,
-        varietyId: updatedCrop.varietyId,
-        plantingDate: updatedCrop._plantingDate.toISOString(),
-        expectedHarvest: updatedCrop._expectedHarvest.toISOString(),
-        actualHarvest: updatedCrop._actualHarvest.toISOString(),
+        plantingDate: updatedCrop._plantingDate
+          ? updatedCrop._plantingDate.toISOString()
+          : undefined,
+        expectedHarvest: updatedCrop._expectedHarvest
+          ? updatedCrop._expectedHarvest.toISOString()
+          : undefined,
+        actualHarvest: updatedCrop._actualHarvest
+          ? updatedCrop._actualHarvest.toISOString()
+          : undefined,
         quantity: updatedCrop._quantity,
         status: updatedCrop._status.value,
         plantingMethod: updatedCrop._plantingMethod?.value,

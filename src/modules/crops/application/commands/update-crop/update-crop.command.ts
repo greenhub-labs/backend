@@ -14,10 +14,6 @@
 export class UpdateCropCommand {
   /** Crop unique identifier */
   readonly id: string;
-  /** Plot where the crop is planted */
-  readonly plotId?: string;
-  /** Crop variety */
-  readonly varietyId?: string;
   /** Actual planting date */
   readonly plantingDate?: Date;
   /** Expected harvest date */
@@ -35,8 +31,6 @@ export class UpdateCropCommand {
 
   constructor(params: {
     id: string;
-    plotId?: string;
-    varietyId?: string;
     plantingDate?: Date;
     expectedHarvest?: Date;
     actualHarvest?: Date;
@@ -46,8 +40,6 @@ export class UpdateCropCommand {
     notes?: string;
   }) {
     this.id = params.id;
-    this.plotId = params.plotId;
-    this.varietyId = params.varietyId;
     this.plantingDate = params.plantingDate;
     this.expectedHarvest = params.expectedHarvest;
     this.actualHarvest = params.actualHarvest;
