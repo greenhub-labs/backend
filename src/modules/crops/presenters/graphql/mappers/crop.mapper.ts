@@ -1,10 +1,13 @@
-import { CropDetailsResult } from 'src/modules/crops/application/dtos/crop-details.result';
+import { CropVarietyEntity } from 'src/modules/crops/domain/entities/crop-variety.entity';
 import { CropEntity } from 'src/modules/crops/domain/entities/crop.entity';
 import { CropResponseDto } from '../dtos/responses/crop.response.dto';
 import { CropVarietyMapper } from './crop-variety.mapper';
 
 export class CropMapper {
-  static fromDomain(entity: CropDetailsResult): CropResponseDto {
+  static fromDomain(entity: {
+    crop: CropEntity;
+    cropVariety: CropVarietyEntity;
+  }): CropResponseDto {
     const { crop, cropVariety } = entity;
     return {
       id: crop.id.value,

@@ -1,4 +1,4 @@
-import { CropEntity } from 'src/modules/crops/domain/entities/crop.entity';
+import { CropDetailsResult } from '../../../crops/application/dtos/crop-details.result';
 import { PlotEntity } from '../../domain/entities/plot.entity';
 
 /**
@@ -7,7 +7,7 @@ import { PlotEntity } from '../../domain/entities/plot.entity';
 export class PlotDetailsResult {
   constructor(
     public readonly plot: PlotEntity,
-    public readonly crops: CropEntity[] = [],
+    public readonly crops: CropDetailsResult[] = [],
     // Future: plots, configuration, sensors, etc.
   ) {}
 }

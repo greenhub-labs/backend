@@ -38,7 +38,14 @@ export class PlotMapper {
       createdAt: plot.createdAt,
       updatedAt: plot.updatedAt,
       deletedAt: plot.deletedAt,
-      crops: crops ? crops.map(CropMapper.fromDomain) : [],
+      crops: crops
+        ? crops.map((cropDetails) =>
+            CropMapper.fromDomain({
+              crop: cropDetails.crop,
+              cropVariety: cropDetails.cropVariety,
+            }),
+          )
+        : [],
     };
   }
 }
