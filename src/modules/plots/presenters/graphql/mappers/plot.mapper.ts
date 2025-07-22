@@ -16,7 +16,6 @@ export class PlotMapper {
    */
   static fromDomain(plotDetails: PlotDetailsResult): PlotResponseDto {
     const { plot, crops } = plotDetails;
-    console.log(JSON.stringify(plotDetails, null, 2));
     return {
       id: plot.id.value,
       name: plot.name.value,

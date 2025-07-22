@@ -19,7 +19,6 @@ describe('CropPrismaEntity', () => {
       updatedAt: new Date(),
     } as unknown as CropEntity;
     const prisma = CropPrismaEntity.toPrismaCreate(entity);
-    console.log(prisma);
     const domain = CropPrismaEntity.fromPrisma(prisma);
     expect(domain).toEqual(entity);
   });
