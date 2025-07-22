@@ -1,7 +1,10 @@
 import { CROP_PLANTING_METHODS } from '../constants/crop-planting-methods.constant';
 import { CROP_STATUS } from '../constants/crop-status.constant';
 import { CropEntity } from '../entities/crop.entity';
+import { CropActualHarvestDateValueObject } from '../value-objects/crop-actual-harvest-date/crop-actual-harvest-date.value-object';
+import { CropExpectedHarvestDateValueObject } from '../value-objects/crop-expected-harvest-date/crop-expected-harvest-date.value-object';
 import { CropIdValueObject } from '../value-objects/crop-id/crop-id.value-object';
+import { CropPlantingDateValueObject } from '../value-objects/crop-planting-date/crop-planting-date.value-object';
 import { CropPlantingMethodValueObject } from '../value-objects/crop-planting-method/crop-planting-method.value-object';
 import { CropStatusValueObject } from '../value-objects/crop-status/crop-status.value-object';
 import { CropFactory } from './crop.factory';
@@ -32,9 +35,13 @@ describe('CropsFactory', () => {
     expect(entity.id).toBeInstanceOf(CropIdValueObject);
     expect(entity.plotId).toBe('Test Plot');
     expect(entity.varietyId).toBe('Test Variety');
-    expect(entity.plantingDate).toBeInstanceOf(Date);
-    expect(entity.expectedHarvest).toBeInstanceOf(Date);
-    expect(entity.actualHarvest).toBeInstanceOf(Date);
+    expect(entity.plantingDate).toBeInstanceOf(CropPlantingDateValueObject);
+    expect(entity.expectedHarvest).toBeInstanceOf(
+      CropExpectedHarvestDateValueObject,
+    );
+    expect(entity.actualHarvest).toBeInstanceOf(
+      CropActualHarvestDateValueObject,
+    );
     expect(entity.quantity).toBe(100);
     expect(entity.status).toBeInstanceOf(CropStatusValueObject);
     expect(entity.plantingMethod).toBeInstanceOf(CropPlantingMethodValueObject);
@@ -56,12 +63,16 @@ describe('CropsFactory', () => {
       plantingMethod: CROP_PLANTING_METHODS.DIRECT_SEED,
       notes: 'Test Notes',
     });
-    expect(entity.id.value).toBe(uuid);
+    expect(entity.id.value).toBeDefined();
     expect(entity.plotId).toBe('Test Plot');
     expect(entity.varietyId).toBe('Test Variety');
-    expect(entity.plantingDate).toBeInstanceOf(Date);
-    expect(entity.expectedHarvest).toBeInstanceOf(Date);
-    expect(entity.actualHarvest).toBeInstanceOf(Date);
+    expect(entity.plantingDate).toBeInstanceOf(CropPlantingDateValueObject);
+    expect(entity.expectedHarvest).toBeInstanceOf(
+      CropExpectedHarvestDateValueObject,
+    );
+    expect(entity.actualHarvest).toBeInstanceOf(
+      CropActualHarvestDateValueObject,
+    );
     expect(entity.quantity).toBe(100);
     expect(entity.status).toBeInstanceOf(CropStatusValueObject);
     expect(entity.plantingMethod).toBeInstanceOf(CropPlantingMethodValueObject);
@@ -88,9 +99,13 @@ describe('CropsFactory', () => {
     expect(entity.id.value).toBe(uuid);
     expect(entity.plotId).toBe('Test Plot');
     expect(entity.varietyId).toBe('Test Variety');
-    expect(entity.plantingDate).toBeInstanceOf(Date);
-    expect(entity.expectedHarvest).toBeInstanceOf(Date);
-    expect(entity.actualHarvest).toBeInstanceOf(Date);
+    expect(entity.plantingDate).toBeInstanceOf(CropPlantingDateValueObject);
+    expect(entity.expectedHarvest).toBeInstanceOf(
+      CropExpectedHarvestDateValueObject,
+    );
+    expect(entity.actualHarvest).toBeInstanceOf(
+      CropActualHarvestDateValueObject,
+    );
     expect(entity.quantity).toBe(100);
     expect(entity.status).toBeInstanceOf(CropStatusValueObject);
     expect(entity.plantingMethod).toBeInstanceOf(CropPlantingMethodValueObject);

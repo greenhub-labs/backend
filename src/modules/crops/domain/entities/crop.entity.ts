@@ -247,15 +247,11 @@ export class CropEntity {
         eventId: crypto.randomUUID(),
         aggregateId: updatedCrop._id.value,
         occurredAt: updatedCrop._updatedAt.toISOString(),
-        plantingDate: updatedCrop._plantingDate
-          ? updatedCrop._plantingDate.toISOString()
-          : undefined,
-        expectedHarvest: updatedCrop._expectedHarvest
-          ? updatedCrop._expectedHarvest.toISOString()
-          : undefined,
-        actualHarvest: updatedCrop._actualHarvest
-          ? updatedCrop._actualHarvest.toISOString()
-          : undefined,
+        plotId: updatedCrop._plotId,
+        varietyId: updatedCrop._varietyId,
+        plantingDate: updatedCrop._plantingDate?.value,
+        expectedHarvest: updatedCrop._expectedHarvest?.value,
+        actualHarvest: updatedCrop._actualHarvest?.value,
         quantity: updatedCrop._quantity,
         status: updatedCrop._status.value,
         plantingMethod: updatedCrop._plantingMethod?.value,

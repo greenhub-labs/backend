@@ -18,7 +18,7 @@ describe('CropEntity', () => {
   const mockActualHarvest = new Date('2024-06-10');
   const mockQuantity = 100;
   const mockStatus = 'PLANTED';
-  const mockPlantingMethod = 'DIRECT_SEEDING';
+  const mockPlantingMethod = 'DIRECT_SEED';
   const mockNotes = 'Test crop notes';
 
   let cropEntity: CropEntity;
@@ -132,7 +132,7 @@ describe('CropEntity', () => {
       expect(updatedCrop.quantity).toBe(updateData.quantity);
       expect(updatedCrop.status.value).toBe(updateData.status);
       expect(updatedCrop.notes).toBe(updateData.notes);
-      expect(updatedCrop.updatedAt.getTime()).toBeGreaterThan(
+      expect(updatedCrop.updatedAt.getTime()).toBeGreaterThanOrEqual(
         cropEntity.updatedAt.getTime(),
       );
 

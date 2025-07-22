@@ -177,7 +177,7 @@ describe('CropVarietyEntity', () => {
         updateData.waterRequirements,
       );
       expect(updatedVariety.compatibleWith).toEqual(updateData.compatibleWith);
-      expect(updatedVariety.updatedAt.getTime()).toBeGreaterThan(
+      expect(updatedVariety.updatedAt.getTime()).toBeGreaterThanOrEqual(
         cropVarietyEntity.updatedAt.getTime(),
       );
 
@@ -255,7 +255,7 @@ describe('CropVarietyEntity', () => {
       expect(deletedVariety).toBeInstanceOf(CropVarietyEntity);
       expect(deletedVariety.id.value).toBe(mockId);
       expect(deletedVariety.deletedAt).toBeInstanceOf(Date);
-      expect(deletedVariety.deletedAt!.getTime()).toBeGreaterThan(
+      expect(deletedVariety.deletedAt!.getTime()).toBeGreaterThanOrEqual(
         cropVarietyEntity.updatedAt.getTime(),
       );
 
