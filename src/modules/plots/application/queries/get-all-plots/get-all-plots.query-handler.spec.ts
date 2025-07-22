@@ -1,13 +1,16 @@
-import { GetAllPlotsQueryHandler } from './get-all-plots.query-handler';
-import { GetAllPlotsQuery } from './get-all-plots.query';
-import { PlotsRepository } from '../../ports/plots.repository';
+import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
+import { PLOT_STATUS } from 'src/modules/plots/domain/constants/plot-status.constant';
+import { PlotDimensionValueObject } from 'src/modules/plots/domain/value-objects/plot-dimension/plot-dimension.value-object';
+import { PlotSoilTypeValueObject } from 'src/modules/plots/domain/value-objects/plot-soil-type/plot-soil-type.value-object';
+import { PlotStatusValueObject } from 'src/modules/plots/domain/value-objects/plot-status/plot-status.value-object';
+import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 import { PlotEntity } from '../../../domain/entities/plot.entity';
 import { PlotIdValueObject } from '../../../domain/value-objects/plot-id/plot-id.value-object';
 import { PlotNameValueObject } from '../../../domain/value-objects/plot-name/plot-name.value-object';
 import { PlotsCacheRepository } from '../../ports/plots-cache.repository';
-import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
-import { PlotDimensionsValueObject } from 'src/modules/plots/domain/value-objects/plot-dimension/plot-dimension.value-object';
-import { PlotStatusValueObject } from 'src/modules/plots/domain/value-objects/plot-status/plot-status.value-object';
+import { PlotsRepository } from '../../ports/plots.repository';
+import { GetAllPlotsQuery } from './get-all-plots.query';
+import { GetAllPlotsQueryHandler } from './get-all-plots.query-handler';
 
 describe('GetAllPlotsQueryHandler', () => {
   let handler: GetAllPlotsQueryHandler;
@@ -27,17 +30,18 @@ describe('GetAllPlotsQueryHandler', () => {
   });
 
   it('should return an array of plots', async () => {
+    const uuid = '123e4567-e89b-12d3-a456-426614174000';
     const plot = new PlotEntity({
-      id: new PlotIdValueObject('plot-123'),
+      id: new PlotIdValueObject(uuid),
       name: new PlotNameValueObject('Test Plot'),
-      status: new PlotStatusValueObject('active'),
-      soilType: 'soil',
+      status: new PlotStatusValueObject(PLOT_STATUS.ACTIVE),
+      soilType: new PlotSoilTypeValueObject(PLOT_SOIL_TYPES.SANDY),
       soilPh: 7,
-      dimensions: new PlotDimensionsValueObject(
+      dimensions: new PlotDimensionValueObject(
         10,
         20,
         1,
-        UNIT_MEASUREMENT.METRIC,
+        UNIT_MEASUREMENT.METERS,
       ),
       farmId: 'farm-123',
       createdAt: new Date(),
@@ -45,7 +49,8 @@ describe('GetAllPlotsQueryHandler', () => {
     });
     plotsRepository.findAll.mockResolvedValue([plot]);
     const result = await handler.execute(new GetAllPlotsQuery());
-    expect(result).toEqual([plot]);
+    // Ajuste: comparar contra el tipo de retorno real
+    expect(result[0].plot).toEqual(plot);
     expect(plotsRepository.findAll).toHaveBeenCalled();
   });
 

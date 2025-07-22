@@ -1,6 +1,6 @@
-import { PlotDimensionValueObject } from './plot-dimension.value-object';
 import { UNIT_MEASUREMENT } from 'src/shared/domain/constants/unit-measurement.constant';
 import { InvalidPlotDimensionsException } from '../../exceptions/invalid-plot-dimensions/invalid-plot-dimensions.exception';
+import { PlotDimensionValueObject } from './plot-dimension.value-object';
 
 describe('PlotDimensionValueObject', () => {
   describe('constructor', () => {
@@ -114,20 +114,17 @@ describe('PlotDimensionValueObject', () => {
   describe('calculation methods', () => {
     it('should calculate area correctly', () => {
       const dimensions = new PlotDimensionValueObject(10, 20, 5);
-
-      expect(dimensions.getArea()).toBe(200); // 10 * 20
+      expect(dimensions.area).toBe(200); // 10 * 20
     });
 
     it('should calculate perimeter correctly', () => {
       const dimensions = new PlotDimensionValueObject(10, 20, 5);
-
-      expect(dimensions.getPerimeter()).toBe(60); // 2 * (10 + 20)
+      expect(dimensions.perimeter).toBe(60); // 2 * (10 + 20)
     });
 
     it('should calculate volume correctly', () => {
       const dimensions = new PlotDimensionValueObject(10, 20, 5);
-
-      expect(dimensions.getVolume()).toBe(1000); // 10 * 20 * 5
+      expect(dimensions.volume).toBe(1000); // 10 * 20 * 5
     });
   });
 
@@ -139,11 +136,10 @@ describe('PlotDimensionValueObject', () => {
         5,
         UNIT_MEASUREMENT.FEET,
       );
-
-      expect(dimensions.getWidth()).toBe(10);
-      expect(dimensions.getLength()).toBe(20);
-      expect(dimensions.getHeight()).toBe(5);
-      expect(dimensions.getUnitMeasurement()).toBe(UNIT_MEASUREMENT.FEET);
+      expect(dimensions.width).toBe(10);
+      expect(dimensions.length).toBe(20);
+      expect(dimensions.height).toBe(5);
+      expect(dimensions.unitMeasurement).toBe(UNIT_MEASUREMENT.FEET);
     });
   });
 
