@@ -1,4 +1,4 @@
-import { CropVarietyEntity } from '../../domain/entities/crop-variety.entity';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
 import { CropEntity } from '../../domain/entities/crop.entity';
 
 /**

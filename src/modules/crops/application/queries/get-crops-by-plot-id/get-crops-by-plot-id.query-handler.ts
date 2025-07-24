@@ -1,11 +1,11 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryBus, QueryHandler } from '@nestjs/cqrs';
+import { GetCropVarietyByIdQuery } from 'src/modules/crops-variety/application/queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
 import { CropDetailsResult } from '../../dtos/crop-details.result';
 import {
   CROPS_REPOSITORY_TOKEN,
   CropsRepository,
 } from '../../ports/crops.repository';
-import { GetCropVarietyByIdQuery } from '../get-crop-variety-by-id/get-crop-variety-by-id.query';
 import { GetCropsByPlotIdQuery } from './get-crops-by-plot-id.query';
 
 /**

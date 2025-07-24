@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CropVarietyResponseDto } from './crop-variety.response.dto';
+import { CropVarietyResponseDto } from 'src/modules/crops-variety/presenters/graphql/dtos/responses/crop-variety.response.dto';
 
 /**
  * CropResponseDto

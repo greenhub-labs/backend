@@ -1,6 +1,6 @@
 import { Inject, NotFoundException } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { CropVarietyEntity } from 'src/modules/crops/domain/entities/crop-variety.entity';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
 import {
   CROP_VARIETY_CACHE_REPOSITORY_TOKEN,
   CropVarietyCacheRepository,

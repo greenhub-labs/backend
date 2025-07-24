@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { CropVarietyEntity } from 'src/modules/crops/domain/entities/crop-variety.entity';
-import { CropNotFoundException } from '../../../domain/exceptions/crop-not-found/crop-not-found.exception';
+import { CropVarietyNotFoundException } from 'src/modules/crops-variety/domain/exceptions/crop-variety-not-found/crop-variety-not-found.exception';
+import { CropVarietyEntity } from '../../../domain/entities/crop-variety.entity';
 import {
   CROP_VARIETY_CACHE_REPOSITORY_TOKEN,
   CropVarietyCacheRepository,
@@ -49,7 +49,7 @@ export class GetCropVarietyByIdQueryHandler
       }
     }
     if (!cropVariety) {
-      throw new CropNotFoundException(query.cropVarietyId);
+      throw new CropVarietyNotFoundException(query.cropVarietyId);
     }
     return cropVariety;
   }

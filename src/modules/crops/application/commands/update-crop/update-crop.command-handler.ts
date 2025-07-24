@@ -1,5 +1,6 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
+import { GetCropVarietyByIdQuery } from 'src/modules/crops-variety/application/queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
 import { CropNotFoundException } from '../../../domain/exceptions/crop-not-found/crop-not-found.exception';
 import { CropDetailsResult } from '../../dtos/crop-details.result';
 import {
@@ -10,7 +11,6 @@ import {
   CROPS_REPOSITORY_TOKEN,
   CropsRepository,
 } from '../../ports/crops.repository';
-import { GetCropVarietyByIdQuery } from '../../queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { UpdateCropCommand } from './update-crop.command';
 

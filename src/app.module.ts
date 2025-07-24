@@ -6,6 +6,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { AuthModule } from './modules/auth/auth.module';
+import { CropsVarietyModule } from './modules/crops-variety/crops.module';
 import { CropsModule } from './modules/crops/crops.module';
 import { FarmsModule } from './modules/farms/farms.module';
 import { PlotsModule } from './modules/plots/plots.module';
@@ -34,6 +35,7 @@ import { SharedModule } from './shared/shared.module';
     FarmsModule,
     PlotsModule,
     CropsModule,
+    CropsVarietyModule,
   ],
   providers: [StartupCheckService],
 })

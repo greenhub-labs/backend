@@ -1,6 +1,6 @@
 import { CropType, Prisma, Season } from '@prisma/client';
-import { CropVarietyEntity } from 'src/modules/crops/domain/entities/crop-variety.entity';
-import { CropVarietyIdValueObject } from 'src/modules/crops/domain/value-objects/crop-variety-id/crop-variety-id.value-object';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
+import { CropVarietyIdValueObject } from 'src/modules/crops-variety/domain/value-objects/crop-variety-id/crop-variety-id.value-object';
 import { SEASON } from 'src/shared/domain/constants/season.constant';
 
 /**

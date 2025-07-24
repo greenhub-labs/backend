@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-import { CropVarietyCacheRepository } from 'src/modules/crops/application/ports/crop-variety-cache.repository';
-import { CropVarietyEntity } from '../../../../domain/entities/crop-variety.entity';
+import { CropVarietyCacheRepository } from 'src/modules/crops-variety/application/ports/crop-variety-cache.repository';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
 import { CropVarietyRedisEntity } from '../entities/crop-variety-redis.entity';
 
 /**
