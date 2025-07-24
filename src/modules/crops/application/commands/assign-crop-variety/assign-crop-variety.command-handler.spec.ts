@@ -1,4 +1,4 @@
-import { CropVarietyRepository } from '../../ports/crop-variety.repository';
+import { QueryBus } from '@nestjs/cqrs';
 import { CropsRepository } from '../../ports/crops.repository';
 import { AssignCropVarietyCommand } from './assign-crop-variety.command';
 import { AssignCropVarietyCommandHandler } from './assign-crop-variety.command-handler';
@@ -6,15 +6,12 @@ import { AssignCropVarietyCommandHandler } from './assign-crop-variety.command-h
 describe('AssignCropVarietyCommandHandler', () => {
   let handler: AssignCropVarietyCommandHandler;
   let cropsRepository: jest.Mocked<CropsRepository>;
-  let cropVarietyRepository: jest.Mocked<CropVarietyRepository>;
+  let queryBus: jest.Mocked<QueryBus>;
 
   beforeEach(() => {
     cropsRepository = { findById: jest.fn(), update: jest.fn() } as any;
-    cropVarietyRepository = { findById: jest.fn() } as any;
-    handler = new AssignCropVarietyCommandHandler(
-      cropsRepository,
-      cropVarietyRepository,
-    );
+    queryBus = { execute: jest.fn() } as any;
+    handler = new AssignCropVarietyCommandHandler(cropsRepository, queryBus);
   });
 
   it('should assign a variety to a crop and save', async () => {
@@ -22,9 +19,7 @@ describe('AssignCropVarietyCommandHandler', () => {
       update: jest.fn().mockReturnValue({}),
       id: { value: 'cropId' },
     } as any;
-    const cropVariety = { id: { value: 'varietyId' } } as any;
     cropsRepository.findById.mockResolvedValue(crop);
-    cropVarietyRepository.findById.mockResolvedValue(cropVariety);
     const command = new AssignCropVarietyCommand({
       cropId: 'cropId',
       cropVarietyId: 'varietyId',
@@ -49,7 +44,6 @@ describe('AssignCropVarietyCommandHandler', () => {
       id: { value: 'cropId' },
     } as any;
     cropsRepository.findById.mockResolvedValue(crop);
-    cropVarietyRepository.findById.mockResolvedValue(null);
     const command = new AssignCropVarietyCommand({
       cropId: 'cropId',
       cropVarietyId: 'not-found',

@@ -1,8 +1,9 @@
 import { QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CropVarietyEntity } from '../../../domain/entities/crop-variety.entity';
-import { CropEntity } from '../../../domain/entities/crop.entity';
-import { CropNotFoundException } from '../../../domain/exceptions/crop-not-found/crop-not-found.exception';
+import { GetCropVarietyByIdQuery } from 'src/modules/crops-variety/application/queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
+import { CropEntity } from 'src/modules/crops/domain/entities/crop.entity';
+import { CropNotFoundException } from 'src/modules/crops/domain/exceptions/crop-not-found/crop-not-found.exception';
 import { CropDetailsResult } from '../../dtos/crop-details.result';
 import {
   CROPS_CACHE_REPOSITORY_TOKEN,
@@ -12,7 +13,6 @@ import {
   CROPS_REPOSITORY_TOKEN,
   CropsRepository,
 } from '../../ports/crops.repository';
-import { GetCropVarietyByIdQuery } from '../../queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';
 import { UpdateCropCommand } from './update-crop.command';
 import { UpdateCropCommandHandler } from './update-crop.command-handler';

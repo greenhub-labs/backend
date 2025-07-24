@@ -1,7 +1,7 @@
 import { QueryBus } from '@nestjs/cqrs';
 import { GetCropVarietyByIdQuery } from 'src/modules/crops-variety/application/queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
-import { CropVarietyEntity } from '../../../domain/entities/crop-variety.entity';
-import { CropEntity } from '../../../domain/entities/crop.entity';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
+import { CropEntity } from 'src/modules/crops/domain/entities/crop.entity';
 import { CropsRepository } from '../../ports/crops.repository';
 import { GetCropsByPlotIdQuery } from './get-crops-by-plot-id.query';
 import { GetCropsByPlotIdQueryHandler } from './get-crops-by-plot-id.query-handler';

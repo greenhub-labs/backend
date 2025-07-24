@@ -1,4 +1,4 @@
-import { CropVarietyEntity } from 'src/modules/crops/domain/entities/crop-variety.entity';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
 import { CropVarietyRedisEntity } from './crop-variety-redis.entity';
 
 describe('CropVarietyRedisEntity', () => {

@@ -1,7 +1,8 @@
 import { QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CropVarietyEntity } from '../../../domain/entities/crop-variety.entity';
-import { CropEntity } from '../../../domain/entities/crop.entity';
+import { GetCropVarietyByIdQuery } from 'src/modules/crops-variety/application/queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
+import { CropEntity } from 'src/modules/crops/domain/entities/crop.entity';
 import { CropNotFoundException } from '../../../domain/exceptions/crop-not-found/crop-not-found.exception';
 import { CropDetailsResult } from '../../dtos/crop-details.result';
 import {
@@ -12,7 +13,6 @@ import {
   CROPS_REPOSITORY_TOKEN,
   CropsRepository,
 } from '../../ports/crops.repository';
-import { GetCropVarietyByIdQuery } from '../get-crop-variety-by-id/get-crop-variety-by-id.query';
 import { GetCropByIdQuery } from './get-crop-by-id.query';
 import { GetCropByIdQueryHandler } from './get-crop-by-id.query-handler';
 

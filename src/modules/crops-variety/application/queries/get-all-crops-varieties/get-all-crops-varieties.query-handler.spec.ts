@@ -1,4 +1,4 @@
-import { CropVarietyEntity } from 'src/modules/crops/domain/entities/crop-variety.entity';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
 import { CropVarietyRepository } from '../../ports/crop-variety.repository';
 import { GetAllCropsVarietiesQuery } from './get-all-crops-varieties.query';
 import { GetAllCropsVarietiesQueryHandler } from './get-all-crops-varieties.query-handler';

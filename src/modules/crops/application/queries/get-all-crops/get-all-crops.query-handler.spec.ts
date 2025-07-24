@@ -1,13 +1,13 @@
 import { QueryBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CropVarietyEntity } from '../../../domain/entities/crop-variety.entity';
-import { CropEntity } from '../../../domain/entities/crop.entity';
+import { GetCropVarietyByIdQuery } from 'src/modules/crops-variety/application/queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
+import { CropEntity } from 'src/modules/crops/domain/entities/crop.entity';
 import { CropDetailsResult } from '../../dtos/crop-details.result';
 import {
   CROPS_REPOSITORY_TOKEN,
   CropsRepository,
 } from '../../ports/crops.repository';
-import { GetCropVarietyByIdQuery } from '../get-crop-variety-by-id/get-crop-variety-by-id.query';
 import { GetAllCropsQuery } from './get-all-crops.query';
 import { GetAllCropsQueryHandler } from './get-all-crops.query-handler';
 

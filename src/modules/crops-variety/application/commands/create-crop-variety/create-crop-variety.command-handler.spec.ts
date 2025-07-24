@@ -1,5 +1,5 @@
-import { CropVarietyEntity } from 'src/modules/crops/domain/entities/crop-variety.entity';
-import { CropVarietyFactory } from 'src/modules/crops/domain/factories/crop-variety.factory';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
+import { CropVarietyFactory } from 'src/modules/crops-variety/domain/factories/crop-variety.factory';
 import { CropVarietyCacheRepository } from '../../ports/crop-variety-cache.repository';
 import { CropVarietyRepository } from '../../ports/crop-variety.repository';
 import { NestjsEventBusService } from '../../services/nestjs-event-bus.service';

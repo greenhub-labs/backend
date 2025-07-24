@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CropVarietyEntity } from '../../../domain/entities/crop-variety.entity';
-import { CropNotFoundException } from '../../../domain/exceptions/crop-not-found/crop-not-found.exception';
+import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
+import { CropVarietyNotFoundException } from 'src/modules/crops-variety/domain/exceptions/crop-variety-not-found/crop-variety-not-found.exception';
 import {
   CROP_VARIETY_CACHE_REPOSITORY_TOKEN,
   CropVarietyCacheRepository,
@@ -149,14 +149,14 @@ describe('GetCropVarietyByIdQueryHandler', () => {
       expect(result).toEqual(mockCropVariety);
     });
 
-    it('should throw CropNotFoundException when crop variety not found', async () => {
+    it('should throw CropVarietyNotFoundException when crop variety not found', async () => {
       // Arrange
       cropVarietyCacheRepository.get.mockResolvedValue(null);
       cropVarietyRepository.findById.mockResolvedValue(null);
 
       // Act & Assert
       await expect(handler.execute(mockQuery)).rejects.toThrow(
-        CropNotFoundException,
+        CropVarietyNotFoundException,
       );
       expect(cropVarietyCacheRepository.get).toHaveBeenCalledWith(
         mockQuery.cropVarietyId,
