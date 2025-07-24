@@ -1,15 +1,12 @@
 import { Inject } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CropDetailsResult } from '../../dtos/crop-variety-details.result';
-import {
-  CROP_VARIETY_REPOSITORY_TOKEN,
-  CropVarietyRepository,
-} from '../../ports/crop-variety.repository';
+import { CommandHandler, ICommandHandler, QueryBus } from '@nestjs/cqrs';
+import { AssignCropVarietyCommand } from 'src/modules/crops/application/commands/assign-crop-variety/assign-crop-variety.command';
+import { CropDetailsResult } from 'src/modules/crops/application/dtos/crop-details.result';
 import {
   CROPS_REPOSITORY_TOKEN,
   CropsRepository,
-} from '../../ports/crops.repository';
-import { AssignCropVarietyCommand } from './assign-crop-variety.command';
+} from 'src/modules/crops/application/ports/crops.repository';
+import { GetCropVarietyByIdQuery } from '../../queries/get-crop-variety-by-id/get-crop-variety-by-id.query';
 
 @CommandHandler(AssignCropVarietyCommand)
 export class AssignCropVarietyCommandHandler
@@ -18,8 +15,7 @@ export class AssignCropVarietyCommandHandler
   constructor(
     @Inject(CROPS_REPOSITORY_TOKEN)
     private readonly cropsRepository: CropsRepository,
-    @Inject(CROP_VARIETY_REPOSITORY_TOKEN)
-    private readonly cropVarietyRepository: CropVarietyRepository,
+    private readonly queryBus: QueryBus,
   ) {}
 
   async execute(command: AssignCropVarietyCommand): Promise<CropDetailsResult> {
@@ -27,13 +23,11 @@ export class AssignCropVarietyCommandHandler
     if (!crop) {
       throw new Error(`Crop with id ${command.cropId} not found`);
     }
-    const cropVariety = await this.cropVarietyRepository.findById(
-      command.cropVarietyId,
+    const cropVariety = await this.queryBus.execute(
+      new GetCropVarietyByIdQuery(command.cropVarietyId),
     );
-    if (!cropVariety) {
-      throw new Error(`CropVariety with id ${command.cropVarietyId} not found`);
-    }
-    const updatedCrop = crop.update({ varietyId: command.cropVarietyId });
+
+    const updatedCrop = crop.update({ varietyId: cropVariety.id });
     await this.cropsRepository.update(updatedCrop);
     return new CropDetailsResult(updatedCrop, cropVariety);
   }
