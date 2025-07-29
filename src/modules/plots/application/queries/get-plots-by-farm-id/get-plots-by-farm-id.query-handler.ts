@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryBus, QueryHandler } from '@nestjs/cqrs';
+import { GetCropsByPlotIdQuery } from 'src/modules/crops/application/queries/get-crops-by-plot-id/get-crops-by-plot-id.query';
 import { PlotNotFoundException } from '../../../domain/exceptions/plot-not-found/plot-not-found.exception';
 import { PlotDetailsResult } from '../../dtos/plot-details.result';
 import {
@@ -24,6 +25,7 @@ export class GetPlotsByFarmIdQueryHandler
     private readonly plotsRepository: PlotsRepository,
     @Inject(PLOTS_CACHE_REPOSITORY_TOKEN)
     private readonly plotsCacheRepository: PlotsCacheRepository,
+    private readonly queryBus: QueryBus,
   ) {}
 
   /**
@@ -47,6 +49,14 @@ export class GetPlotsByFarmIdQueryHandler
     if (!plots) {
       throw new PlotNotFoundException(query.farmId);
     }
-    return plots.map((plot) => new PlotDetailsResult(plot));
+
+    const plotDetailsPromises = plots.map(async (plot) => {
+      const crops = await this.queryBus.execute(
+        new GetCropsByPlotIdQuery(plot.id.value),
+      );
+      return new PlotDetailsResult(plot, crops);
+    });
+
+    return Promise.all(plotDetailsPromises);
   }
 }

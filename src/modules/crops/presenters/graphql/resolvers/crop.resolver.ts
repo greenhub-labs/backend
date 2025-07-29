@@ -7,10 +7,12 @@ import { DeleteCropCommand } from '../../../application/commands/delete-crop/del
 import { UpdateCropCommand } from '../../../application/commands/update-crop/update-crop.command';
 import { GetAllCropsQuery } from '../../../application/queries/get-all-crops/get-all-crops.query';
 import { GetCropByIdQuery } from '../../../application/queries/get-crop-by-id/get-crop-by-id.query';
+import { GetCropsByFarmIdQuery } from '../../../application/queries/get-crops-by-farm-id/get-crops-by-farm-id.query';
 import { GetCropsByPlotIdQuery } from '../../../application/queries/get-crops-by-plot-id/get-crops-by-plot-id.query';
 import { CreateCropRequestDto } from '../dtos/requests/create-crop.request.dto';
 import { DeleteCropRequestDto } from '../dtos/requests/delete-crop.request.dto';
 import { GetCropByIdRequestDto } from '../dtos/requests/get-crop-by-id.request.dto';
+import { GetCropsByFarmIdRequestDto } from '../dtos/requests/get-crops-by-farm-id.request.dto';
 import { UpdateCropRequestDto } from '../dtos/requests/update-crop.request.dto';
 import { CropResponseDto } from '../dtos/responses/crop.response.dto';
 import { CropMapper } from '../mappers/crop.mapper';
@@ -54,6 +56,19 @@ export class CropResolver {
   ): Promise<CropResponseDto[]> {
     const results = await this.queryBus.execute(
       new GetCropsByPlotIdQuery(plotId),
+    );
+    return results.map((result) => CropMapper.fromDomain(result));
+  }
+
+  @Query(() => [CropResponseDto], {
+    name: 'getCropsByFarmId',
+    description: 'Get all crops by farm ID (requires authentication)',
+  })
+  async getCropsByFarmId(
+    @Args('input') input: GetCropsByFarmIdRequestDto,
+  ): Promise<CropResponseDto[]> {
+    const results = await this.queryBus.execute(
+      new GetCropsByFarmIdQuery(input.farmId),
     );
     return results.map((result) => CropMapper.fromDomain(result));
   }
@@ -117,11 +132,12 @@ export class CropResolver {
 
   @Mutation(() => Boolean, {
     name: 'deleteCrop',
-    description: 'Delete a crop by ID',
+    description: 'Delete a crop',
   })
   async deleteCrop(
     @Args('input') input: DeleteCropRequestDto,
   ): Promise<boolean> {
-    return await this.commandBus.execute(new DeleteCropCommand(input.cropId));
+    await this.commandBus.execute(new DeleteCropCommand(input.cropId));
+    return true;
   }
 }

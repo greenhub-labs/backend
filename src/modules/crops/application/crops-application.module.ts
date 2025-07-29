@@ -9,6 +9,7 @@ import { UnassignCropVarietyCommandHandler } from './commands/unassign-crop-vari
 import { UpdateCropCommandHandler } from './commands/update-crop/update-crop.command-handler';
 import { GetAllCropsQueryHandler } from './queries/get-all-crops/get-all-crops.query-handler';
 import { GetCropByIdQueryHandler } from './queries/get-crop-by-id/get-crop-by-id.query-handler';
+import { GetCropsByFarmIdQueryHandler } from './queries/get-crops-by-farm-id/get-crops-by-farm-id.query-handler';
 import { GetCropsByPlotIdQueryHandler } from './queries/get-crops-by-plot-id/get-crops-by-plot-id.query-handler';
 import { NestjsEventBusService } from './services/nestjs-event-bus.service';
 
@@ -26,6 +27,7 @@ import { NestjsEventBusService } from './services/nestjs-event-bus.service';
     GetCropByIdQueryHandler,
     GetAllCropsQueryHandler,
     GetCropsByPlotIdQueryHandler,
+    GetCropsByFarmIdQueryHandler,
     AssignCropVarietyCommandHandler,
     UnassignCropVarietyCommandHandler,
     NestjsEventBusService,
@@ -37,6 +39,7 @@ import { NestjsEventBusService } from './services/nestjs-event-bus.service';
     GetCropByIdQueryHandler,
     GetAllCropsQueryHandler,
     GetCropsByPlotIdQueryHandler,
+    GetCropsByFarmIdQueryHandler,
     AssignCropVarietyCommandHandler,
     UnassignCropVarietyCommandHandler,
     NestjsEventBusService,

@@ -260,6 +260,9 @@ type Query {
   """Get all crops by plot ID (requires authentication)"""
   getCropsByPlotId(plotId: String!): [CropResponseDto!]!
 
+  """Get all crops by farm ID (requires authentication)"""
+  getCropsByFarmId(input: GetCropsByFarmIdRequestDto!): [CropResponseDto!]!
+
   """Get a crop variety by ID"""
   getCropVarietyById(id: String!): CropVarietyResponseDto!
 
@@ -291,6 +294,11 @@ input GetPlotsByFarmIdRequestDto {
 input GetCropByIdRequestDto {
   """Crop unique identifier"""
   cropId: String!
+}
+
+input GetCropsByFarmIdRequestDto {
+  """Farm unique identifier"""
+  farmId: String!
 }
 
 input GetCropVarietyByScientificNameRequestDto {
@@ -352,7 +360,7 @@ type Mutation {
   """Update an existing crop"""
   updateCrop(input: UpdateCropRequestDto!): CropResponseDto!
 
-  """Delete a crop by ID"""
+  """Delete a crop"""
   deleteCrop(input: DeleteCropRequestDto!): Boolean!
 
   """Create a new crop variety"""

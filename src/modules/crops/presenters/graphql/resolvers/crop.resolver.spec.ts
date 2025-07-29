@@ -4,6 +4,7 @@ import { DeleteCropCommand } from '../../../application/commands/delete-crop/del
 import { UpdateCropCommand } from '../../../application/commands/update-crop/update-crop.command';
 import { GetAllCropsQuery } from '../../../application/queries/get-all-crops/get-all-crops.query';
 import { GetCropByIdQuery } from '../../../application/queries/get-crop-by-id/get-crop-by-id.query';
+import { GetCropsByFarmIdQuery } from '../../../application/queries/get-crops-by-farm-id/get-crops-by-farm-id.query';
 import { GetCropsByPlotIdQuery } from '../../../application/queries/get-crops-by-plot-id/get-crops-by-plot-id.query';
 import { CropMapper } from '../mappers/crop.mapper';
 import { CropResolver } from './crop.resolver';
@@ -63,6 +64,30 @@ describe('CropResolver', () => {
     });
   });
 
+  describe('getCropsByFarmId', () => {
+    it('should return crops by farm id', async () => {
+      queryBus.execute.mockResolvedValue([mockDomainResult]);
+      const input = { farmId: 'farm-1' };
+      const result = await resolver.getCropsByFarmId(input);
+      expect(queryBus.execute).toHaveBeenCalledWith(
+        new GetCropsByFarmIdQuery('farm-1'),
+      );
+      expect(CropMapper.fromDomain).toHaveBeenCalledWith(mockDomainResult);
+      expect(result).toEqual([mockDto]);
+    });
+
+    it('should return empty array when farm has no crops', async () => {
+      queryBus.execute.mockResolvedValue([]);
+      const input = { farmId: 'farm-1' };
+      const result = await resolver.getCropsByFarmId(input);
+      expect(queryBus.execute).toHaveBeenCalledWith(
+        new GetCropsByFarmIdQuery('farm-1'),
+      );
+      expect(CropMapper.fromDomain).not.toHaveBeenCalled();
+      expect(result).toEqual([]);
+    });
+  });
+
   describe('createCrop', () => {
     it('should create a crop', async () => {
       commandBus.execute.mockResolvedValue(mockDomainResult);
@@ -110,7 +135,7 @@ describe('CropResolver', () => {
 
   describe('deleteCrop', () => {
     it('should delete a crop', async () => {
-      commandBus.execute.mockResolvedValue(true);
+      commandBus.execute.mockResolvedValue(undefined);
       const input = { cropId: 'crop-1' };
       const result = await resolver.deleteCrop(input);
       expect(commandBus.execute).toHaveBeenCalledWith(
