@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CreatePlotCommand } from 'src/modules/plots/application/commands/create-plot/create-plot.command';
 import { DeletePlotCommand } from 'src/modules/plots/application/commands/delete-plot/delete-plot.command';
 import { UpdatePlotCommand } from 'src/modules/plots/application/commands/update-plot/update-plot.command';
+import { PlotDetailsResult } from 'src/modules/plots/application/dtos/plot-details.result';
 import { GetAllPlotsQuery } from 'src/modules/plots/application/queries/get-all-plots/get-all-plots.query';
 import { GetPlotByIdQuery } from 'src/modules/plots/application/queries/get-plot-by-id/get-plot-by-id.query';
 import { GetPlotsByFarmIdQuery } from 'src/modules/plots/application/queries/get-plots-by-farm-id/get-plots-by-farm-id.query';
@@ -62,6 +63,8 @@ describe('PlotResolver', () => {
     updatedAt: new Date('2023-01-02'),
   });
 
+  const mockPlotDetails = new PlotDetailsResult(mockPlot, []);
+
   const mockPlotResponse: PlotResponseDto = {
     id: validUuid,
     name: 'Test Plot',
@@ -116,7 +119,7 @@ describe('PlotResolver', () => {
   describe('getPlotById', () => {
     it('should return a plot by ID', async () => {
       const input: GetPlotByIdRequestDto = { id: validUuid };
-      const queryResult = { plot: mockPlot };
+      const queryResult = mockPlotDetails;
 
       queryBus.execute.mockResolvedValue(queryResult);
       plotMapper.fromDomain.mockReturnValue(mockPlotResponse);
@@ -126,14 +129,14 @@ describe('PlotResolver', () => {
       expect(queryBus.execute).toHaveBeenCalledWith(
         new GetPlotByIdQuery(validUuid),
       );
-      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlot);
+      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlotDetails);
       expect(result).toEqual(mockPlotResponse);
     });
   });
 
   describe('getAllPlots', () => {
     it('should return all plots', async () => {
-      const queryResult = [{ plot: mockPlot }];
+      const queryResult = [mockPlotDetails];
 
       queryBus.execute.mockResolvedValue(queryResult);
       plotMapper.fromDomain.mockReturnValue(mockPlotResponse);
@@ -141,7 +144,7 @@ describe('PlotResolver', () => {
       const result = await resolver.getAllPlots();
 
       expect(queryBus.execute).toHaveBeenCalledWith(new GetAllPlotsQuery());
-      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlot);
+      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlotDetails);
       expect(result).toEqual([mockPlotResponse]);
     });
   });
@@ -149,7 +152,7 @@ describe('PlotResolver', () => {
   describe('getPlotsByFarmId', () => {
     it('should return plots by farm ID', async () => {
       const input: GetPlotsByFarmIdRequestDto = { farmId: 'farm-123' };
-      const queryResult = [{ plot: mockPlot }];
+      const queryResult = [mockPlotDetails];
 
       queryBus.execute.mockResolvedValue(queryResult);
       plotMapper.fromDomain.mockReturnValue(mockPlotResponse);
@@ -159,7 +162,7 @@ describe('PlotResolver', () => {
       expect(queryBus.execute).toHaveBeenCalledWith(
         new GetPlotsByFarmIdQuery('farm-123'),
       );
-      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlot);
+      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlotDetails);
       expect(result).toEqual([mockPlotResponse]);
     });
   });
@@ -178,7 +181,7 @@ describe('PlotResolver', () => {
         status: PLOT_STATUS.ACTIVE,
         farmId: 'farm-123',
       };
-      const commandResult = { plot: mockPlot };
+      const commandResult = mockPlotDetails;
 
       commandBus.execute.mockResolvedValue(commandResult);
       plotMapper.fromDomain.mockReturnValue(mockPlotResponse);
@@ -199,7 +202,7 @@ describe('PlotResolver', () => {
           farmId: input.farmId,
         }),
       );
-      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlot);
+      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlotDetails);
       expect(result).toEqual(mockPlotResponse);
     });
   });
@@ -218,7 +221,7 @@ describe('PlotResolver', () => {
         soilPh: 6.8,
         status: PLOT_STATUS.INACTIVE,
       };
-      const commandResult = { plot: mockPlot };
+      const commandResult = mockPlotDetails;
 
       commandBus.execute.mockResolvedValue(commandResult);
       plotMapper.fromDomain.mockReturnValue(mockPlotResponse);
@@ -239,7 +242,7 @@ describe('PlotResolver', () => {
           status: input.status,
         }),
       );
-      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlot);
+      expect(plotMapper.fromDomain).toHaveBeenCalledWith(mockPlotDetails);
       expect(result).toEqual(mockPlotResponse);
     });
   });

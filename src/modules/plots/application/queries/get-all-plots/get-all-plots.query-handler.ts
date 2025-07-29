@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryBus, QueryHandler } from '@nestjs/cqrs';
+import { GetCropsByPlotIdQuery } from 'src/modules/crops/application/queries/get-crops-by-plot-id/get-crops-by-plot-id.query';
 import { PlotDetailsResult } from '../../dtos/plot-details.result';
 import {
   PLOTS_CACHE_REPOSITORY_TOKEN,
@@ -23,6 +24,7 @@ export class GetAllPlotsQueryHandler
     private readonly plotsRepository: PlotsRepository,
     @Inject(PLOTS_CACHE_REPOSITORY_TOKEN)
     private readonly plotsCacheRepository: PlotsCacheRepository,
+    private readonly queryBus: QueryBus,
   ) {}
 
   /**
@@ -34,7 +36,10 @@ export class GetAllPlotsQueryHandler
     const plots = await this.plotsRepository.findAll();
     const results = await Promise.all(
       plots.map(async (plot) => {
-        return new PlotDetailsResult(plot);
+        const crops = await this.queryBus.execute(
+          new GetCropsByPlotIdQuery(plot.id.value),
+        );
+        return new PlotDetailsResult(plot, crops);
       }),
     );
     return results;

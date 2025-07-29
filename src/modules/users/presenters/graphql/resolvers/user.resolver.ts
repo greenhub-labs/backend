@@ -1,18 +1,17 @@
-import { Args, Query, Resolver, Mutation, Context } from '@nestjs/graphql';
-import { UseGuards, ForbiddenException } from '@nestjs/common';
-import { GetUserByIdRequestDto } from '../dtos/requests/get-user-by-id.request.dto';
-import { UserDetailsResponseDto } from '../dtos/responses/user.response.dto';
-import { QueryBus } from '@nestjs/cqrs';
-import { GetUserByIdQuery } from '../../../application/queries/get-user-by-id/get-user-by-id.query';
-import { CommandBus } from '@nestjs/cqrs';
-import { CreateUserRequestDto } from '../dtos/requests/create-user.request.dto';
-import { UpdateUserRequestDto } from '../dtos/requests/update-user.request.dto';
-import { DeleteUserRequestDto } from '../dtos/requests/delete-user.request.dto';
-import { RestoreUserRequestDto } from '../dtos/requests/restore-user.request.dto';
+import { ForbiddenException, UseGuards } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserCommand } from '../../../application/commands/create-user/create-user.command';
-import { UpdateUserCommand } from '../../../application/commands/update-user/update-user.command';
 import { DeleteUserCommand } from '../../../application/commands/delete-user/delete-user.command';
 import { RestoreUserCommand } from '../../../application/commands/restore-user/restore-user.command';
+import { UpdateUserCommand } from '../../../application/commands/update-user/update-user.command';
+import { GetUserByIdQuery } from '../../../application/queries/get-user-by-id/get-user-by-id.query';
+import { CreateUserRequestDto } from '../dtos/requests/create-user.request.dto';
+import { DeleteUserRequestDto } from '../dtos/requests/delete-user.request.dto';
+import { GetUserByIdRequestDto } from '../dtos/requests/get-user-by-id.request.dto';
+import { RestoreUserRequestDto } from '../dtos/requests/restore-user.request.dto';
+import { UpdateUserRequestDto } from '../dtos/requests/update-user.request.dto';
+import { UserDetailsResponseDto } from '../dtos/responses/user.response.dto';
 import { UserMapper } from '../mappers/user.mapper';
 
 // Auth guards and decorators
@@ -142,9 +141,6 @@ export class UserResolver {
     // TODO: Add role-based authorization check for admin privileges
     // For now, any authenticated user can restore (should be restricted to admins)
     const currentUser = context.req.user;
-    console.log(
-      `User ${currentUser.userId} attempting to restore user ${input.id}`,
-    );
 
     // Note: In production, this should check for admin role
     // RestoreUserCommand usa userId, no id

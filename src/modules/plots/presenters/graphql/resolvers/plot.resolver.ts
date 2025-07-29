@@ -32,7 +32,7 @@ export class PlotResolver {
     @Args('input') input: GetPlotByIdRequestDto,
   ): Promise<PlotResponseDto> {
     const result = await this.queryBus.execute(new GetPlotByIdQuery(input.id));
-    return PlotMapper.fromDomain(result.plot);
+    return PlotMapper.fromDomain(result);
   }
 
   @Query(() => [PlotResponseDto], {
@@ -41,7 +41,7 @@ export class PlotResolver {
   })
   async getAllPlots(): Promise<PlotResponseDto[]> {
     const results = await this.queryBus.execute(new GetAllPlotsQuery());
-    return results.map((result) => PlotMapper.fromDomain(result.plot));
+    return results.map((result) => PlotMapper.fromDomain(result));
   }
 
   @Query(() => [PlotResponseDto], {
@@ -54,7 +54,7 @@ export class PlotResolver {
     const results = await this.queryBus.execute(
       new GetPlotsByFarmIdQuery(input.farmId),
     );
-    return results.map((result) => PlotMapper.fromDomain(result.plot));
+    return results.map((result) => PlotMapper.fromDomain(result));
   }
 
   @Mutation(() => PlotResponseDto, {
@@ -78,7 +78,7 @@ export class PlotResolver {
         farmId: input.farmId,
       }),
     );
-    return PlotMapper.fromDomain(result.plot);
+    return PlotMapper.fromDomain(result);
   }
 
   @Mutation(() => PlotResponseDto, {
@@ -102,7 +102,7 @@ export class PlotResolver {
         status: input.status,
       }),
     );
-    return PlotMapper.fromDomain(result.plot);
+    return PlotMapper.fromDomain(result);
   }
 
   @Mutation(() => Boolean, {

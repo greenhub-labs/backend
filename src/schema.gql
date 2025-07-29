@@ -54,6 +54,73 @@ type TokenVerificationResult {
   email: String
 }
 
+type CropVarietyResponseDto {
+  id: String!
+  name: String!
+  scientificName: String
+  type: String!
+  description: String
+  averageYield: Float
+  daysToMaturity: Float
+  plantingDepth: Float
+  spacingBetween: Float
+  waterRequirements: String
+  sunRequirements: String
+  minIdealTemperature: Float
+  maxIdealTemperature: Float
+  minIdealPh: Float
+  maxIdealPh: Float
+  compatibleWith: [String!]!
+  incompatibleWith: [String!]!
+  plantingSeasons: [String!]!
+  harvestSeasons: [String!]!
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+}
+
+type CropResponseDto {
+  """Unique identifier of the crop"""
+  id: String!
+
+  """Plot ID where the crop is planted"""
+  plotId: String!
+
+  """Crop variety ID"""
+  varietyId: String!
+
+  """Actual planting date"""
+  plantingDate: String
+
+  """Expected harvest date"""
+  expectedHarvest: String
+
+  """Actual harvest date"""
+  actualHarvest: String
+
+  """Number of plants/units"""
+  quantity: Float
+
+  """Crop status"""
+  status: String
+
+  """Planting method"""
+  plantingMethod: String
+
+  """Additional notes"""
+  notes: String
+  cropVariety: CropVarietyResponseDto
+
+  """Date when the crop was created"""
+  createdAt: String
+
+  """Date when the crop was last updated"""
+  updatedAt: String
+
+  """Date when the crop was deleted (soft delete)"""
+  deletedAt: String
+}
+
 type PlotDimensionsResponseDto {
   """Width of the plot"""
   width: Float
@@ -113,6 +180,9 @@ type PlotResponseDto {
 
   """Date when the plot was deleted (soft delete)"""
   deletedAt: DateTime
+
+  """Crops associated with this plot"""
+  crops: [CropResponseDto!]
 }
 
 type FarmMemberResponseDto {
@@ -180,6 +250,24 @@ type Query {
 
   """Get all plots by farm ID (requires authentication)"""
   getPlotsByFarmId(input: GetPlotsByFarmIdRequestDto!): [PlotResponseDto!]!
+
+  """Get crop information by ID (requires authentication)"""
+  getCropById(input: GetCropByIdRequestDto!): CropResponseDto!
+
+  """Get all crops (requires authentication)"""
+  getAllCrops: [CropResponseDto!]!
+
+  """Get all crops by plot ID (requires authentication)"""
+  getCropsByPlotId(plotId: String!): [CropResponseDto!]!
+
+  """Get a crop variety by ID"""
+  getCropVarietyById(id: String!): CropVarietyResponseDto!
+
+  """Get a crop variety by its scientific name"""
+  getCropVarietyByScientificName(input: GetCropVarietyByScientificNameRequestDto!): CropVarietyResponseDto!
+
+  """Get all crop varieties"""
+  getAllCropVarieties: [CropVarietyResponseDto!]!
 }
 
 input GetUserByIdRequestDto {
@@ -198,6 +286,16 @@ input GetPlotByIdRequestDto {
 input GetPlotsByFarmIdRequestDto {
   """Unique identifier of the farm"""
   farmId: String!
+}
+
+input GetCropByIdRequestDto {
+  """Crop unique identifier"""
+  cropId: String!
+}
+
+input GetCropVarietyByScientificNameRequestDto {
+  """Scientific name of the crop variety"""
+  scientificName: String!
 }
 
 type Mutation {
@@ -247,6 +345,24 @@ type Mutation {
 
   """Delete a plot by ID"""
   deletePlot(input: DeletePlotRequestDto!): Boolean!
+
+  """Create a new crop"""
+  createCrop(input: CreateCropRequestDto!): CropResponseDto!
+
+  """Update an existing crop"""
+  updateCrop(input: UpdateCropRequestDto!): CropResponseDto!
+
+  """Delete a crop by ID"""
+  deleteCrop(input: DeleteCropRequestDto!): Boolean!
+
+  """Create a new crop variety"""
+  createCropVariety(input: CreateCropVarietyRequestDto!): CropVarietyResponseDto!
+
+  """Update an existing crop variety"""
+  updateCropVariety(input: UpdateCropVarietyRequestDto!): CropVarietyResponseDto!
+
+  """Delete a crop variety by ID"""
+  deleteCropVariety(input: DeleteCropVarietyRequestDto!): Boolean!
 }
 
 input RegisterInput {
@@ -404,5 +520,112 @@ input UpdatePlotRequestDto {
 
 input DeletePlotRequestDto {
   """Unique identifier of the plot to delete"""
+  id: String!
+}
+
+input CreateCropRequestDto {
+  """Plot ID where the crop is planted"""
+  plotId: String!
+
+  """Crop variety ID"""
+  varietyId: String!
+
+  """Actual planting date"""
+  plantingDate: String
+
+  """Expected harvest date"""
+  expectedHarvest: String
+
+  """Actual harvest date"""
+  actualHarvest: String
+
+  """Number of plants/units"""
+  quantity: Float
+
+  """Crop status"""
+  status: String
+
+  """Planting method"""
+  plantingMethod: String!
+
+  """Additional notes"""
+  notes: String
+}
+
+input UpdateCropRequestDto {
+  """Crop unique identifier"""
+  id: String!
+
+  """Actual planting date"""
+  plantingDate: String
+
+  """Expected harvest date"""
+  expectedHarvest: String
+
+  """Actual harvest date"""
+  actualHarvest: String
+
+  """Number of plants/units"""
+  quantity: Float
+
+  """Crop status"""
+  status: String
+
+  """Planting method"""
+  plantingMethod: String
+
+  """Additional notes"""
+  notes: String
+}
+
+input DeleteCropRequestDto {
+  """Crop unique identifier"""
+  cropId: String!
+}
+
+input CreateCropVarietyRequestDto {
+  name: String!
+  scientificName: String
+  type: String!
+  description: String
+  averageYield: Float
+  daysToMaturity: Float
+  plantingDepth: Float
+  spacingBetween: Float
+  waterRequirements: String
+  sunRequirements: String
+  minIdealTemperature: Float
+  maxIdealTemperature: Float
+  minIdealPh: Float
+  maxIdealPh: Float
+  compatibleWith: [String!]
+  incompatibleWith: [String!]
+  plantingSeasons: [String!]
+  harvestSeasons: [String!]
+}
+
+input UpdateCropVarietyRequestDto {
+  id: String!
+  name: String
+  scientificName: String
+  type: String
+  description: String
+  averageYield: Float
+  daysToMaturity: Float
+  plantingDepth: Float
+  spacingBetween: Float
+  waterRequirements: String
+  sunRequirements: String
+  minIdealTemperature: Float
+  maxIdealTemperature: Float
+  minIdealPh: Float
+  maxIdealPh: Float
+  compatibleWith: [String!]
+  incompatibleWith: [String!]
+  plantingSeasons: [String!]
+  harvestSeasons: [String!]
+}
+
+input DeleteCropVarietyRequestDto {
   id: String!
 }
