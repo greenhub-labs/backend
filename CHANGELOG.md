@@ -1,3 +1,23 @@
+# [0.5.0](https://github.com/greenhub-labs/backend/compare/v0.4.0...v0.5.0) (2025-07-29)
+
+
+### Bug Fixes
+
+* Correct import path for CropVarietyEntity in get-crop-variety-by-scientific-name query handler test ([3c0c638](https://github.com/greenhub-labs/backend/commit/3c0c63880ff51d48b222912b855a27e0df716aab))
+* Disable event emission for crop and crop variety updates and deletions ([bf4be25](https://github.com/greenhub-labs/backend/commit/bf4be252a4a9ec72d84b7ab3a587fee11aa199f3))
+* Update crop and crop variety entities to include additional fields and improve test assertions ([dea2aea](https://github.com/greenhub-labs/backend/commit/dea2aea12d40ff40f3356cf10302153bc5c2cd92))
+* Update test assertion for deleted crop date comparison ([8e4d767](https://github.com/greenhub-labs/backend/commit/8e4d76769e8d1e002a47aa65458a477f4e752de5))
+
+
+### Features
+
+* Add crop variety field to CropResponseDto and update mappers ([97f0345](https://github.com/greenhub-labs/backend/commit/97f03454d3888a2331c9396a9daea446f5f5ff68))
+* Add crop variety queries and enhance crop entity handling ([37cdcbd](https://github.com/greenhub-labs/backend/commit/37cdcbd8f3cbc0ddbce2501238812e14a0636412))
+* Add query to retrieve crop variety by scientific name ([9944c35](https://github.com/greenhub-labs/backend/commit/9944c35b9d285ebae283b10ec7d11e2080a83e61))
+* Enhance crop management by adding crop varieties and related GraphQL schema ([0501b3f](https://github.com/greenhub-labs/backend/commit/0501b3fb44d20892c2d6da1d1a28eb8f78debc96))
+* Enhance plot and crop integration in GraphQL schema ([fc72310](https://github.com/greenhub-labs/backend/commit/fc723102f4ca9bfee57783377ae71326bafb0c1c))
+* Update plot and crop mapping to include crop variety details ([5d314af](https://github.com/greenhub-labs/backend/commit/5d314af8199be1ca8d4ccddd14bea846dd643067))
+
 # [0.4.0](https://github.com/greenhub-labs/backend/compare/v0.3.0...v0.4.0) (2025-07-20)
 
 
