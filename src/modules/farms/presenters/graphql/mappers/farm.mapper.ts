@@ -1,5 +1,5 @@
 import { FarmDetailsResult } from 'src/modules/farms/application/dtos/farm-details.result';
-import { PLOT_SOIL_TYPES } from 'src/modules/plots/domain/constants/plot-soil-types.constant';
+import { PlotMapper } from 'src/modules/plots/presenters/graphql/mappers/plot.mapper';
 import { FarmResponseDto } from '../dtos/responses/farm.response.dto';
 
 export class FarmMapper {
@@ -37,28 +37,8 @@ export class FarmMapper {
           role,
         })) || undefined,
       plots:
-        plots?.map((plot) => ({
-          id: plot.id.value,
-          name: plot.name.value,
-          description: plot.description,
-          status: plot.status.value,
-          createdAt: plot.createdAt,
-          updatedAt: plot.updatedAt,
-          deletedAt: plot.deletedAt,
-          farmId: farm.id.value,
-          soilType: plot.soilType?.value as PLOT_SOIL_TYPES,
-          soilPh: plot.soilPh,
-          dimensions: {
-            width: plot.dimensions.width,
-            length: plot.dimensions.length,
-            height: plot.dimensions.height,
-            area: plot.dimensions.area,
-            perimeter: plot.dimensions.perimeter,
-            volume: plot.dimensions.volume,
-            unitMeasurement: plot.dimensions.unitMeasurement,
-            unitMeasurementCategory:
-              plot.dimensions.getUnitMeasurementCategory(),
-          },
+        plots?.map((plotDetails) => ({
+          ...PlotMapper.fromDomain(plotDetails),
         })) || undefined,
     };
     return dto;

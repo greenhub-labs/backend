@@ -1,4 +1,4 @@
-import { PlotEntity } from 'src/modules/plots/domain/entities/plot.entity';
+import { PlotDetailsResult } from 'src/modules/plots/application/dtos/plot-details.result';
 import { FarmEntity } from '../../domain/entities/farm.entity';
 import { FarmMemberWithRole } from '../ports/farm-memberships.repository';
 
@@ -9,7 +9,7 @@ export class FarmDetailsResult {
   constructor(
     public readonly farm: FarmEntity,
     public readonly members: FarmMemberWithRole[],
-    public readonly plots?: PlotEntity[],
+    public readonly plots?: PlotDetailsResult[],
     // Future: plots, configuration, sensors, etc.
   ) {}
 }

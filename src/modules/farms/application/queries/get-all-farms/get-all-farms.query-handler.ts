@@ -52,11 +52,7 @@ export class GetAllFarmsQueryHandler
           `Found ${plotsDetailsResults.map((plot) => plot.plot.id.value).join(', ')} plots for farm ${farm.id.value}`,
         );
 
-        return new FarmDetailsResult(
-          farm,
-          members,
-          plotsDetailsResults.map((plot) => plot.plot),
-        );
+        return new FarmDetailsResult(farm, members, plotsDetailsResults);
       }),
     );
     return results;
