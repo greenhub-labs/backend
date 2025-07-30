@@ -1,4 +1,10 @@
-import { CropType, Prisma, Season } from '@prisma/client';
+import {
+  CropType,
+  Prisma,
+  Season,
+  SunRequirements,
+  WaterRequirements,
+} from '@prisma/client';
 import { CropVarietyEntity } from 'src/modules/crops-variety/domain/entities/crop-variety.entity';
 import { CropVarietyIdValueObject } from 'src/modules/crops-variety/domain/value-objects/crop-variety-id/crop-variety-id.value-object';
 import { SEASON } from 'src/shared/domain/constants/season.constant';
@@ -58,8 +64,8 @@ export class CropVarietyPrismaEntity {
       daysToMaturity: entity.daysToMaturity,
       plantingDepth: entity.plantingDepth,
       spacingBetween: entity.spacingBetween,
-      waterRequirements: entity.waterRequirements,
-      sunRequirements: entity.sunRequirements,
+      waterRequirements: entity.waterRequirements?.value as WaterRequirements,
+      sunRequirements: entity.sunRequirements?.value as SunRequirements,
       minIdealTemperature: entity.minIdealTemperature,
       maxIdealTemperature: entity.maxIdealTemperature,
       minIdealPh: entity.minIdealPh,
@@ -91,8 +97,8 @@ export class CropVarietyPrismaEntity {
       daysToMaturity: entity.daysToMaturity,
       plantingDepth: entity.plantingDepth,
       spacingBetween: entity.spacingBetween,
-      waterRequirements: entity.waterRequirements,
-      sunRequirements: entity.sunRequirements,
+      waterRequirements: entity.waterRequirements?.value as WaterRequirements,
+      sunRequirements: entity.sunRequirements?.value as SunRequirements,
       minIdealTemperature: entity.minIdealTemperature,
       maxIdealTemperature: entity.maxIdealTemperature,
       minIdealPh: entity.minIdealPh,

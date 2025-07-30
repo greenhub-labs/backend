@@ -6,7 +6,9 @@ import { CropVarietyUpdatedDomainEvent } from '../events/crop-variety-updated/cr
 import { CropVarietyPrimitive } from '../primitives/crop-variety.primitive';
 import { CropVarietyIdValueObject } from '../value-objects/crop-variety-id/crop-variety-id.value-object';
 import { CropVarietySeasonValueObject } from '../value-objects/crop-variety-season/crop-variety-season.value-object';
+import { CropVarietySunRequirementsValueObject } from '../value-objects/crop-variety-sun-requirements/crop-variety-sun-requirements.value-object';
 import { CropVarietyTypeValueObject } from '../value-objects/crop-variety-type/crop-variety-type.value-object';
+import { CropVarietyWaterRequirementsValueObject } from '../value-objects/crop-variety-water-requirements/crop-variety-water-requirements.value-object';
 
 /**
  * Entity representing a Crop Variety in the domain.
@@ -31,9 +33,9 @@ export class CropVarietyEntity {
   /** Spacing between plants (cm) */
   private readonly _spacingBetween?: number;
   /** Water requirements */
-  private readonly _waterRequirements?: string;
+  private readonly _waterRequirements?: CropVarietyWaterRequirementsValueObject;
   /** Sun requirements */
-  private readonly _sunRequirements?: string;
+  private readonly _sunRequirements?: CropVarietySunRequirementsValueObject;
   /** Ideal temperature (min) */
   private readonly _minIdealTemperature?: number;
   /** Ideal temperature (max) */
@@ -96,8 +98,12 @@ export class CropVarietyEntity {
     this._daysToMaturity = params.daysToMaturity;
     this._plantingDepth = params.plantingDepth;
     this._spacingBetween = params.spacingBetween;
-    this._waterRequirements = params.waterRequirements;
-    this._sunRequirements = params.sunRequirements;
+    this._waterRequirements = params.waterRequirements
+      ? new CropVarietyWaterRequirementsValueObject(params.waterRequirements)
+      : undefined;
+    this._sunRequirements = params.sunRequirements
+      ? new CropVarietySunRequirementsValueObject(params.sunRequirements)
+      : undefined;
     this._minIdealTemperature = params.minIdealTemperature;
     this._maxIdealTemperature = params.maxIdealTemperature;
     this._minIdealPh = params.minIdealPh;
@@ -128,8 +134,8 @@ export class CropVarietyEntity {
           daysToMaturity: this._daysToMaturity,
           plantingDepth: this._plantingDepth,
           spacingBetween: this._spacingBetween,
-          waterRequirements: this._waterRequirements,
-          sunRequirements: this._sunRequirements,
+          waterRequirements: this._waterRequirements?.value,
+          sunRequirements: this._sunRequirements?.value,
           minIdealTemperature: this._minIdealTemperature,
           maxIdealTemperature: this._maxIdealTemperature,
           minIdealPh: this._minIdealPh,
@@ -180,8 +186,9 @@ export class CropVarietyEntity {
       daysToMaturity: data.daysToMaturity ?? this._daysToMaturity,
       plantingDepth: data.plantingDepth ?? this._plantingDepth,
       spacingBetween: data.spacingBetween ?? this._spacingBetween,
-      waterRequirements: data.waterRequirements ?? this._waterRequirements,
-      sunRequirements: data.sunRequirements ?? this._sunRequirements,
+      waterRequirements:
+        data.waterRequirements ?? this._waterRequirements?.value,
+      sunRequirements: data.sunRequirements ?? this._sunRequirements?.value,
       minIdealTemperature:
         data.minIdealTemperature ?? this._minIdealTemperature,
       maxIdealTemperature:
@@ -214,8 +221,8 @@ export class CropVarietyEntity {
         daysToMaturity: updated._daysToMaturity,
         plantingDepth: updated._plantingDepth,
         spacingBetween: updated._spacingBetween,
-        waterRequirements: updated._waterRequirements,
-        sunRequirements: updated._sunRequirements,
+        waterRequirements: updated._waterRequirements?.value,
+        sunRequirements: updated._sunRequirements?.value,
         minIdealTemperature: updated._minIdealTemperature,
         maxIdealTemperature: updated._maxIdealTemperature,
         minIdealPh: updated._minIdealPh,
@@ -244,8 +251,8 @@ export class CropVarietyEntity {
       daysToMaturity: this._daysToMaturity,
       plantingDepth: this._plantingDepth,
       spacingBetween: this._spacingBetween,
-      waterRequirements: this._waterRequirements,
-      sunRequirements: this._sunRequirements,
+      waterRequirements: this._waterRequirements.value,
+      sunRequirements: this._sunRequirements.value,
       minIdealTemperature: this._minIdealTemperature,
       maxIdealTemperature: this._maxIdealTemperature,
       minIdealPh: this._minIdealPh,
@@ -308,8 +315,8 @@ export class CropVarietyEntity {
       daysToMaturity: this._daysToMaturity,
       plantingDepth: this._plantingDepth,
       spacingBetween: this._spacingBetween,
-      waterRequirements: this._waterRequirements,
-      sunRequirements: this._sunRequirements,
+      waterRequirements: this._waterRequirements?.value,
+      sunRequirements: this._sunRequirements?.value,
       minIdealTemperature: this._minIdealTemperature,
       maxIdealTemperature: this._maxIdealTemperature,
       minIdealPh: this._minIdealPh,
@@ -364,11 +371,11 @@ export class CropVarietyEntity {
     return this._spacingBetween;
   }
 
-  get waterRequirements(): string | undefined {
+  get waterRequirements(): CropVarietyWaterRequirementsValueObject | undefined {
     return this._waterRequirements;
   }
 
-  get sunRequirements(): string | undefined {
+  get sunRequirements(): CropVarietySunRequirementsValueObject | undefined {
     return this._sunRequirements;
   }
 

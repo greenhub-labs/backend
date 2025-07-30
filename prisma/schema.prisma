@@ -257,6 +257,20 @@ enum SoilType {
   VOLCANIC   /// Volcanic soil (Andosol) - Very fertile, high mineral content, excellent for high-value crops
 }
 
+/// Requerimientos de agua para cultivos
+enum WaterRequirements {
+  LOW    /// Bajo requerimiento: riego ocasional, tolerante a sequía
+  MEDIUM /// Requerimiento medio: riego regular, humedad moderada
+  HIGH   /// Alto requerimiento: riego frecuente, humedad constante
+}
+
+/// Requerimientos de luz solar para cultivos
+enum SunRequirements {
+  FULL    /// Sol completo: 6+ horas de luz solar directa
+  PARTIAL /// Sol parcial: 3-6 horas de luz solar directa
+  SHADE   /// Sombra: menos de 3 horas de luz solar directa
+}
+
 // ================================
 // 👥 USER MANAGEMENT & MULTI-TENANT
 // ================================
@@ -565,9 +579,9 @@ model CropVariety {
   /// Espaciado entre plantas en centímetros
   spacingBetween    Float?
   /// Requerimientos hídricos
-  waterRequirements String? // "low", "medium", "high"
+  waterRequirements WaterRequirements?
   /// Requerimientos de luz solar
-  sunRequirements   String? // "full", "partial", "shade"
+  sunRequirements   SunRequirements?
   /// Temperatura ideal de crecimiento
   minIdealTemperature Float?
   /// Temperatura máxima ideal de crecimiento

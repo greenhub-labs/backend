@@ -1,0 +1,5 @@
+export enum SUN_REQUIREMENTS {
+  FULL = 'FULL',
+  PARTIAL = 'PARTIAL',
+  SHADE = 'SHADE',
+}

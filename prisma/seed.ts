@@ -1,4 +1,11 @@
-import { CropType, PrismaClient, Roles, Season } from '@prisma/client';
+import {
+  CropType,
+  PrismaClient,
+  Roles,
+  Season,
+  SunRequirements,
+  WaterRequirements,
+} from '@prisma/client';
 import { randomUUID } from 'crypto';
 
 const prisma = new PrismaClient();
@@ -39,8 +46,8 @@ async function main() {
       daysToMaturity: 75,
       plantingDepth: 1.5,
       spacingBetween: 40,
-      waterRequirements: 'medium',
-      sunRequirements: 'full',
+      waterRequirements: 'MEDIUM',
+      sunRequirements: 'FULL',
       minIdealTemperature: 18,
       maxIdealTemperature: 27,
       minIdealPh: 6.0,
@@ -141,6 +148,8 @@ async function main() {
         type: variety.type as CropType,
         plantingSeasons: variety.plantingSeasons as Season[],
         harvestSeasons: variety.harvestSeasons as Season[],
+        waterRequirements: variety.waterRequirements as WaterRequirements,
+        sunRequirements: variety.sunRequirements as SunRequirements,
       },
     });
   }
