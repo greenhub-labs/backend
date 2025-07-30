@@ -60,10 +60,6 @@ export class GetFarmByIdQueryHandler
     const plots = await this.queryBus.execute(
       new GetPlotsByFarmIdQuery(query.farmId),
     );
-    return new FarmDetailsResult(
-      farm,
-      members,
-      plots.map((plot) => plot.plot),
-    );
+    return new FarmDetailsResult(farm, members, plots);
   }
 }
